@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-#!/usr/bin/env node
 // dsh-plugin-doctor：dsh 插件「完整性 + 运行流畅」一体检测器
 // 分组：静态·包结构 / 静态·cordis 契约扫描 / 动态·沙箱冒烟 / 生态·集合站清单
 import path from 'node:path'
