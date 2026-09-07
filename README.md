@@ -63,5 +63,11 @@ SURVEY.md                全渠道检测方法梳理 + 判据出处
 
 ## 状态
 
-WIP 工作夹（非 git 仓，同 `dsh-ticktick-handoff` 口径）。检测器本体零依赖、可独立运行；
-后续如需发布，可参照工作区发布流程另立仓库。
+正式仓库：GitHub `PerryLink/dsh-plugin-doctor`（MIT 外 Apache-2.0），npm `@perrylink/dsh-plugin-doctor`
+（latest=0.1.3，2026-09-07）。CI 用法：
+
+```powershell
+npx --yes @perrylink/dsh-plugin-doctor@0.1.3 --repo . --no-smoke --only "静态·包结构,静态·cordis 契约扫描"
+```
+
+35 个插件仓已内置 `.github/workflows/plugin-doctor.yml`（install→build→npx 静态 R/K 门禁）。
