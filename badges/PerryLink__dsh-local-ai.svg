@@ -1,19 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="147" height="20" role="img" aria-label="dsh-doctor: passing">
+<svg xmlns="http://www.w3.org/2000/svg" width="178" height="20" role="img" aria-label="dsh-doctor: passing">
   <title>dsh-doctor: passing</title>
   <defs>
-    <linearGradient id="dL-pass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#cbd5e1"/></linearGradient>
-    <linearGradient id="dV-pass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#047857"/><stop offset="1" stop-color="#065f46"/></linearGradient>
+    <linearGradient id="pL-pass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#eef2f7"/><stop offset="1" stop-color="#c9d4e2"/></linearGradient>
+    <linearGradient id="pV-pass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#047857"/><stop offset="1" stop-color="#065f46"/></linearGradient>
   </defs>
-  <clipPath id="dR-pass"><rect width="147" height="20" rx="3" fill="#fff"/></clipPath>
-  <g clip-path="url(#dR-pass)">
-    <rect width="77" height="20" fill="url(#dL-pass)"/>
-    <rect width="77" height="9" fill="#ffffff" opacity="0.45"/>
-    <rect y="18" width="77" height="2" fill="#0b1f3a" opacity="0.10"/>
-    <rect x="77" width="70" height="20" fill="url(#dV-pass)"/>
-    <rect width="147" height="1" fill="#ffffff" opacity="0.14"/>
+  <clipPath id="pC-pass"><rect width="178" height="20" rx="5" fill="#fff"/></clipPath>
+  <g clip-path="url(#pC-pass)">
+    <rect width="102" height="20" fill="url(#pL-pass)"/>
+    <rect width="102" height="1" fill="#ffffff" opacity="0.7"/>
+    <rect x="102" width="76" height="20" fill="url(#pV-pass)"/>
+    <rect x="102" width="76" height="1" fill="#ffffff" opacity="0.22"/>
   </g>
-  <rect x="0.5" y="0.5" width="146" height="19" rx="3" fill="none" stroke="#8fa0b5" stroke-opacity="0.85"/>
-  <g fill="#0b1f3a" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="11"><text x="38.5" y="14">dsh-doctor</text></g>
-  <g fill="#ffffff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="11"><text x="118.5" y="14">passing</text></g>
-  <path d="M85 8.8 l1.71 1.805 l3.04 -3.515" fill="none" stroke="#ffffff" stroke-width="1.52" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="0.5" y="0.5" width="177" height="19" rx="5" fill="none" stroke="#8fa0b5" stroke-opacity="0.85"/>
+  <g transform="translate(6,4.6)">
+  <path d="M5 0.6 L9.4 2.1 V5.6 C9.4 8 7.5 9.7 5 10.4 C2.5 9.7 0.6 8 0.6 5.6 V2.1 Z" fill="none" stroke="#1f3a5f" stroke-width="1.15" stroke-linejoin="round"/>
+  <path d="M2.9 5.4 l1.5 1.6 l2.7 -3.1" fill="none" stroke="#1f3a5f" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+  <text x="20" y="14" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="10.5" font-weight="600" letter-spacing="0.9" fill="#0b1f3a">DSH DOCTOR</text>
+  <path d="M110 8.8 l1.53 1.62 l2.7 -3.15" fill="none" stroke="#ffffff" stroke-width="1.4400000000000002" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="146.5" y="14" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="10.5" font-weight="600" letter-spacing="0.9" fill="#ffffff">PASSING</text>
 </svg>
