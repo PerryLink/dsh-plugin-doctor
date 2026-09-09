@@ -136,10 +136,10 @@ SURVEY.md                全渠道检测方法梳理 + 判据出处
 ## 状态
 
 正式仓库：GitHub `PerryLink/dsh-plugin-doctor`（Apache-2.0），npm `@perrylink/dsh-plugin-doctor`
-（**latest=0.1.4**；0.1.5 已入库待发布，见 `CHANGELOG.md`）。CI 用法（**请用 ASCII 别名**）：
+（**latest=0.1.6**，见 `CHANGELOG.md`）。CI 用法（**请用 ASCII 别名**）：
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.1.4 --repo . --no-smoke --only "R,K"
+npx --yes @perrylink/dsh-plugin-doctor@0.1.6 --repo . --no-smoke --only "R,K"
 ```
 
-35 个插件仓已内置 `.github/workflows/plugin-doctor.yml`（install→build→npx 静态 R/K 门禁）。
+35 个插件仓已内置 `.github/workflows/plugin-doctor.yml`（只读已提交树 → npx 静态 R/K 门禁 + R0/K1 实跑自校验）。

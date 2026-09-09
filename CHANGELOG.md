@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.6
+
+- **Docs/design sync (no CLI behavior change)**: the README's verified-badge section now documents the final shipped badge design (monospace UPPERCASE + letter-spacing + shield-check mark + 5px corners; platinum/silver left panel with deep-navy label text; one solid GitHub-conventional state block on the right) and describes the family gate as reading the committed tree (no install/build; R2/R4 gated by each repo's own `ci.yml`). The "状态" section and CI snippet now pin 0.1.6. Published so the npm page matches the repository; `scripts/` and `badges/` are not in the npm `files` list, so the installed CLI surface is identical to 0.1.5.
+
 ## 0.1.5
 
 - **Group aliases (encoding-safe)**: `--only` now accepts the ASCII aliases `R`, `K`, `D`, `CC` (case-insensitive) in addition to the Chinese group names. Chinese group names had silently rotted into double-encoded mojibake in 35 repos' `plugin-doctor.yml`, which made `--only` match nothing.
