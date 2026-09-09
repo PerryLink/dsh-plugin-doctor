@@ -30,8 +30,11 @@ const limit = Number(flag('--limit') ?? 0)
 // Reading other repositories' Actions metadata needs a token that can see
 // them: the workflow-scoped GITHUB_TOKEN is rate-limited as an anonymous
 // caller (60/h), so DOCTOR_AUDIT_TOKEN (a read-capable PAT stored as a repo
-// secret) is preferred when present.
-const token = process.env.DOCTOR_AUDIT_TOKEN || process.env.GITHUB_TOKEN || process.env.GH_TOKEN || ''
+// secret) is preferred when present. A stray BOM would make fetch throw, so
+// strip it defensively.
+const token = (process.env.DOCTOR_AUDIT_TOKEN || process.env.GITHUB_TOKEN || process.env.GH_TOKEN || '')
+  .replace(/^\uFEFF/, '')
+  .trim()
 const declared = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/verified-repos.json'), 'utf8'))
 let repos = declared.repos
 if (onlyRepos.length > 0) repos = repos.filter((r) => onlyRepos.includes(r.repo))
