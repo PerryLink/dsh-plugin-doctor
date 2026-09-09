@@ -102,6 +102,9 @@
     {
       "repo": "PerryLink/dsh-plugin-guide",
       "package": "dsh-plugin-guide"
+    },    {
+      "repo": "PerryLink/dsh-plugin-upgrade",
+      "package": "dsh-plugin-upgrade"
     },
     {
       "repo": "PerryLink/dsh-reach",
