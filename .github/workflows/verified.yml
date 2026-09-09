@@ -28,6 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -38,10 +40,20 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          if [ -n "$(git status --porcelain data badges)" ]; then
-            git add data/verified.json badges
-            git commit -m 'chore: refresh verified badges'
-            git push
-          else
+          if [ -z "$(git status --porcelain data badges)" ]; then
             echo 'verified registry unchanged'
+            exit 0
           fi
+          git add data/verified.json badges
+          git commit -m 'chore: refresh verified badges'
+          # A concurrent human push can land while this job runs; rebase and retry.
+          for attempt in 1 2 3; do
+            if git pull --rebase --autostash origin "$GITHUB_REF_NAME" && git push; then
+              echo "pushed on attempt ${attempt}"
+              exit 0
+            fi
+            echo "push attempt ${attempt} failed; retrying"
+            sleep 5
+          done
+          echo '::error::could not push the refreshed registry after 3 attempts'
+          exit 1
