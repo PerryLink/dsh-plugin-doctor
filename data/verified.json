@@ -3,8 +3,8 @@
   "scope": "static R+K (the repo's own plugin-doctor CI gate)",
   "meaning": "The declared repo runs the dsh-plugin-doctor static R+K gate (16 checks: R0/R1/R3/R5/R6/R7/R8 + K1-K9) in its own CI and that gate is green on the current default-branch HEAD. R2/R4 read built artifacts and are gated by the repo's own ci.yml. Verification reads the GitHub API only; no third-party code is cloned or executed.",
   "doctorVersion": "0.1.5",
-  "doctorCommit": "9c16d49b93fb6f6a3a7908a13dc618464a806957",
-  "generatedAt": "2026-09-09T11:44:39.572Z",
+  "doctorCommit": "e4b384810dbad9d6b6306ae59cd889e2bc81c243",
+  "generatedAt": "2026-09-09T12:11:02.414Z",
   "entries": [
     {
       "repo": "PerryLink/dsh-auto-review",
@@ -21,7 +21,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:32:44Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@95b1f2cfb7; run https://github.com/PerryLink/dsh-auto-review/actions/runs/34346124380 (success); checked 2026-09-09"
     },
     {
@@ -39,7 +39,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:32:47Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@d80aa8f8a3; run https://github.com/PerryLink/dsh-background-agents/actions/runs/34346128739 (success); checked 2026-09-09"
     },
     {
@@ -57,7 +57,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:32:50Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@7cee161f18; run https://github.com/PerryLink/dsh-budget/actions/runs/34346133166 (success); checked 2026-09-09"
     },
     {
@@ -75,7 +75,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:32:54Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@ce585b2f24; run https://github.com/PerryLink/dsh-checkpoint-rewind/actions/runs/34346139130 (success); checked 2026-09-09"
     },
     {
@@ -93,7 +93,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:32:56Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on master@d252ae99a3; run https://github.com/PerryLink/dsh-claude-move/actions/runs/34346142596 (success); checked 2026-09-09"
     },
     {
@@ -111,7 +111,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:32:59Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@696d0aec4d; run https://github.com/PerryLink/dsh-click/actions/runs/34346146374 (success); checked 2026-09-09"
     },
     {
@@ -129,7 +129,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:14Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@8bdb8b9a74; run https://github.com/PerryLink/dsh-composer-history/actions/runs/34346167906 (success); checked 2026-09-09"
     },
     {
@@ -147,7 +147,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:17Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@654ec5f453; run https://github.com/PerryLink/dsh-data-quality/actions/runs/34346171818 (success); checked 2026-09-09"
     },
     {
@@ -165,7 +165,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:20Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@47dcf8c9c0; run https://github.com/PerryLink/dsh-defend/actions/runs/34346175811 (success); checked 2026-09-09"
     },
     {
@@ -183,7 +183,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:23Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@2b045c5900; run https://github.com/PerryLink/dsh-doublecheck/actions/runs/34346180608 (success); checked 2026-09-09"
     },
     {
@@ -201,7 +201,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:26Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@c65402ce73; run https://github.com/PerryLink/dsh-draw/actions/runs/34346185355 (success); checked 2026-09-09"
     },
     {
@@ -219,7 +219,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:29Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@e76dbe2731; run https://github.com/PerryLink/dsh-fast/actions/runs/34346190761 (success); checked 2026-09-09"
     },
     {
@@ -237,7 +237,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:44Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@c6d4655008; run https://github.com/PerryLink/dsh-fund-research/actions/runs/34346216152 (success); checked 2026-09-09"
     },
     {
@@ -255,7 +255,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:47Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@458fb69e1e; run https://github.com/PerryLink/dsh-github/actions/runs/34346221091 (success); checked 2026-09-09"
     },
     {
@@ -273,7 +273,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:50Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@de18c68249; run https://github.com/PerryLink/dsh-industry-research/actions/runs/34346226082 (success); checked 2026-09-09"
     },
     {
@@ -291,7 +291,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:53Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@cc5276a16b; run https://github.com/PerryLink/dsh-library/actions/runs/34346230472 (success); checked 2026-09-09"
     },
     {
@@ -309,7 +309,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:58Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@6b56d106da; run https://github.com/PerryLink/dsh-local-ai/actions/runs/34346237495 (success); checked 2026-09-09"
     },
     {
@@ -327,7 +327,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:33:59Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@71bd0577b3; run https://github.com/PerryLink/dsh-lsp-actions/actions/runs/34346238897 (success); checked 2026-09-09"
     },
     {
@@ -345,7 +345,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:34:13Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@b2745eb2d7; run https://github.com/PerryLink/dsh-mask/actions/runs/34346259632 (success); checked 2026-09-09"
     },
     {
@@ -363,7 +363,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:34:17Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@a81ee2c368; run https://github.com/PerryLink/dsh-mcp-panel/actions/runs/34346264383 (success); checked 2026-09-09"
     },
     {
@@ -381,7 +381,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:34:19Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@27a40d9ead; run https://github.com/PerryLink/dsh-memento/actions/runs/34346268449 (success); checked 2026-09-09"
     },
     {
@@ -399,7 +399,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:34:22Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@8ffdf15ed5; run https://github.com/PerryLink/dsh-observe/actions/runs/34346272207 (success); checked 2026-09-09"
     },
     {
@@ -409,16 +409,16 @@
       "result": "pass",
       "reason": "gate green on HEAD",
       "defaultBranch": "main",
-      "headSha": "a91d4bc9be87121641eaf951fed03e10cfb82b4b",
+      "headSha": "070c10928f1587d524be1a04c1f40daf8b021990",
       "gate": "ascii-escaped + self-check",
       "doctorPinned": "0.1.4",
       "guard": true,
-      "runId": 34346276791,
+      "runId": 34348073414,
       "runConclusion": "success",
-      "runCreatedAt": "2026-09-09T11:34:25Z",
+      "runCreatedAt": "2026-09-09T11:55:18Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
-      "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@a91d4bc9be; run https://github.com/PerryLink/dsh-output-styles/actions/runs/34346276791 (success); checked 2026-09-09"
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
+      "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@070c10928f; run https://github.com/PerryLink/dsh-output-styles/actions/runs/34348073414 (success); checked 2026-09-09"
     },
     {
       "repo": "PerryLink/dsh-permission-rules",
@@ -435,7 +435,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:34:28Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@dbe523ce45; run https://github.com/PerryLink/dsh-permission-rules/actions/runs/34346281311 (success); checked 2026-09-09"
     },
     {
@@ -453,7 +453,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:34:43Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@dc6fd063aa; run https://github.com/PerryLink/dsh-plugin-guide/actions/runs/34346305190 (success); checked 2026-09-09"
     },
     {
@@ -471,7 +471,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:34:46Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@00f898e5d7; run https://github.com/PerryLink/dsh-reach/actions/runs/34346310399 (success); checked 2026-09-09"
     },
     {
@@ -489,7 +489,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:34:49Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@33b0290423; run https://github.com/PerryLink/dsh-research-report/actions/runs/34346314412 (success); checked 2026-09-09"
     },
     {
@@ -507,7 +507,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:34:52Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@946be68f18; run https://github.com/PerryLink/dsh-score/actions/runs/34346318908 (success); checked 2026-09-09"
     },
     {
@@ -525,7 +525,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:34:55Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@ddabeb8116; run https://github.com/PerryLink/dsh-session-pin/actions/runs/34346322996 (success); checked 2026-09-09"
     },
     {
@@ -543,7 +543,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:34:58Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@118bf5ea47; run https://github.com/PerryLink/dsh-session-sync/actions/runs/34346326981 (success); checked 2026-09-09"
     },
     {
@@ -561,7 +561,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:35:13Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@ca86fe7ffb; run https://github.com/PerryLink/dsh-talk/actions/runs/34346348316 (success); checked 2026-09-09"
     },
     {
@@ -579,7 +579,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:35:17Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@72b161c35c; run https://github.com/PerryLink/dsh-test-drive/actions/runs/34346354959 (success); checked 2026-09-09"
     },
     {
@@ -597,7 +597,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:35:20Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@33928caf1a; run https://github.com/PerryLink/dsh-ticktick/actions/runs/34346359054 (success); checked 2026-09-09"
     },
     {
@@ -615,7 +615,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:35:23Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@2fde407755; run https://github.com/PerryLink/dsh-translate/actions/runs/34346363402 (success); checked 2026-09-09"
     },
     {
@@ -633,7 +633,7 @@
       "runConclusion": "success",
       "runCreatedAt": "2026-09-09T11:35:26Z",
       "snapshot": "2026-09-09",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34347085264",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/34349480556",
       "evidence": "pass — gate green on HEAD; gate=ascii-escaped + self-check doctorPinned=0.1.4 guard=true on main@3eef313189; run https://github.com/PerryLink/dsh-wechat/actions/runs/34346367650 (success); checked 2026-09-09"
     }
   ]

@@ -1,8 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="141" height="20" role="img" aria-label="dsh-doctor: R+K pass">
-  <linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
-  <clipPath id="r"><rect width="141" height="20" rx="3" fill="#fff"/></clipPath>
-  <g clip-path="url(#r)"><rect width="77" height="20" fill="#3b3f46"/><rect x="77" width="64" height="20" fill="#2da44e"/><rect width="141" height="20" fill="url(#s)"/></g>
-  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="11">
-    <text x="38.5" y="14">dsh-doctor</text><text x="109" y="14">R+K pass</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="147" height="20" role="img" aria-label="dsh-doctor: passing">
+  <title>dsh-doctor: passing</title>
+  <defs>
+    <linearGradient id="dL-pass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#cbd5e1"/></linearGradient>
+    <linearGradient id="dV-pass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#047857"/><stop offset="1" stop-color="#065f46"/></linearGradient>
+  </defs>
+  <clipPath id="dR-pass"><rect width="147" height="20" rx="3" fill="#fff"/></clipPath>
+  <g clip-path="url(#dR-pass)">
+    <rect width="77" height="20" fill="url(#dL-pass)"/>
+    <rect width="77" height="9" fill="#ffffff" opacity="0.45"/>
+    <rect y="18" width="77" height="2" fill="#0b1f3a" opacity="0.10"/>
+    <rect x="77" width="70" height="20" fill="url(#dV-pass)"/>
+    <rect width="147" height="1" fill="#ffffff" opacity="0.14"/>
   </g>
+  <rect x="0.5" y="0.5" width="146" height="19" rx="3" fill="none" stroke="#8fa0b5" stroke-opacity="0.85"/>
+  <g fill="#0b1f3a" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="11"><text x="38.5" y="14">dsh-doctor</text></g>
+  <g fill="#ffffff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="11"><text x="118.5" y="14">passing</text></g>
+  <path d="M85 8.8 l1.71 1.805 l3.04 -3.515" fill="none" stroke="#ffffff" stroke-width="1.52" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
