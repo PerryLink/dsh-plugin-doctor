@@ -1,7 +1,7 @@
 # Refreshes the dsh-doctor verified registry and one badge per declared repo.
-# The registry is the only source of truth for badges; a repo that stops
-# passing the static R+K gates turns red on the next run instead of keeping a
-# stale green badge.
+# Verification reads the GitHub API only (gate config + the run on HEAD); no
+# third-party code is cloned or executed. A repo that stops passing the gate
+# turns red on the next run instead of keeping a stale green badge.
 name: verified badges
 
 on:
@@ -10,8 +10,6 @@ on:
     paths:
       - 'data/verified-repos.json'
       - 'scripts/**'
-      - 'doctor.mjs'
-      - 'lib/**'
       - '.github/workflows/verified.yml'
   schedule:
     - cron: '41 5 * * *'
@@ -19,6 +17,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: verified-badges

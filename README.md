@@ -57,16 +57,34 @@ node doctor.mjs --repo <路径> --json report.json
 
 ## Verified 徽章
 
-通过静态 R+K 两层的仓库可以挂这枚徽章（**不是**认证徽章：不含 Scorecard/provenance/安装冒烟）：
+挂这枚徽章的含义只有一条，且可审计：**该仓在自己的 CI 里跑 dsh-plugin-doctor 的静态 R+K 门禁，且门禁在默认分支当前 HEAD 上是绿的**（**不是**认证徽章：不含 Scorecard/provenance/安装冒烟）。
 
 ```markdown
 [![dsh-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/badges/PerryLink__dsh-github.svg)](https://github.com/PerryLink/dsh-plugin-doctor#verified-徽章)
 ```
 
-- 注册表 `data/verified.json` 是唯一事实来源，由 `.github/workflows/verified.yml` 每日 + 每次相关 push 刷新：浅克隆 `data/verified-repos.json` 里声明的仓库 → 用本仓 `doctor.mjs --no-smoke --only R,K` 实测 → 写回注册表与 `badges/<owner>__<repo>.svg`。
-- 三种状态：`R+K pass`（绿）/ `R+K warn`（黄，存在 warn 或 skip）/ `R+K fail`（红）。徽章是**动态**的：某天不再通过就会变红，不会保留陈旧绿灯。
-- 加入方式：向 `data/verified-repos.json` 提 PR 增加 `{ "repo": "<owner>/<name>", "package": "<npm 包名>" }`；条目必须满足 doctor 的 R+K 静态门。
-- 证据纪律：每条记录的 `evidence` 都带 commit、doctor 版本与 commit、逐状态计数，CI 运行时附 run URL。
+- 注册表 `data/verified.json` 是唯一事实来源，由 `.github/workflows/verified.yml` 每日 + 每次相关 push 刷新。刷新只读 GitHub API：解析各仓 HEAD 的 `plugin-doctor.yml` 门禁配置（必须钉住 `@perrylink/dsh-plugin-doctor@<版本>` 且 `--only` 参数可用），再核对 HEAD 那次 `plugin-doctor` workflow run 的结论。**本仓 CI 不克隆、不安装、不执行任何第三方代码。**
+- 四种状态：`R+K pass`（绿，HEAD 上 run success）/ `R+K warn`（黄：HEAD 还没跑、run 仍在队列、或缺少门禁配置的前置条件）/ `R+K fail`（红：HEAD 上 run 失败，或门禁配置不成立——含 `--only` 参数是双重编码乱码的"假门禁"）/ `no-data`（灰：API 查询失败）。徽章是**动态**的：不再通过就会变红。
+- 加入方式：向 `data/verified-repos.json` 提 PR 增加 `{ "repo": "<owner>/<name>", "package": "<npm 包名>" }`，并按下面的模板在自己的仓里加 `plugin-doctor.yml`；条目必须通过上面的门禁核对。
+- 门禁模板（`--only` 参数用 YAML `\u` 转义构造，文件保持纯 ASCII，避免编码往返把中文分组名变成乱码；末尾自校验 R0/K1 确实跑了）：
+
+```yaml
+      - name: Run dsh-plugin-doctor
+        env:
+          DOCTOR_ONLY: "\u9759\u6001\u00b7\u5305\u7ed3\u6784,\u9759\u6001\u00b7cordis \u5951\u7ea6\u626b\u63cf"
+        run: |
+          if [ -z "$DOCTOR_ONLY" ]; then echo "DOCTOR_ONLY is empty"; exit 1; fi
+          set +e
+          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.1.4 --repo . --no-smoke --only "$DOCTOR_ONLY" 2>&1)"
+          code=$?
+          set -e
+          printf '%s\n' "$out"
+          echo "$out" | grep -q 'R0 ' || { echo "::error::doctor ran no R checks"; exit 1; }
+          echo "$out" | grep -q 'K1 ' || { echo "::error::doctor ran no K checks"; exit 1; }
+          exit $code
+```
+
+> 为什么徽章读 CI 结论而不是本仓自跑：家族多数仓把 `lib/` 放在 `.gitignore`（构建产物），纯克隆缺入口文件，必须 `install + build` 才能跑 R2/R4；而把 35 个第三方仓的依赖安装集中到本仓 CI 执行是供应链风险。因此门禁由各仓自己的 CI 执行（与用户安装时的构建环境一致），本仓只做审计与发徽。
 
 ## 判据来源（SURVEY.md 有全文与 URL）
 
@@ -99,7 +117,7 @@ lib/checks-cordis.mjs    静态·cordis 契约 K1–K9
 lib/checks-smoke.mjs     动态·沙箱冒烟 D0–D3、D9
 lib/checks-collections.mjs  生态·集合站清单 CC1–CC5
 tests/selftest.mjs       7 例真实 CLI 自检（退出码契约 + 防静默通过回归守卫）
-scripts/verify.mjs       verified 注册表与徽章刷新
+scripts/verify.mjs       verified 注册表与徽章刷新（只读 GitHub API 审计各仓门禁）
 scripts/badge.mjs        verified SVG 渲染
 data/verified-repos.json verified 声明仓清单
 data/verified.json       verified 注册表（CI 生成）
