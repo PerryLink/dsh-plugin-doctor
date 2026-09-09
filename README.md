@@ -1,5 +1,12 @@
 # dsh-plugin-doctor
 
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![npm version](https://img.shields.io/npm/v/%40perrylink%2Fdsh-plugin-doctor)](https://www.npmjs.com/package/@perrylink/dsh-plugin-doctor)
+[![npm downloads](https://img.shields.io/npm/dm/%40perrylink%2Fdsh-plugin-doctor)](https://www.npmjs.com/package/@perrylink/dsh-plugin-doctor)
+[![Node](https://img.shields.io/badge/node-%5E22.19%20%7C%7C%20%3E%3D24-brightgreen.svg)](#)
+[![CI](https://img.shields.io/github/actions/workflow/status/PerryLink/dsh-plugin-doctor/ci.yml?branch=main&label=CI)](https://github.com/PerryLink/dsh-plugin-doctor/actions)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/PerryLink/dsh-plugin-doctor/badge)](https://api.securityscorecards.dev/projects/github.com/PerryLink/dsh-plugin-doctor)
+
 dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22 自带能力），一次运行同时覆盖
 **包结构静态检查（R）→ cordis 契约扫描（K）→ 动态沙箱冒烟（D）→ 生态集合站清单校验（CC）** 四层。
 判据全部来自 2026-09-07 三路一手调研：deepseek-harness 文档/源码、cordiverse/cordis 源码契约、
@@ -11,11 +18,31 @@ dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22
 node doctor.mjs --repo <插件仓路径>            # 全量（含动态冒烟，需网络 + pnpm）
 node doctor.mjs --repo <路径> --no-smoke       # 仅静态 + 清单
 node doctor.mjs --repo <路径> --dsh 0.1.2-rc.1 # 冒烟宿主版本（默认 npm latest 已发布线）
-node doctor.mjs --repo <路径> --only 静态·包结构,静态·cordis 契约扫描
+node doctor.mjs --repo <路径> --only R,K       # 只跑静态两层（推荐用 ASCII 别名）
 node doctor.mjs --repo <路径> --json report.json
 ```
 
-- 退出码：`0` = 无 fail/error（可含 warn/skip）；`1` = 存在 fail/error。适合直接挂 CI。
+### `--only` 分组与 ASCII 别名
+
+| 别名 | 分组全名 | 内容 |
+|---|---|---|
+| `R` | 静态·包结构 | R0–R8 |
+| `K` | 静态·cordis 契约扫描 | K1–K9 |
+| `D` | 动态·沙箱冒烟 | D0–D3、D9 |
+| `CC` | 生态·集合站清单 | CC1–CC5 |
+
+别名大小写不敏感，中文全名同样可用。**工作流里请一律使用别名**：中文分组名一旦被编辑器/脚本按错误编码往返，`--only` 就会一个分组都匹配不上。
+
+### 退出码契约
+
+| 码 | 含义 |
+|---|---|
+| `0` | 无 fail/error（可含 warn/skip） |
+| `1` | 存在 fail/error |
+| `2` | 用法错误、未知分组、或**零检查执行** |
+
+**防静默通过**：`--only` 里只要有一个分组名不匹配，或最终零检查执行，本工具立即以 `2` 失败。0.1.4 及更早版本在分组名乱码时会"零检查 + exit 0"，这曾让 35 个仓的 CI 门禁变成假绿（2026-09-09 实测：`checks_run=0`、`exit=0`）。
+
 - 冒烟全程使用 `%TEMP%` mkdtemp 临时 `DSH_HOME`/`DSH_AGENTS_HOME`，绝不触碰真实 `~/.dsh`（红线 3）。
 - 每步子进程 stdout/stderr 落盘 `%TEMP%\dsh-doctor-logs-*`，报告尾部打印路径，证据可查。
 
@@ -27,6 +54,19 @@ node doctor.mjs --repo <路径> --json report.json
 | 静态·cordis 契约 | K1–K9 | 服务访问 vs inject 声明；ctx 活数据序列化红线；定时器/监听器未包 `ctx.effect`；Schema 含函数；apply 返回形状（v4 Effect 契约）；inject 服务名 seam；**v3 遗留 API（3.x→4.x 已删除清单）**；Config 必须是 Standard Schema；`name==='apply'` 特例 |
 | 动态·沙箱冒烟 | D0–D3、D9 | npm pack → `dsh plugin --profile headless add <tarball>` → 断言 `dsh.profile.bundles` 含包名 → `--dump-config` 层标记 → keyless headless 运行期望 **exit 1 + `dsh: MISSING_CREDENTIAL`**（=组合 boot 到请求阶段；排除 NO_ADAPTER/ERR_MODULE_NOT_FOUND/SyntaxError/TypeError）→ 沙箱清理 |
 | 生态·集合站清单 | CC1–CC5 | 认证注册表 spec v1 五维 evidence；adp-list yml 字段/枚举/描述；dsh-catalog 目录条目约束（禁安装命令、截断启发式）；omdsh `dshWorkshop` activation 5 值；dsh-plugin-kit 三门（license/五语 README/seam 三角色，优先调用 kit 官方 CLI） |
+
+## Verified 徽章
+
+通过静态 R+K 两层的仓库可以挂这枚徽章（**不是**认证徽章：不含 Scorecard/provenance/安装冒烟）：
+
+```markdown
+[![dsh-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/badges/PerryLink__dsh-github.svg)](https://github.com/PerryLink/dsh-plugin-doctor#verified-徽章)
+```
+
+- 注册表 `data/verified.json` 是唯一事实来源，由 `.github/workflows/verified.yml` 每日 + 每次相关 push 刷新：浅克隆 `data/verified-repos.json` 里声明的仓库 → 用本仓 `doctor.mjs --no-smoke --only R,K` 实测 → 写回注册表与 `badges/<owner>__<repo>.svg`。
+- 三种状态：`R+K pass`（绿）/ `R+K warn`（黄，存在 warn 或 skip）/ `R+K fail`（红）。徽章是**动态**的：某天不再通过就会变红，不会保留陈旧绿灯。
+- 加入方式：向 `data/verified-repos.json` 提 PR 增加 `{ "repo": "<owner>/<name>", "package": "<npm 包名>" }`；条目必须满足 doctor 的 R+K 静态门。
+- 证据纪律：每条记录的 `evidence` 都带 commit、doctor 版本与 commit、逐状态计数，CI 运行时附 run URL。
 
 ## 判据来源（SURVEY.md 有全文与 URL）
 
@@ -58,16 +98,22 @@ lib/checks-package.mjs   静态·包结构 R0–R8
 lib/checks-cordis.mjs    静态·cordis 契约 K1–K9
 lib/checks-smoke.mjs     动态·沙箱冒烟 D0–D3、D9
 lib/checks-collections.mjs  生态·集合站清单 CC1–CC5
+tests/selftest.mjs       7 例真实 CLI 自检（退出码契约 + 防静默通过回归守卫）
+scripts/verify.mjs       verified 注册表与徽章刷新
+scripts/badge.mjs        verified SVG 渲染
+data/verified-repos.json verified 声明仓清单
+data/verified.json       verified 注册表（CI 生成）
+badges/                  verified 徽章（CI 生成）
 SURVEY.md                全渠道检测方法梳理 + 判据出处
 ```
 
 ## 状态
 
-正式仓库：GitHub `PerryLink/dsh-plugin-doctor`（MIT 外 Apache-2.0），npm `@perrylink/dsh-plugin-doctor`
-（latest=0.1.3，2026-09-07）。CI 用法：
+正式仓库：GitHub `PerryLink/dsh-plugin-doctor`（Apache-2.0），npm `@perrylink/dsh-plugin-doctor`
+（**latest=0.1.4**；0.1.5 已入库待发布，见 `CHANGELOG.md`）。CI 用法（**请用 ASCII 别名**）：
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.1.3 --repo . --no-smoke --only "静态·包结构,静态·cordis 契约扫描"
+npx --yes @perrylink/dsh-plugin-doctor@0.1.4 --repo . --no-smoke --only "R,K"
 ```
 
 35 个插件仓已内置 `.github/workflows/plugin-doctor.yml`（install→build→npx 静态 R/K 门禁）。

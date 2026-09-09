@@ -1,0 +1,147 @@
+{
+  "specVersion": "v1",
+  "scope": "static R+K (no sandbox smoke)",
+  "note": "Repos declared for the dsh-doctor verified badge. Every entry is re-checked by scripts/verify.mjs; the registry data/verified.json is the only source of truth.",
+  "repos": [
+    {
+      "repo": "PerryLink/dsh-auto-review",
+      "package": "dsh-auto-review"
+    },
+    {
+      "repo": "PerryLink/dsh-background-agents",
+      "package": "dsh-background-agents"
+    },
+    {
+      "repo": "PerryLink/dsh-budget",
+      "package": "dsh-budget"
+    },
+    {
+      "repo": "PerryLink/dsh-checkpoint-rewind",
+      "package": "dsh-checkpoint-rewind"
+    },
+    {
+      "repo": "PerryLink/dsh-claude-move",
+      "package": "dsh-claude-move"
+    },
+    {
+      "repo": "PerryLink/dsh-click",
+      "package": "dsh-click"
+    },
+    {
+      "repo": "PerryLink/dsh-composer-history",
+      "package": "dsh-composer-history"
+    },
+    {
+      "repo": "PerryLink/dsh-data-quality",
+      "package": "dsh-data-quality"
+    },
+    {
+      "repo": "PerryLink/dsh-defend",
+      "package": "dsh-defend"
+    },
+    {
+      "repo": "PerryLink/dsh-doublecheck",
+      "package": "dsh-doublecheck"
+    },
+    {
+      "repo": "PerryLink/dsh-draw",
+      "package": "dsh-draw"
+    },
+    {
+      "repo": "PerryLink/dsh-fast",
+      "package": "dsh-fast"
+    },
+    {
+      "repo": "PerryLink/dsh-fund-research",
+      "package": "dsh-fund-research"
+    },
+    {
+      "repo": "PerryLink/dsh-github",
+      "package": "@perrylink/dsh-github"
+    },
+    {
+      "repo": "PerryLink/dsh-industry-research",
+      "package": "dsh-industry-research"
+    },
+    {
+      "repo": "PerryLink/dsh-library",
+      "package": "dsh-library"
+    },
+    {
+      "repo": "PerryLink/dsh-local-ai",
+      "package": "dsh-local-ai"
+    },
+    {
+      "repo": "PerryLink/dsh-lsp-actions",
+      "package": "dsh-lsp-actions"
+    },
+    {
+      "repo": "PerryLink/dsh-mask",
+      "package": "dsh-mask"
+    },
+    {
+      "repo": "PerryLink/dsh-mcp-panel",
+      "package": "dsh-mcp-panel"
+    },
+    {
+      "repo": "PerryLink/dsh-memento",
+      "package": "dsh-memento"
+    },
+    {
+      "repo": "PerryLink/dsh-observe",
+      "package": "dsh-observe"
+    },
+    {
+      "repo": "PerryLink/dsh-output-styles",
+      "package": "dsh-output-styles"
+    },
+    {
+      "repo": "PerryLink/dsh-permission-rules",
+      "package": "dsh-permission-rules"
+    },
+    {
+      "repo": "PerryLink/dsh-plugin-guide",
+      "package": "dsh-plugin-guide"
+    },
+    {
+      "repo": "PerryLink/dsh-reach",
+      "package": "dsh-reach"
+    },
+    {
+      "repo": "PerryLink/dsh-research-report",
+      "package": "dsh-research-report"
+    },
+    {
+      "repo": "PerryLink/dsh-score",
+      "package": "dsh-score"
+    },
+    {
+      "repo": "PerryLink/dsh-session-pin",
+      "package": "dsh-session-pin"
+    },
+    {
+      "repo": "PerryLink/dsh-session-sync",
+      "package": "dsh-session-sync"
+    },
+    {
+      "repo": "PerryLink/dsh-talk",
+      "package": "dsh-talk"
+    },
+    {
+      "repo": "PerryLink/dsh-test-drive",
+      "package": "dsh-test-drive"
+    },
+    {
+      "repo": "PerryLink/dsh-ticktick",
+      "package": "@perrylink/dsh-ticktick"
+    },
+    {
+      "repo": "PerryLink/dsh-translate",
+      "package": "dsh-translate"
+    },
+    {
+      "repo": "PerryLink/dsh-wechat",
+      "package": "dsh-wechat"
+    }
+  ]
+}

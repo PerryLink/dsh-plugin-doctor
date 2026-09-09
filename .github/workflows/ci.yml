@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Syntax check
+        shell: bash
+        run: |
+          node --check doctor.mjs
+          for f in lib/*.mjs scripts/*.mjs tests/*.mjs; do node --check "$f"; done
+      - name: Self-test (fixtures + exit-code contract)
+        run: node tests/selftest.mjs
+      - name: Pack check
+        run: npm pack --dry-run
