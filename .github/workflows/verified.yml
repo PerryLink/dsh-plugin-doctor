@@ -34,6 +34,12 @@ jobs:
         with:
           node-version: 22
       - name: Verify declared repos (static R+K)
+        env:
+          # Cross-repo reads need a token that can see other repositories; the
+          # workflow-scoped GITHUB_TOKEN is rate-limited as an anonymous caller.
+          # Falls back to GITHUB_TOKEN when the secret is absent.
+          DOCTOR_AUDIT_TOKEN: ${{ secrets.DOCTOR_AUDIT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/verify.mjs
       - name: Commit registry and badges
         shell: bash

@@ -9,7 +9,7 @@
 //   node scripts/verify.mjs
 //   node scripts/verify.mjs --only-repo PerryLink/dsh-github,dsh-memento
 //   node scripts/verify.mjs --limit 3
-// Env: GITHUB_TOKEN or GH_TOKEN (optional but strongly recommended).
+// Env: DOCTOR_AUDIT_TOKEN (preferred) / GITHUB_TOKEN / GH_TOKEN.
 import fs from 'node:fs'
 import path from 'node:path'
 import { renderBadge } from './badge.mjs'
@@ -27,7 +27,11 @@ const flag = (name) => {
 const onlyRepos = (flag('--only-repo') ?? '').split(',').map((s) => s.trim()).filter(Boolean)
 const limit = Number(flag('--limit') ?? 0)
 
-const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || ''
+// Reading other repositories' Actions metadata needs a token that can see
+// them: the workflow-scoped GITHUB_TOKEN is rate-limited as an anonymous
+// caller (60/h), so DOCTOR_AUDIT_TOKEN (a read-capable PAT stored as a repo
+// secret) is preferred when present.
+const token = process.env.DOCTOR_AUDIT_TOKEN || process.env.GITHUB_TOKEN || process.env.GH_TOKEN || ''
 const declared = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/verified-repos.json'), 'utf8'))
 let repos = declared.repos
 if (onlyRepos.length > 0) repos = repos.filter((r) => onlyRepos.includes(r.repo))
