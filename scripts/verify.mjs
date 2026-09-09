@@ -168,7 +168,7 @@ const registry = {
   specVersion: 'v1',
   scope: SCOPE,
   meaning:
-    'The declared repo runs the dsh-plugin-doctor static R+K gate in its own CI and that gate is green on the current default-branch HEAD. Verification reads the GitHub API only; no third-party code is cloned or executed.',
+    'The declared repo runs the dsh-plugin-doctor static R+K gate (16 checks: R0/R1/R3/R5/R6/R7/R8 + K1-K9) in its own CI and that gate is green on the current default-branch HEAD. R2/R4 read built artifacts and are gated by the repo\'s own ci.yml. Verification reads the GitHub API only; no third-party code is cloned or executed.',
   doctorVersion: JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version,
   doctorCommit,
   generatedAt: new Date().toISOString(),
