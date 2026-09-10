@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.7
+
+- **Gate form migration (family CI)**: the 36 plugin repos' `plugin-doctor.yml` no longer carries the `\u`-escaped `DOCTOR_ONLY` environment variable; the gate now runs `npx --yes @perrylink/dsh-plugin-doctor@0.1.6 --repo . --no-smoke --only "R,K"` directly, so the whole step is plain ASCII and self-explanatory. The R0/K1 self-check and the JSON gate (R2/R4 reported but gated by each repo's `ci.yml`) are unchanged. Rolled out canary-first (`gated 16 checks; build-dependent: R2=pass R4=pass`), then all 36 repos: 36/36 green, registry `gate=ascii-alias + self-check`, `doctorPinned=0.1.6`.
+- **Registry discipline**: `scripts/verify.mjs` now labels the detected gate form (`ascii-alias` / `ascii-escaped` / `chinese-names`, each optionally `+ self-check`) instead of collapsing both ASCII forms into one label, and it fails the workflow loudly when *every* declared repo comes back `no-data` (expired `DOCTOR_AUDIT_TOKEN` or exhausted rate limit) while still committing the honest grey registry.
+- **Docs**: README gate snippet, "状态" line and the family repo count now match the shipped gate. Published so the npm page matches the repository; the installed CLI surface is identical to 0.1.6.
+
 ## 0.1.6
 
 - **Docs/design sync (no CLI behavior change)**: the README's verified-badge section now documents the final shipped badge design (monospace UPPERCASE + letter-spacing + shield-check mark + 5px corners; platinum/silver left panel with deep-navy label text; one solid GitHub-conventional state block on the right) and describes the family gate as reading the committed tree (no install/build; R2/R4 gated by each repo's own `ci.yml`). The "状态" section and CI snippet now pin 0.1.6. Published so the npm page matches the repository; `scripts/` and `badges/` are not in the npm `files` list, so the installed CLI surface is identical to 0.1.5.

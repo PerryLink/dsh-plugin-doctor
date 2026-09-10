@@ -67,16 +67,13 @@ node doctor.mjs --repo <路径> --json report.json
 - 徽章外观：视觉语言对齐生态里较新的两枚徽章（`dsh.directory` 的等宽大写 + 字距 + 标记 + 渐变，`awesome-dsh-plugin` 的印章块）——**银白/铂金金属左段 + 盾牌勾标记 + 墨蓝等宽大写字**（金行主导、水行在字），右段是**整块 GitHub 惯例状态色**（绿/橙/红/灰）配等宽大写状态词，状态另用**路径绘制的图标**（✓ / ! / ✕ / –）冗余表达，色觉障碍下同样可读。5px 圆角 + 1px 描边；**描边是必需的**——去掉后银白左段在白色 README 背景上会消失。
 - 四种状态（值文本用 shields / GitHub Actions 惯用词）：`passing`（绿，HEAD 上 run success）/ `warning`（橙：HEAD 还没跑、run 仍在队列、或缺少门禁配置的前置条件）/ `failing`（红：HEAD 上 run 失败，或门禁配置不成立——含 `--only` 参数是双重编码乱码的"假门禁"）/ `no data`（灰：API 查询失败）。徽章是**动态**的：不再通过就会变红。R+K 的精确口径不在徽章文字里，而在本节与注册表 `meaning` 字段（徽章链接指回本节）。
 - 加入方式：向 `data/verified-repos.json` 提 PR 增加 `{ "repo": "<owner>/<name>", "package": "<npm 包名>" }`，并按下面的门禁在自己的仓里加 `plugin-doctor.yml`；条目必须通过上面的门禁核对。
-- 门禁步骤（完整工作流见任一家族仓的 `.github/workflows/plugin-doctor.yml`；分组名用 YAML `\u` 转义构造，文件保持纯 ASCII，避免编码往返把中文分组名变成乱码；末尾自校验 R0/K1 确实跑了）：
+- 门禁步骤（完整工作流见任一家族仓的 `.github/workflows/plugin-doctor.yml`；分组名用 **ASCII 别名 `R,K`**——0.1.5 起支持，文件与命令行全程纯 ASCII；末尾自校验 R0/K1 确实跑了。家族 36 仓当前 pin `0.1.6`）：
 
 ```yaml
       - name: Run dsh-plugin-doctor (static R/K on the committed tree)
-        env:
-          DOCTOR_ONLY: "\u9759\u6001\u00b7\u5305\u7ed3\u6784,\u9759\u6001\u00b7cordis \u5951\u7ea6\u626b\u63cf"
         run: |
-          if [ -z "$DOCTOR_ONLY" ]; then echo "DOCTOR_ONLY is empty"; exit 1; fi
           set +e
-          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.1.4 --repo . --no-smoke --only "$DOCTOR_ONLY" --json /tmp/doctor.json 2>&1)"
+          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.1.6 --repo . --no-smoke --only "R,K" --json /tmp/doctor.json 2>&1)"
           set -e
           printf '%s\n' "$out"
           echo "$out" | grep -q 'R0 ' || { echo "::error::doctor ran no R checks"; exit 1; }
@@ -92,7 +89,7 @@ node doctor.mjs --repo <路径> --json report.json
           '
 ```
 
-> 为什么门禁不 install/build、徽章也不由本仓自跑：静态 R/K 检查只读已提交的树（无需依赖）；而 `npm run build` 在缺 harness 别名的环境里会失败，其 prebuild 还会清空已提交的 `lib/`，制造假红。把 35 个第三方仓的依赖安装集中到本仓 CI 执行则是供应链风险。因此门禁在各仓自己的 CI 里执行、只读提交树，本仓只做审计与发徽。
+> 为什么门禁不 install/build、徽章也不由本仓自跑：静态 R/K 检查只读已提交的树（无需依赖）；而 `npm run build` 在缺 harness 别名的环境里会失败，其 prebuild 还会清空已提交的 `lib/`，制造假红。把第三方仓的依赖安装集中到本仓 CI 执行则是供应链风险。因此门禁在各仓自己的 CI 里执行、只读提交树，本仓只做审计与发徽。
 
 ## 判据来源（SURVEY.md 有全文与 URL）
 
@@ -136,10 +133,10 @@ SURVEY.md                全渠道检测方法梳理 + 判据出处
 ## 状态
 
 正式仓库：GitHub `PerryLink/dsh-plugin-doctor`（Apache-2.0），npm `@perrylink/dsh-plugin-doctor`
-（**latest=0.1.6**，见 `CHANGELOG.md`）。CI 用法（**请用 ASCII 别名**）：
+（**latest=0.1.7**，见 `CHANGELOG.md`）。CI 用法（**请用 ASCII 别名**）：
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.1.6 --repo . --no-smoke --only "R,K"
+npx --yes @perrylink/dsh-plugin-doctor@0.1.7 --repo . --no-smoke --only "R,K"
 ```
 
-35 个插件仓已内置 `.github/workflows/plugin-doctor.yml`（只读已提交树 → npx 静态 R/K 门禁 + R0/K1 实跑自校验）。
+36 个插件仓已内置 `.github/workflows/plugin-doctor.yml`（只读已提交树 → `--only "R,K"` 静态门禁 + R0/K1 实跑自校验，pin `@0.1.6`）。
