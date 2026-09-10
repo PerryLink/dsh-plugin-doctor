@@ -29,5 +29,11 @@ jobs:
           for f in lib/*.mjs scripts/*.mjs tests/*.mjs; do node --check "$f"; done
       - name: Self-test (fixtures + exit-code contract)
         run: node tests/selftest.mjs
+      # The 37 family repositories grep this tool's stdout and read its JSON; a
+      # rename or a "cleanup" of those observables turns all of them red at once.
+      # tests/contract.mjs freezes them, so it must run on every push — not only
+      # inside the publish workflow, where the break would already be shipped.
+      - name: Contract test (frozen family-CI observables)
+        run: node tests/contract.mjs
       - name: Pack check
         run: npm pack --dry-run

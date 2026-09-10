@@ -47,14 +47,30 @@ jobs:
         run: |
           version="$(node -p "require('./package.json').version")"
           if [ -z "$NPM_TOKEN" ]; then
-            echo "NPM_TOKEN secret is not set; skipping npm publish"
-            exit 0
+            # Exiting 0 here would make a release that published nothing look green —
+            # exactly the silent-pass class this tool exists to catch.
+            echo "::error::NPM_TOKEN secret is not set; refusing to report a release that published nothing"
+            exit 1
           fi
           if npm view "@perrylink/dsh-plugin-doctor@${version}" version >/dev/null 2>&1; then
             echo "@perrylink/dsh-plugin-doctor@${version} is already published; skipping npm publish"
           else
             npm publish --access public --provenance
           fi
+      - name: Verify the version is live on the registry
+        shell: bash
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          for attempt in 1 2 3 4 5 6; do
+            if npm view "@perrylink/dsh-plugin-doctor@${version}" version >/dev/null 2>&1; then
+              echo "@perrylink/dsh-plugin-doctor@${version} is live on the registry"
+              exit 0
+            fi
+            echo "attempt ${attempt}: not visible on the registry yet; retrying"
+            sleep 5
+          done
+          echo "::error::@perrylink/dsh-plugin-doctor@${version} is not on the registry after the publish step"
+          exit 1
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
