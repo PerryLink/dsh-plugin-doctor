@@ -117,11 +117,13 @@ for (const item of repos) {
     if (!pin) gateProblems.push('no pinned @perrylink/dsh-plugin-doctor version')
     else entry.doctorPinned = pin[1]
     entry.guard = /grep -q 'R0 '/.test(text)
-    const asciiAlias = /--only\s+"R,K"/.test(text) || /DOCTOR_ONLY/.test(text)
     const chinese = text.includes('静态·包结构')
+    const aliasForm = /--only\s+"?R,K"?/.test(text)
+    const escapedForm = /DOCTOR_ONLY/.test(text)
     if (MOJIBAKE.test(text)) gateProblems.push('gate args are double-encoded mojibake')
-    else if (!asciiAlias && !chinese) gateProblems.push('no recognized --only gate args')
-    entry.gate = asciiAlias ? (entry.guard ? 'ascii-escaped + self-check' : 'ascii-escaped') : 'chinese-names'
+    else if (!aliasForm && !escapedForm && !chinese) gateProblems.push('no recognized --only gate args')
+    const form = aliasForm ? 'ascii-alias' : escapedForm ? 'ascii-escaped' : 'chinese-names'
+    entry.gate = entry.guard ? `${form} + self-check` : form
   }
 
   if (gateProblems.length > 0) {
