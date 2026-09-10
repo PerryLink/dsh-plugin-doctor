@@ -8,6 +8,10 @@
       "package": "dsh-auto-review"
     },
     {
+      "repo": "PerryLink/dsh-autotier",
+      "package": "dsh-autotier"
+    },
+    {
       "repo": "PerryLink/dsh-background-agents",
       "package": "dsh-background-agents"
     },

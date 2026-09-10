@@ -1,4 +1,7 @@
-﻿node_modules/
+node_modules/
 reports/
 *.tgz
 
+# This repository uses npm (`npm pack` in CI), not pnpm. A stray pnpm lockfile
+# appears here whenever someone runs `pnpm install`.
+pnpm-lock.yaml
