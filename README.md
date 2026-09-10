@@ -20,7 +20,23 @@ node doctor.mjs --repo <路径> --no-smoke       # 仅静态 + 清单
 node doctor.mjs --repo <路径> --dsh 0.1.2-rc.1 # 冒烟宿主版本（默认 npm latest 已发布线）
 node doctor.mjs --repo <路径> --only R,K       # 只跑静态两层（推荐用 ASCII 别名）
 node doctor.mjs --repo <路径> --json report.json
+node doctor.mjs --repo <路径> --json -         # JSON 写 stdout（此时抑制人类可读报告）
+node doctor.mjs --repo <路径> --workspace <工作区根>   # 指定兄弟仓所在工作区（CC 组核对用）
+node doctor.mjs --repo <路径> --allow-degraded # 显式接受「整组未真跑」（默认 exit 6）
+node doctor.mjs --purge <隔离目录>              # 清理本工具产生的隔离目录（仅 doctor-quarantine-*）
 ```
+
+### 目标形态与覆盖率（0.2.0 新增）
+
+`--repo` 可以是**源码树**，也可以是**已装包目录 / 解包后的 tarball 产物**（后者常见于 `node_modules/<pkg>`）。判据随形态变化：
+
+| 形态 | K 组（cordis 契约） | 说明 |
+|---|---|---|
+| 有 `src/` 的源码树 | 扫 `src/**` + 根层 JS（`mode: src`） | 完整 |
+| **无 `src/`、`main` 指向 `lib/`** | **兜底扫 `lib/**`（`mode: lib-fallback`）** | 0.2.0 修复：旧实现的门槛是"无 build 脚本"，而已发布包**保留** build 脚本 → 兜底永不触发、K 九项全 skip 却仍 exit 0（假绿） |
+| 既无 `src/` 也无 `lib/` | 九项全 skip（`mode: none`） | **整组未真跑 → 退出码 6**，不再假绿 |
+
+覆盖率写入 JSON 的 `coverage.K`（`{filesInspected, mode}`），并汇总到 `groups.K`。
 
 ### `--only` 分组与 ASCII 别名
 
@@ -35,16 +51,37 @@ node doctor.mjs --repo <路径> --json report.json
 
 ### 退出码契约
 
-| 码 | 含义 |
-|---|---|
-| `0` | 无 fail/error（可含 warn/skip） |
-| `1` | 存在 fail/error |
-| `2` | 用法错误、未知分组、或**零检查执行** |
+| 码 | 含义 | 引入版本 |
+|---|---|---|
+| `0` | 无 fail/error（可含 warn/skip），且被请求的分组都真的跑了 | 0.1.x |
+| `1` | 存在 fail/error（插件缺陷） | 0.1.x |
+| `2` | 用法错误、未知分组、**未知选项** | 0.1.x |
+| `3` | 基础设施错误（缺 npm/pnpm 等环境不可用） | **0.2.0** |
+| `4` | 不支持的宿主版本（宿主自身安装失败，**不判插件**） | **0.2.0** |
+| `5` | 结果不稳定（步骤超时/被信号终止） | **0.2.0** |
+| `6` | **降级**：被请求的分组整组未真跑（如无源文件可扫描） | **0.2.0** |
 
-**防静默通过**：`--only` 里只要有一个分组名不匹配，或最终零检查执行，本工具立即以 `2` 失败。0.1.4 及更早版本在分组名乱码时会"零检查 + exit 0"，这曾让 35 个仓的 CI 门禁变成假绿（2026-09-09 实测：`checks_run=0`、`exit=0`）。
+**防静默通过**（两层）：
 
-- 冒烟全程使用 `%TEMP%` mkdtemp 临时 `DSH_HOME`/`DSH_AGENTS_HOME`，绝不触碰真实 `~/.dsh`（红线 3）。
-- 每步子进程 stdout/stderr 落盘 `%TEMP%\dsh-doctor-logs-*`，报告尾部打印路径，证据可查。
+1. `--only` 里只要有一个分组名不匹配 → 立即 `2`。0.1.4 及更早版本在分组名乱码时会"零检查 + exit 0"，这曾让 35 个仓的 CI 门禁变成假绿（2026-09-09 实测：`checks_run=0`、`exit=0`）。
+2. 0.2.0 起：**被请求的分组若整组未真跑（全 skip）→ `6`**。旧实现只覆盖"一项都没跑"，不覆盖"跑了但全 skip" —— 后者会让"K 组 0 覆盖"被当成通过。如需显式接受，用 `--allow-degraded`（退出码降为 0，但 JSON 里 `degraded` 仍非空）。
+
+> ⚠️ 既有家族 37 仓的门禁**不读退出码**（workflow 用 `set +e` / `out="$(…)"` / `set -e`），只读 stdout 的 `R0 ` / `K1 ` 与 JSON 里 `results[].name` 前缀分流。因此 0.2.0 的退出码新增**对既有链路零影响**；它服务于交互式使用与未来的接入方。
+
+- 冒烟全程使用 `%TEMP%` 自建沙箱（前缀 `doctor-`，**不与宿主保护模板 `%TEMP%\dsh-*` 重叠**）承载临时 `DSH_HOME`/`DSH_AGENTS_HOME`，绝不触碰真实 `~/.dsh`（红线 3）。
+- `dsh plugin add` 显式带 `--ignore-scripts`：被测包的 install/prepare 脚本不在宿主执行。pnpm 的 ignored-builds 阻断归类为 `environment`（不计 pass、不计插件缺陷）。
+- 每步子进程 stdout/stderr 落盘 `%TEMP%\doctor-run-*\logs\`；运行结束**只隔离不删除**（rename 到 `%TEMP%\doctor-quarantine-*`），报告尾部打印该路径，人工确认后用 `--purge` 清理（红线 4 三段式）。
+- 运行期绝对路径在写入 JSON 与渲染文本前统一占位化为 `<path>`，便于把报告提交进别人的仓而不触发其路径泄漏门禁。
+
+## 同名区分（重要）
+
+本仓是 **`@perrylink/dsh-plugin-doctor`**，与生态里其他同名工具**不是同一个项目**：
+
+- npm 裸名 `dsh-plugin-doctor` 属 **Xrainsmile/DSH-Plugin-Doctor**（另一个项目，0.1.1）。因此**永远不要用 `npx dsh-plugin-doctor`** —— 那会执行别人的包；请始终用 scoped 全名 `@perrylink/dsh-plugin-doctor@<精确版本>`。
+- GitHub 上名称含 `dsh-plugin-doctor` 的仓有 10 个（其中**恰同名者 8 个**），包括 `zoahdev/dsh-plugin-doctor`（GitHub-only，未发布到 npm）。
+- `dsh-testkit` 的 README 把 `dsh-plugin-doctor` 链向 zoahdev 的仓，与本仓无关。
+
+一句话定位：**零依赖、可离线（`--only R,K`）、把 cordis v4 契约（K1–K9）与五大集合站清单（CC1–CC5）做成退出码可判读的 CI 门禁**。（"唯一"这类全称不作声称——仅在已核对的工具集合内未见同类。）
 
 ## 检测目录
 
@@ -67,7 +104,7 @@ node doctor.mjs --repo <路径> --json report.json
 - 徽章外观：视觉语言对齐生态里较新的两枚徽章（`dsh.directory` 的等宽大写 + 字距 + 标记 + 渐变，`awesome-dsh-plugin` 的印章块）——**银白/铂金金属左段 + 盾牌勾标记 + 墨蓝等宽大写字**（金行主导、水行在字），右段是**整块 GitHub 惯例状态色**（绿/橙/红/灰）配等宽大写状态词，状态另用**路径绘制的图标**（✓ / ! / ✕ / –）冗余表达，色觉障碍下同样可读。5px 圆角 + 1px 描边；**描边是必需的**——去掉后银白左段在白色 README 背景上会消失。
 - 四种状态（值文本用 shields / GitHub Actions 惯用词）：`passing`（绿，HEAD 上 run success）/ `warning`（橙：HEAD 还没跑、run 仍在队列、或缺少门禁配置的前置条件）/ `failing`（红：HEAD 上 run 失败，或门禁配置不成立——含 `--only` 参数是双重编码乱码的"假门禁"）/ `no data`（灰：API 查询失败）。徽章是**动态**的：不再通过就会变红。R+K 的精确口径不在徽章文字里，而在本节与注册表 `meaning` 字段（徽章链接指回本节）。
 - 加入方式：向 `data/verified-repos.json` 提 PR 增加 `{ "repo": "<owner>/<name>", "package": "<npm 包名>" }`，并按下面的门禁在自己的仓里加 `plugin-doctor.yml`；条目必须通过上面的门禁核对。
-- 门禁步骤（完整工作流见任一家族仓的 `.github/workflows/plugin-doctor.yml`；分组名用 **ASCII 别名 `R,K`**——0.1.5 起支持，文件与命令行全程纯 ASCII；末尾自校验 R0/K1 确实跑了。家族 36 仓当前 pin `0.1.6`）：
+- 门禁步骤（完整工作流见任一家族仓的 `.github/workflows/plugin-doctor.yml`；分组名用 **ASCII 别名 `R,K`**——0.1.5 起支持，文件与命令行全程纯 ASCII；末尾自校验 R0/K1 确实跑了。**家族 37 仓当前 pin `0.1.6`**）：
 
 ```yaml
       - name: Run dsh-plugin-doctor (static R/K on the committed tree)
@@ -121,7 +158,8 @@ lib/checks-package.mjs   静态·包结构 R0–R8
 lib/checks-cordis.mjs    静态·cordis 契约 K1–K9
 lib/checks-smoke.mjs     动态·沙箱冒烟 D0–D3、D9
 lib/checks-collections.mjs  生态·集合站清单 CC1–CC5
-tests/selftest.mjs       7 例真实 CLI 自检（退出码契约 + 防静默通过回归守卫）
+tests/selftest.mjs       14 例真实 CLI 自检（既有 7 例退出码契约逐字不变 + 新增降级/用法守卫 7 例）
+tests/contract.mjs       31 项契约测试（冻结既有 37 仓 CI 依赖的 5 个可观测量）
 scripts/verify.mjs       verified 注册表与徽章刷新（只读 GitHub API 审计各仓门禁）
 scripts/badge.mjs        verified SVG 渲染
 data/verified-repos.json verified 声明仓清单
@@ -132,11 +170,13 @@ SURVEY.md                全渠道检测方法梳理 + 判据出处
 
 ## 状态
 
-正式仓库：GitHub `PerryLink/dsh-plugin-doctor`（Apache-2.0），npm `@perrylink/dsh-plugin-doctor`
-（**latest=0.1.7**，见 `CHANGELOG.md`）。CI 用法（**请用 ASCII 别名**）：
+正式仓库：GitHub `PerryLink/dsh-plugin-doctor`（Apache-2.0），npm `@perrylink/dsh-plugin-doctor`。
+**工作副本为 0.2.0（本地，未发布）**；npm 上仍是 0.1.7，见 `CHANGELOG.md`。CI 用法（**请用 ASCII 别名**）：
 
 ```powershell
 npx --yes @perrylink/dsh-plugin-doctor@0.1.7 --repo . --no-smoke --only "R,K"
 ```
 
-36 个插件仓已内置 `.github/workflows/plugin-doctor.yml`（只读已提交树 → `--only "R,K"` 静态门禁 + R0/K1 实跑自校验，pin `@0.1.6`）。
+**37 个插件仓**已内置 `.github/workflows/plugin-doctor.yml`（只读已提交树 → `--only "R,K"` 静态门禁 + R0/K1 实跑自校验，pin `@0.1.6`）。
+
+> 0.2.0 的改动全部是**加法式**（新增字段 / 新增选项 / 新增退出码），既有 37 仓的判据不变；已用 37 仓基线逐项比对验证 **diffs = 0**。

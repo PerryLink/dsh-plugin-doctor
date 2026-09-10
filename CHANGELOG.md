@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0
+
+- **Silent-pass fixes (the load-bearing change)** — three ways this tool could return a green result without having actually decided anything are now closed:
+  - The K group's source-file discovery required `!pkg.scripts.build` before falling back to `lib/**`. Published packages keep their `scripts`, so an installed-package directory or an unpacked tarball produced **zero files inspected → K1–K9 all skipped → exit 0**. The fallback no longer checks for a build script, and `main` is now `./`-stripped (family repos with `main: "./index.mjs"` never triggered the old fallback).
+  - `R5` returned `pass` when there was no `src/` to scan ("a pure-JS repo may have no cordis runtime dependency"). It now returns `skip` — and it is one of the 16 gated checks.
+  - A requested group whose checks all skipped is reported as **degraded** and exits **6** (use `--allow-degraded` to accept it explicitly). Previously only "zero checks executed" was caught.
+- **New exit codes**: `3` infrastructure, `4` unsupported host (a host install failure is no longer reported as a plugin defect), `5` unstable, `6` degraded. `0/1/2` are unchanged, and the family gate never reads the exit code, so nothing downstream changes.
+- **New options**: `--workspace/-w`, `--allow-degraded`, `--json -`, `--purge`, `-v/--version`. **Unknown options are now a usage error (exit 2)** — previously an unrecognised long option had its value assigned to `--repo`, silently retargeting the check.
+- **JSON envelope v2** (`schemaVersion: "2"`): adds `doctorVersion`, `checksetVersion`, `target`, `env`, `coverage`, `groups`, `degraded`, `verdict`, `quarantine`, and per-result `id`/`groupId`/`category`. **`name` keeps its `R0 `/`K1 ` prefix — that prefix is a frozen contract** (the family workflow greps for `R0 ` and `K1 ` on the rendered output and splits `results[].name` on `/^R[24] /`).
+- **Sandbox discipline**: `dsh plugin add` now passes `--ignore-scripts` (the target's install/prepare scripts never run on the host); pnpm's ignored-builds block is classified `environment` instead of being counted as a plugin result; `npm pack` writes into the sandbox (8 family repos had accumulated 17 stray `.tgz` files); the sandbox prefix is now `doctor-` so it no longer collides with the host's protected `%TEMP%\dsh-*` template; the sandbox is **quarantined, never deleted** (three-stage delete discipline) with `--purge` as the explicit third stage.
+- **Report hygiene**: run-time absolute paths are replaced with `<path>` in both the JSON and the rendered text, so a report can be committed into someone else's repository without tripping their path-leak gate.
+- **CC group semantics**: `CC5`'s three gates (Apache-2.0 / five-language READMEs / seam markers) are PerryLink-family standards, not ecosystem standards. Outside a family workspace it now reports `not-applicable` instead of failing any third-party repository (and instead of letting the whole CC group look like an environment failure).
+- **Regression proof**: a 37-repo before/after baseline over the whole family (`--only R,K --no-smoke`) shows **zero item-level changes**; `tests/contract.mjs` freezes the five observables the family CI depends on; `tests/selftest.mjs` grows from 7 to 14 cases with the original 7 unchanged.
+
 ## 0.1.7
 
 - **Gate form migration (family CI)**: the 36 plugin repos' `plugin-doctor.yml` no longer carries the `\u`-escaped `DOCTOR_ONLY` environment variable; the gate now runs `npx --yes @perrylink/dsh-plugin-doctor@0.1.6 --repo . --no-smoke --only "R,K"` directly, so the whole step is plain ASCII and self-explanatory. The R0/K1 self-check and the JSON gate (R2/R4 reported but gated by each repo's `ci.yml`) are unchanged. Rolled out canary-first (`gated 16 checks; build-dependent: R2=pass R4=pass`), then all 36 repos: 36/36 green, registry `gate=ascii-alias + self-check`, `doctorPinned=0.1.6`.

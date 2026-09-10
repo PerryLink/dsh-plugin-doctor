@@ -1,6 +1,6 @@
 {
   "name": "@perrylink/dsh-plugin-doctor",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "Zero-dependency static + sandbox smoke detector for DeepSeek Harness (dsh) plugins: package-structure gates (R), cordis contract scans (K), keyless-headless sandbox smoke (D), and ecosystem-listing checks (CC).",
   "type": "module",
   "main": "doctor.mjs",
@@ -41,7 +41,7 @@
     "url": "https://github.com/sponsors/PerryLink"
   },
   "scripts": {
-    "test": "node --check doctor.mjs && node --check lib/framework.mjs && node --check lib/util.mjs && node --check lib/checks-package.mjs && node --check lib/checks-cordis.mjs && node --check lib/checks-smoke.mjs && node --check lib/checks-collections.mjs && node --check scripts/badge.mjs && node --check scripts/verify.mjs && node tests/selftest.mjs",
+    "test": "node --check doctor.mjs && node --check lib/framework.mjs && node --check lib/util.mjs && node --check lib/checks-package.mjs && node --check lib/checks-cordis.mjs && node --check lib/checks-smoke.mjs && node --check lib/checks-collections.mjs && node --check scripts/badge.mjs && node --check scripts/verify.mjs && node --check tests/selftest.mjs && node --check tests/contract.mjs && node tests/selftest.mjs && node tests/contract.mjs",
     "prepublishOnly": "npm test",
     "verify:registry": "node scripts/verify.mjs",
     "badge": "node scripts/badge.mjs"
