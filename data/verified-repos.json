@@ -145,10 +145,6 @@
     {
       "repo": "PerryLink/dsh-translate",
       "package": "dsh-translate"
-    },
-    {
-      "repo": "PerryLink/dsh-wechat",
-      "package": "dsh-wechat"
     }
   ]
 }
