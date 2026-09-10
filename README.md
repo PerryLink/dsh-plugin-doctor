@@ -165,18 +165,26 @@ scripts/badge.mjs        verified SVG 渲染
 data/verified-repos.json verified 声明仓清单
 data/verified.json       verified 注册表（CI 生成）
 badges/                  verified 徽章（CI 生成）
+THIRD-PARTY-RK-SCAN.md   第三方插件静态 R+K 扫描结果集（公开报告）
+data/rk-scans.json       上述扫描的机器可读形态
 SURVEY.md                全渠道检测方法梳理 + 判据出处
 ```
 
 ## 状态
 
 正式仓库：GitHub `PerryLink/dsh-plugin-doctor`（Apache-2.0），npm `@perrylink/dsh-plugin-doctor`。
-**工作副本为 0.2.0（本地，未发布）**；npm 上仍是 0.1.7，见 `CHANGELOG.md`。CI 用法（**请用 ASCII 别名**）：
+**当前版本 0.2.0**（npm 上 0.2.0 之前的最新为 0.1.7），见 `CHANGELOG.md`。CI 用法（**请用 ASCII 别名**）：
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.1.7 --repo . --no-smoke --only "R,K"
+npx --yes @perrylink/dsh-plugin-doctor@0.2.0 --repo . --no-smoke --only "R,K"
 ```
 
 **37 个插件仓**已内置 `.github/workflows/plugin-doctor.yml`（只读已提交树 → `--only "R,K"` 静态门禁 + R0/K1 实跑自校验，pin `@0.1.6`）。
+pin 停在 0.1.6 是有意的：0.2.0 对 R/K 两组的判据与输出形态**逐字不变**（`tests/contract.mjs` 已把这条冻成断言），所以提升 pin 是一波独立动作，不是本次发布的前置条件。
 
 > 0.2.0 的改动全部是**加法式**（新增字段 / 新增选项 / 新增退出码），既有 37 仓的判据不变；已用 37 仓基线逐项比对验证 **diffs = 0**。
+
+### 公开结果集
+
+- [`THIRD-PARTY-RK-SCAN.md`](https://github.com/PerryLink/dsh-plugin-doctor/blob/main/THIRD-PARTY-RK-SCAN.md) —— 首份**第三方**（非 PerryLink）dsh 插件的静态 R+K 扫描：60 个候选 → 20 个真正声明 `dsh.bundle.patch` 的插件 → 16 项门禁下 **10 通过 / 10 失败**。方法：只读克隆、**零执行**第三方代码、R2/R4 单列不入门禁；含复现命令、本次扫描自身的方法学更正，以及**被点名仓的更正通道**。机器可读形态：`data/rk-scans.json`。
+  **它不是认证、不是评级，也不代表插件安全**：pass 仅表示「该 commit 上 16 项静态门禁未报失败」。

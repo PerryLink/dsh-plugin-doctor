@@ -24,6 +24,15 @@ First public, reproducible result set for plugins outside this project's own fam
   `lib-fallback` is real coverage but it is **not equivalent** to `src/` coverage: a bundle is harder to
   read heuristically and K3–K7 may under-report there.
 
+### Corrections
+
+Every row below is a record of what a **static** check reported on **one commit**, and nothing more.
+If you maintain a repository listed here and believe a row is wrong — a stale clone, a file this
+heuristic mis-reads, a check that does not fit your layout — open an issue at
+[PerryLink/dsh-plugin-doctor/issues](https://github.com/PerryLink/dsh-plugin-doctor/issues) with the
+reproduce command and the output you get. The row is re-run and this file is amended in place, with the
+same prominence as the original: a wrong row is a defect of this tool, not a fact about your plugin.
+
 ## Result
 
 | metric | value |
