@@ -184,3 +184,16 @@ for (const e of entries) {
 const summary = entries.reduce((acc, e) => ((acc[e.result] = (acc[e.result] ?? 0) + 1), acc), {})
 console.log(`\nverified: ${entries.length} repos | ${Object.entries(summary).map(([k, n]) => `${k}=${n}`).join(' ')}`)
 console.log('registry: data/verified.json | badges: badges/*.svg')
+
+// Never let a broken token or an exhausted rate limit look like a normal run:
+// the registry and badges are still written (grey = "cannot verify", honest),
+// but the workflow fails loudly so it gets noticed.
+const allNoData = entries.length > 0 && entries.every((e) => e.result === 'no-data')
+if (allNoData) {
+  const first = entries.find((e) => e.reason)?.reason ?? 'unknown'
+  console.error(
+    `::error::every declared repo failed verification (${entries.length}/${entries.length} no-data) — ` +
+      `first reason: ${first}. Check DOCTOR_AUDIT_TOKEN (expired/revoked PAT?) and the API rate limit.`,
+  )
+  process.exitCode = 1
+}

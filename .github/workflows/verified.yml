@@ -42,6 +42,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/verify.mjs
       - name: Commit registry and badges
+        # Runs even when verification failed (e.g. an expired audit token): the
+        # grey "cannot verify" registry is the honest record, and the job still
+        # ends red so the failure is noticed.
+        if: always()
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
