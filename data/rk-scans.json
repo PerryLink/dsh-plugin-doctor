@@ -1,0 +1,1118 @@
+{
+  "scannedAt": "2026-09-10T12:19:07.742Z",
+  "source": "awesome-dsh-plugin.com/plugins.json",
+  "method": "git clone --depth 1 → 资格校验(dsh.bundle.patch) → doctor --no-smoke --only R,K；零执行第三方代码",
+  "doctorVersion": "0.2.0",
+  "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+  "candidatePool": 60,
+  "qualified": 20,
+  "skippedNotPlugins": 21,
+  "exit0": 8,
+  "exit1": 12,
+  "exit6": 0,
+  "failureHistogram": {
+    "R2": 8,
+    "R3": 5,
+    "R4": 8,
+    "R7": 3,
+    "R5": 1,
+    "R8": 3
+  },
+  "rows": [
+    {
+      "name": "dsh-web#packages/dsh-web-all",
+      "repo": "dsh-web",
+      "stars": 7131,
+      "verdict": null,
+      "category": "ui",
+      "owner": "zhu1090093659",
+      "qualified": true,
+      "pkgName": "dsh-web",
+      "pkgVersion": "0.1.1",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "warn": 2,
+        "pass": 10,
+        "fail": 4,
+        "skip": 2
+      },
+      "fails": [
+        "R2",
+        "R3",
+        "R4",
+        "R7"
+      ],
+      "warns": [
+        "R0",
+        "R6"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [
+        "R3",
+        "R7"
+      ],
+      "gatedWarns": [
+        "R0",
+        "R6"
+      ],
+      "buildArtifactChecks": [
+        "R2=fail",
+        "R4=fail"
+      ],
+      "gatedVerdict": "fail"
+    },
+    {
+      "name": "modlens",
+      "repo": "modlens",
+      "stars": 3913,
+      "verdict": null,
+      "category": "vision",
+      "owner": "liustack",
+      "qualified": true,
+      "pkgName": "@liustack/modlens",
+      "pkgVersion": "3.26.1",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "pass": 11,
+        "fail": 3,
+        "warn": 3,
+        "skip": 1
+      },
+      "fails": [
+        "R2",
+        "R4",
+        "R7"
+      ],
+      "warns": [
+        "R6",
+        "K3",
+        "K4"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [
+        "R7"
+      ],
+      "gatedWarns": [
+        "R6",
+        "K3",
+        "K4"
+      ],
+      "buildArtifactChecks": [
+        "R2=fail",
+        "R4=fail"
+      ],
+      "gatedVerdict": "fail"
+    },
+    {
+      "name": "DSH-better-sidebar",
+      "repo": "DSH-better-sidebar",
+      "stars": 3421,
+      "verdict": null,
+      "category": "ui",
+      "owner": "omdsh-dev",
+      "qualified": true,
+      "pkgName": "dsh-better-sidebar",
+      "pkgVersion": "0.19.0",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "pass": 11,
+        "fail": 3,
+        "warn": 4
+      },
+      "fails": [
+        "R2",
+        "R4",
+        "R5"
+      ],
+      "warns": [
+        "R6",
+        "K1",
+        "K3",
+        "K6"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [
+        "R5"
+      ],
+      "gatedWarns": [
+        "R6",
+        "K1",
+        "K3",
+        "K6"
+      ],
+      "buildArtifactChecks": [
+        "R2=fail",
+        "R4=fail"
+      ],
+      "gatedVerdict": "fail"
+    },
+    {
+      "name": "dsh-market",
+      "repo": "dsh-market",
+      "stars": 3408,
+      "verdict": null,
+      "category": "market",
+      "owner": "dsh-market",
+      "qualified": true,
+      "pkgName": "dshmarket",
+      "pkgVersion": "1.45.1",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "pass": 12,
+        "fail": 3,
+        "warn": 3
+      },
+      "fails": [
+        "R2",
+        "R4",
+        "R8"
+      ],
+      "warns": [
+        "R6",
+        "K3",
+        "K6"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [
+        "R8"
+      ],
+      "gatedWarns": [
+        "R6",
+        "K3",
+        "K6"
+      ],
+      "buildArtifactChecks": [
+        "R2=fail",
+        "R4=fail"
+      ],
+      "gatedVerdict": "fail"
+    },
+    {
+      "name": "dsh-TUI",
+      "repo": "dsh-TUI",
+      "stars": 2882,
+      "verdict": null,
+      "category": "ui",
+      "owner": "ccch1mneyyy",
+      "qualified": true,
+      "pkgName": "@deepseek-harness-tui/dsh-tui",
+      "pkgVersion": "0.10.0",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "pass": 11,
+        "fail": 3,
+        "warn": 4
+      },
+      "fails": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "warns": [
+        "K3",
+        "K4",
+        "K5",
+        "K6"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [
+        "R3"
+      ],
+      "gatedWarns": [
+        "K3",
+        "K4",
+        "K5",
+        "K6"
+      ],
+      "buildArtifactChecks": [
+        "R2=fail",
+        "R4=fail"
+      ],
+      "gatedVerdict": "fail"
+    },
+    {
+      "name": "DeepSeek-Balance-Whale-Widget",
+      "repo": "DeepSeek-Balance-Whale-Widget",
+      "stars": 1884,
+      "verdict": null,
+      "category": "ui",
+      "owner": "MeteorNOX",
+      "qualified": true,
+      "pkgName": "dsh-whale-widget",
+      "pkgVersion": "0.2.10",
+      "exit": 0,
+      "total": 18,
+      "byStatus": {
+        "pass": 12,
+        "warn": 4,
+        "skip": 2
+      },
+      "fails": [],
+      "warns": [
+        "R4",
+        "R6",
+        "K3",
+        "K6"
+      ],
+      "kMode": "lib-fallback",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": "lib",
+      "gatedTotal": 16,
+      "gatedFails": [],
+      "gatedWarns": [
+        "R6",
+        "K3",
+        "K6"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=warn"
+      ],
+      "gatedVerdict": "pass"
+    },
+    {
+      "name": "dsh-agent-teams",
+      "repo": "dsh-agent-teams",
+      "stars": 1443,
+      "verdict": null,
+      "category": "workflow",
+      "owner": "NanmiCoder",
+      "qualified": true,
+      "pkgName": "@nanmicoder/dsh-agent-teams",
+      "pkgVersion": "0.1.16-rc.3",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "pass": 13,
+        "fail": 2,
+        "warn": 3
+      },
+      "fails": [
+        "R2",
+        "R4"
+      ],
+      "warns": [
+        "K1",
+        "K3",
+        "K6"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [],
+      "gatedWarns": [
+        "K1",
+        "K3",
+        "K6"
+      ],
+      "buildArtifactChecks": [
+        "R2=fail",
+        "R4=fail"
+      ],
+      "gatedVerdict": "pass"
+    },
+    {
+      "name": "dsh-context",
+      "repo": "dsh-context",
+      "stars": 1328,
+      "verdict": null,
+      "category": "usage",
+      "owner": "bowenliang123",
+      "qualified": true,
+      "pkgName": "dsh-context",
+      "pkgVersion": "0.49.1",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "pass": 12,
+        "fail": 2,
+        "warn": 4
+      },
+      "fails": [
+        "R2",
+        "R4"
+      ],
+      "warns": [
+        "K1",
+        "K3",
+        "K4",
+        "K6"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [],
+      "gatedWarns": [
+        "K1",
+        "K3",
+        "K4",
+        "K6"
+      ],
+      "buildArtifactChecks": [
+        "R2=fail",
+        "R4=fail"
+      ],
+      "gatedVerdict": "pass"
+    },
+    {
+      "name": "treg",
+      "repo": "treg",
+      "stars": 1235,
+      "verdict": null,
+      "category": "tools",
+      "owner": "superdesigndev",
+      "qualified": true,
+      "pkgName": "treg-dsh",
+      "pkgVersion": "0.19.0",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "pass": 12,
+        "fail": 1,
+        "warn": 4,
+        "skip": 1
+      },
+      "fails": [
+        "R3"
+      ],
+      "warns": [
+        "R6",
+        "K1",
+        "K3",
+        "K6"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [
+        "R3"
+      ],
+      "gatedWarns": [
+        "R6",
+        "K1",
+        "K3",
+        "K6"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=pass"
+      ],
+      "gatedVerdict": "fail"
+    },
+    {
+      "name": "dsh-im",
+      "repo": "dsh-im",
+      "stars": 1215,
+      "verdict": null,
+      "category": "notify",
+      "owner": "xmanrui",
+      "qualified": true,
+      "pkgName": "@xmanrui/dsh-im",
+      "pkgVersion": "4.18.1",
+      "exit": 0,
+      "total": 18,
+      "byStatus": {
+        "pass": 13,
+        "warn": 4,
+        "skip": 1
+      },
+      "fails": [],
+      "warns": [
+        "R4",
+        "R6",
+        "K1",
+        "K3"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [],
+      "gatedWarns": [
+        "R6",
+        "K1",
+        "K3"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=warn"
+      ],
+      "gatedVerdict": "pass"
+    },
+    {
+      "name": "Aegis",
+      "repo": "Aegis",
+      "stars": 1172,
+      "verdict": null,
+      "category": "skill",
+      "owner": "GanyuanRan",
+      "qualified": true,
+      "pkgName": "aegis",
+      "pkgVersion": "2.10.0",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "warn": 3,
+        "pass": 13,
+        "skip": 1,
+        "fail": 1
+      },
+      "fails": [
+        "R7"
+      ],
+      "warns": [
+        "R0",
+        "R4",
+        "R6"
+      ],
+      "kMode": "lib-fallback",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": ".opencode/plugins",
+      "gatedTotal": 16,
+      "gatedFails": [
+        "R7"
+      ],
+      "gatedWarns": [
+        "R0",
+        "R6"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=warn"
+      ],
+      "gatedVerdict": "fail"
+    },
+    {
+      "name": "dsh-vision-router",
+      "repo": "dsh-vision-router",
+      "stars": 1086,
+      "verdict": null,
+      "category": "vision",
+      "owner": "ysr666",
+      "qualified": true,
+      "pkgName": "dsh-vision-router",
+      "pkgVersion": "2.1.5",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "pass": 13,
+        "fail": 2,
+        "warn": 2,
+        "skip": 1
+      },
+      "fails": [
+        "R3",
+        "R8"
+      ],
+      "warns": [
+        "R4",
+        "K1"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [
+        "R3",
+        "R8"
+      ],
+      "gatedWarns": [
+        "K1"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=warn"
+      ],
+      "gatedVerdict": "fail"
+    },
+    {
+      "name": "dsh-pocket",
+      "repo": "dsh-pocket",
+      "stars": 1002,
+      "verdict": null,
+      "category": "notify",
+      "owner": "shaobeichen",
+      "qualified": true,
+      "pkgName": "dsh-pocket",
+      "pkgVersion": "2.10.4",
+      "exit": 0,
+      "total": 18,
+      "byStatus": {
+        "pass": 16,
+        "warn": 2
+      },
+      "fails": [],
+      "warns": [
+        "R4",
+        "R6"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [],
+      "gatedWarns": [
+        "R6"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=warn"
+      ],
+      "gatedVerdict": "pass"
+    },
+    {
+      "name": "dsh-vision-toolkit",
+      "repo": "dsh-vision-toolkit",
+      "stars": 858,
+      "verdict": null,
+      "category": "vision",
+      "owner": "Anionex",
+      "qualified": true,
+      "pkgName": "@anionex/dsh-vision-toolkit",
+      "pkgVersion": "0.1.44",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "pass": 12,
+        "fail": 1,
+        "warn": 5
+      },
+      "fails": [
+        "R8"
+      ],
+      "warns": [
+        "K3",
+        "K4",
+        "K5",
+        "K6",
+        "K7"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [
+        "R8"
+      ],
+      "gatedWarns": [
+        "K3",
+        "K4",
+        "K5",
+        "K6",
+        "K7"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=pass"
+      ],
+      "gatedVerdict": "fail"
+    },
+    {
+      "name": "api-relay-audit",
+      "repo": "api-relay-audit",
+      "stars": 824,
+      "verdict": null,
+      "category": "security",
+      "owner": "toby-bridges",
+      "qualified": true,
+      "pkgName": "dsh-api-relay-audit",
+      "pkgVersion": "2.4.0",
+      "exit": 0,
+      "total": 18,
+      "byStatus": {
+        "pass": 17,
+        "warn": 1
+      },
+      "fails": [],
+      "warns": [
+        "K6"
+      ],
+      "kMode": "lib-fallback",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": "dsh",
+      "gatedTotal": 16,
+      "gatedFails": [],
+      "gatedWarns": [
+        "K6"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=pass"
+      ],
+      "gatedVerdict": "pass"
+    },
+    {
+      "name": "deja-vu#extensions/dsh",
+      "repo": "deja-vu",
+      "stars": 789,
+      "verdict": null,
+      "category": "memory",
+      "owner": "vshulcz",
+      "qualified": true,
+      "pkgName": "dsh-deja",
+      "pkgVersion": "0.20.5",
+      "exit": 0,
+      "total": 18,
+      "byStatus": {
+        "pass": 13,
+        "warn": 3,
+        "skip": 2
+      },
+      "fails": [],
+      "warns": [
+        "R4",
+        "R6",
+        "K1"
+      ],
+      "kMode": "lib-fallback",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": "extensions/dsh",
+      "gatedTotal": 16,
+      "gatedFails": [],
+      "gatedWarns": [
+        "R6",
+        "K1"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=warn"
+      ],
+      "gatedVerdict": "pass"
+    },
+    {
+      "name": "sandbase-harness",
+      "repo": "sandbase-harness",
+      "stars": 642,
+      "verdict": null,
+      "category": "workflow",
+      "owner": "sandbaseai",
+      "qualified": true,
+      "pkgName": "managed-agents",
+      "pkgVersion": "0.3.8",
+      "exit": 1,
+      "total": 18,
+      "byStatus": {
+        "pass": 10,
+        "fail": 3,
+        "warn": 4,
+        "skip": 1
+      },
+      "fails": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "warns": [
+        "R6",
+        "K1",
+        "K3",
+        "K4"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [
+        "R3"
+      ],
+      "gatedWarns": [
+        "R6",
+        "K1",
+        "K3",
+        "K4"
+      ],
+      "buildArtifactChecks": [
+        "R2=fail",
+        "R4=fail"
+      ],
+      "gatedVerdict": "fail"
+    },
+    {
+      "name": "dsh-ads",
+      "repo": "dsh-ads",
+      "stars": 613,
+      "verdict": null,
+      "category": "fun",
+      "owner": "Nagi-ovo",
+      "qualified": true,
+      "pkgName": "@dsh-external/dsh-ads",
+      "pkgVersion": "0.1.0",
+      "exit": 0,
+      "total": 18,
+      "byStatus": {
+        "pass": 14,
+        "warn": 4
+      },
+      "fails": [],
+      "warns": [
+        "R6",
+        "K1",
+        "K3",
+        "K6"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [],
+      "gatedWarns": [
+        "R6",
+        "K1",
+        "K3",
+        "K6"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=pass"
+      ],
+      "gatedVerdict": "pass"
+    },
+    {
+      "name": "graph-memory",
+      "repo": "graph-memory",
+      "stars": 604,
+      "verdict": null,
+      "category": "memory",
+      "owner": "adoresever",
+      "qualified": true,
+      "pkgName": "graph-memory",
+      "pkgVersion": "1.6.0-beta.16",
+      "exit": 0,
+      "total": 18,
+      "byStatus": {
+        "warn": 6,
+        "pass": 12
+      },
+      "fails": [],
+      "warns": [
+        "R0",
+        "R4",
+        "R6",
+        "K1",
+        "K3",
+        "K6"
+      ],
+      "kMode": "src",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": null,
+      "gatedTotal": 16,
+      "gatedFails": [],
+      "gatedWarns": [
+        "R0",
+        "R6",
+        "K1",
+        "K3",
+        "K6"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=warn"
+      ],
+      "gatedVerdict": "pass"
+    },
+    {
+      "name": "superdesign-skill",
+      "repo": "superdesign-skill",
+      "stars": 522,
+      "verdict": null,
+      "category": "skill",
+      "owner": "superdesigndev",
+      "qualified": true,
+      "pkgName": "superdesign-dsh",
+      "pkgVersion": "0.6.0",
+      "exit": 0,
+      "total": 18,
+      "byStatus": {
+        "pass": 14,
+        "skip": 2,
+        "warn": 2
+      },
+      "fails": [],
+      "warns": [
+        "R6",
+        "K6"
+      ],
+      "kMode": "lib-fallback",
+      "degraded": [],
+      "doctorVersion": "0.2.0",
+      "checksetVersion": "R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1",
+      "kFallbackDir": "dsh",
+      "gatedTotal": 16,
+      "gatedFails": [],
+      "gatedWarns": [
+        "R6",
+        "K6"
+      ],
+      "buildArtifactChecks": [
+        "R2=pass",
+        "R4=pass"
+      ],
+      "gatedVerdict": "pass"
+    }
+  ],
+  "skipped": [
+    {
+      "name": "archify#integrations/deepseek-harness",
+      "repo": "archify",
+      "stars": 53656,
+      "verdict": null,
+      "category": "docs",
+      "owner": "tt-a1i",
+      "why": "no-package-json"
+    },
+    {
+      "name": "OpenViking#examples/dsh-memory-plugin",
+      "repo": "OpenViking",
+      "stars": 35988,
+      "verdict": null,
+      "category": "memory",
+      "owner": "volcengine",
+      "why": "no-package-json"
+    },
+    {
+      "name": "hindsight#coding-agents",
+      "repo": "hindsight",
+      "stars": 23210,
+      "verdict": null,
+      "category": "memory",
+      "owner": "vectorize-io",
+      "why": "no-dsh-bundle-patch"
+    },
+    {
+      "name": "WeKnora#dsh-weknora",
+      "repo": "WeKnora",
+      "stars": 21766,
+      "verdict": null,
+      "category": "tools",
+      "owner": "Tencent",
+      "why": "no-package-json"
+    },
+    {
+      "name": "dsh-web#packages/dsh-task-board",
+      "repo": "dsh-web",
+      "stars": 7131,
+      "verdict": null,
+      "category": "ui",
+      "owner": "zhu1090093659",
+      "why": "clone-fail",
+      "note": "fatal: unable to access 'https://github.com/zhu1090093659/dsh-web.git/': schannel: failed to receive handshake, SSL/TLS "
+    },
+    {
+      "name": "ouroboros#integrations/dsh-plugin",
+      "repo": "ouroboros",
+      "stars": 5800,
+      "verdict": null,
+      "category": "workflow",
+      "owner": "Q00",
+      "why": "no-package-json"
+    },
+    {
+      "name": "loopx#dsh-loopx-plugin",
+      "repo": "loopx",
+      "stars": 5726,
+      "verdict": null,
+      "category": "workflow",
+      "owner": "huangruiteng",
+      "why": "no-dsh-bundle-patch"
+    },
+    {
+      "name": "mirage#dsh",
+      "repo": "mirage",
+      "stars": 3612,
+      "verdict": null,
+      "category": "dev",
+      "owner": "strukto-ai",
+      "why": "no-package-json"
+    },
+    {
+      "name": "ReMe#typescript",
+      "repo": "ReMe",
+      "stars": 3431,
+      "verdict": null,
+      "category": "memory",
+      "owner": "agentscope-ai",
+      "why": "no-package-json"
+    },
+    {
+      "name": "dashi-taskboard#deepseek-harness",
+      "repo": "dashi-taskboard",
+      "stars": 2991,
+      "verdict": null,
+      "category": "workflow",
+      "owner": "chuspeeism",
+      "why": "no-dsh-bundle-patch"
+    },
+    {
+      "name": "memsearch#MemSearch",
+      "repo": "memsearch",
+      "stars": 2575,
+      "verdict": null,
+      "category": "memory",
+      "owner": "zilliztech",
+      "why": "no-package-json"
+    },
+    {
+      "name": "dsh-deep-whale#maid-atelier",
+      "repo": "dsh-deep-whale",
+      "stars": 1974,
+      "verdict": null,
+      "category": "theme",
+      "owner": "Small-tailqwq",
+      "why": "no-package-json"
+    },
+    {
+      "name": "BrowserSkill#dsh-plugin-browserskill",
+      "repo": "BrowserSkill",
+      "stars": 1855,
+      "verdict": null,
+      "category": "browser",
+      "owner": "Tencent",
+      "why": "no-dsh-bundle-patch"
+    },
+    {
+      "name": "openpets#dsh",
+      "repo": "openpets",
+      "stars": 1174,
+      "verdict": null,
+      "category": "notify",
+      "owner": "alvinunreal",
+      "why": "no-dsh-bundle-patch"
+    },
+    {
+      "name": "tongflow#dsh-tongflow",
+      "repo": "tongflow",
+      "stars": 1017,
+      "verdict": null,
+      "category": "workflow",
+      "owner": "tong-io",
+      "why": "no-dsh-bundle-patch"
+    },
+    {
+      "name": "deepseek-design#deepseek-idesign",
+      "repo": "deepseek-design",
+      "stars": 840,
+      "verdict": null,
+      "category": "ui",
+      "owner": "Devin-AXIS",
+      "why": "no-package-json"
+    },
+    {
+      "name": "deepseek-design#deepseek-ivideo",
+      "repo": "deepseek-design",
+      "stars": 840,
+      "verdict": null,
+      "category": "ui",
+      "owner": "Devin-AXIS",
+      "why": "clone-fail",
+      "note": "fatal: destination path 'C:\\Users\\zzhdz\\AppData\\Local\\Temp\\doctor-3p-j69Q2x\\Devin-AXIS__deepseek-design' already exists "
+    },
+    {
+      "name": "AI-Novel-Writer#dsh-ai-novel-writer",
+      "repo": "AI-Novel-Writer",
+      "stars": 699,
+      "verdict": null,
+      "category": "workflow",
+      "owner": "EthanYoQ",
+      "why": "no-dsh-bundle-patch"
+    },
+    {
+      "name": "dsh-browser#bridge-browser",
+      "repo": "dsh-browser",
+      "stars": 595,
+      "verdict": null,
+      "category": "browser",
+      "owner": "Lum1104",
+      "why": "no-dsh-bundle-patch"
+    },
+    {
+      "name": "dsh-pet#dsh-pet",
+      "repo": "dsh-pet",
+      "stars": 573,
+      "verdict": null,
+      "category": "fun",
+      "owner": "PC2005-cloud",
+      "why": "no-package-json"
+    },
+    {
+      "name": "Avernet#deepseek-harness-channel-bcn",
+      "repo": "Avernet",
+      "stars": 535,
+      "verdict": null,
+      "category": "notify",
+      "owner": "inclusionAI",
+      "why": "no-package-json"
+    }
+  ],
+  "rescannedAt": "2026-09-10T12:21:36.614Z",
+  "gated": 10,
+  "gatedFail": 10,
+  "gatedDegraded": 0,
+  "gatedFailureHistogram": {
+    "R3": 5,
+    "R7": 3,
+    "R5": 1,
+    "R8": 3
+  },
+  "verdictRule": "gated = all checks except R2/R4 (build-artifact dependent); pass = no gated fail/error and no degraded group"
+}
