@@ -135,6 +135,10 @@
       "package": "dsh-talk"
     },
     {
+      "repo": "PerryLink/dsh-team-rooms",
+      "package": "dsh-team-rooms"
+    },
+    {
       "repo": "PerryLink/dsh-test-drive",
       "package": "dsh-test-drive"
     },
