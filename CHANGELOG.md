@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2] - 2026-09-12
+
+### Fixed
+
+- Add the missing `dsh-plugin` keyword. This was the only published `@perrylink/*` package without it, so `keywords:dsh-plugin` on the npm registry (41 of 42 packages matched) and the topic-driven directories that key off the same convention could not reach it by that route.
+
 ## [0.2.1] - 2026-09-12
 
 ### Fixed
