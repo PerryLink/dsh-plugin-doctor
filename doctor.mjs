@@ -27,7 +27,10 @@ const USAGE = `dsh-plugin-doctor ${VERSION} —— dsh 插件完整性 + 运行�
   --repo, -r <路径>      被检插件仓（含 package.json）
   --workspace, -w <路径> 兄弟仓所在工作区根（用于 CC 组核对本地清单；缺省=工具自身父目录）
   --no-smoke        跳过动态沙箱冒烟（默认执行；需网络 + pnpm）
-  --dsh <版本>      冒烟宿主版本（默认 ${'0.1.2-rc.1'} = npm 已发布 latest）
+  --dsh <版本>      冒烟宿主版本（默认 ${'0.1.2-rc.1'} = peer 下限：刻意用最老的受支持线做
+                    向后兼容冒烟，不是 npm latest —— npm @deepseek-ai/dsh 实测 latest 为
+                    0.1.5-rc.1、next 为 0.1.5-rc.2。38 个下游仓的 plugin-doctor.yml 吃这个
+                    默认值，改默认值会静默改变那些门禁的含义）
   --only <分组>     只跑指定分组（逗号分隔）。推荐用 ASCII 别名（编码安全）：
                       R  = 静态·包结构
                       K  = 静态·cordis 契约扫描
