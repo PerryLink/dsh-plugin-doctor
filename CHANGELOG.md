@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.1] - 2026-09-12
+
+### Fixed
+
+- Widen the stale-peer-range detector beyond the single `>=0.1.0-rc.N <0.2.0` shape it was written for, and stop claiming the `--dsh` default is "npm 已发布 latest" (npm `@deepseek-ai/dsh` latest is `0.1.5-rc.1`). The default itself is unchanged: 38 downstream CI gates rely on it as a peer-floor smoke.
+
 ## 0.2.0
 
 - **Silent-pass fixes (the load-bearing change)** — three ways this tool could return a green result without having actually decided anything are now closed:
