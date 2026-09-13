@@ -12,6 +12,29 @@ dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22
 判据全部来自 2026-09-07 三路一手调研：deepseek-harness 文档/源码、cordiverse/cordis 源码契约、
 工作区全渠道存量盘点（详见 `SURVEY.md`）。
 
+## 安装（DSH bundle）
+
+`dsh-plugin-doctor` 在 package.json 中声明 `dsh.bundle.patch` → `cordis.patch.yml`，因此也可以作为 DeepSeek Harness bundle 安装：
+
+```powershell
+# git 渠道（最新 main）
+dsh plugin --profile web add "github:PerryLink/dsh-plugin-doctor#main"
+
+# npm 渠道（正式发布版；务必使用 scoped 全名——裸名 dsh-plugin-doctor 是另一个项目）
+dsh plugin --profile web add @perrylink/dsh-plugin-doctor
+```
+
+插入的行按标准 Cordis 插件契约加载本包：宿主半区是一个导出 `apply(ctx)` 的纯 ESM 模块（需要服务时声明 `inject`）。本包不带浏览器 UI，因此没有 `dsh.client` 声明。
+
+```js
+// bundle 入口（宿主半区）——patch 行加载的导出契约
+export function apply(ctx) {
+  // 注册 /doctor 命令与 plugin_doctor 只读检查工具
+}
+```
+
+卸载：`dsh plugin --profile web remove @perrylink/dsh-plugin-doctor`（或从 profile patch 中删除该行）。上面的 CLI 用法不受影响。
+
 ## 用法
 
 ```powershell

@@ -3,13 +3,19 @@
   "version": "0.2.2",
   "description": "Zero-dependency static + sandbox smoke detector for DeepSeek Harness (dsh) plugins: package-structure gates (R), cordis contract scans (K), keyless-headless sandbox smoke (D), and ecosystem-listing checks (CC).",
   "type": "module",
-  "main": "doctor.mjs",
+  "main": "./plugin.mjs",
+  "exports": {
+    ".": "./plugin.mjs",
+    "./package.json": "./package.json"
+  },
   "bin": {
     "dsh-plugin-doctor": "./doctor.mjs"
   },
   "files": [
     "doctor.mjs",
+    "plugin.mjs",
     "lib/",
+    "cordis.patch.yml",
     "README.md",
     "CHANGELOG.md",
     "SURVEY.md"
@@ -46,5 +52,10 @@
     "prepublishOnly": "npm test",
     "verify:registry": "node scripts/verify.mjs",
     "badge": "node scripts/badge.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
   }
 }

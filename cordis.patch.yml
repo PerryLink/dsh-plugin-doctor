@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: Apache-2.0
+# dsh-plugin-doctor bundle patch: mount the zero-dependency plugin detector
+# as a bundle row. `name` is the npm package name, resolved through the
+# profile's node_modules; an id-targeted override replaces the whole config
+# row — restate every key when overriding.
+- insert:
+    - id: plugin-doctor
+      name: '@perrylink/dsh-plugin-doctor'
