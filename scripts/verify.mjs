@@ -44,6 +44,23 @@ if (repos.length === 0) {
   process.exit(1)
 }
 
+/**
+ * 本脚本只读 GitHub REST 的四个端点（repos / commits / contents / workflow runs），
+ * 这里把实际读取的字段逐一声明。`fetch().json()` 在 @types/node 24 下是 `unknown`，
+ * 缺这份声明时四处读取都会被判「属性不存在」。
+ *
+ * @typedef {{
+ *   default_branch?: string,
+ *   sha?: string,
+ *   content?: string,
+ *   workflow_runs?: Array<{ head_sha?: string, id?: number, status?: string, conclusion?: string, created_at?: string }>,
+ * }} GitHubPayload
+ */
+
+/**
+ * @param {string} pathname
+ * @returns {Promise<{ error?: string, data?: GitHubPayload }>}
+ */
 async function api(pathname) {
   const res = await fetch(`${API}${pathname}`, {
     headers: {
