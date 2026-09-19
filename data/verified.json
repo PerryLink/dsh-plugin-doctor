@@ -3,8 +3,8 @@
   "scope": "static R+K (the repo's own plugin-doctor CI gate)",
   "meaning": "The declared repo runs the dsh-plugin-doctor static R+K gate (16 gated checks: R0/R1/R3/R5/R6/R7/R8 + K1-K9) in its own CI and that gate is green on the current default-branch HEAD. R2/R4 read built artifacts and are gated by the repo's own ci.yml. SCOPE: static R+K only — this is NOT a certification badge (no Scorecard, no provenance, no install/runtime smoke), and it is not a statement that the plugin is safe. Verification reads the GitHub API only; no third-party code is cloned or executed.",
   "doctorVersion": "0.2.3",
-  "doctorCommit": "7ee38dd6d174f80fc0c2d2ec4e23bc340c2bbdde",
-  "generatedAt": "2026-09-18T10:02:24.829Z",
+  "doctorCommit": "e35b4bb63d1b3d4132b2e85310625bdc35fa59cd",
+  "generatedAt": "2026-09-19T09:44:14.952Z",
   "entries": [
     {
       "repo": "PerryLink/dsh-auto-review",
@@ -20,9 +20,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-autotier",
@@ -38,9 +38,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-background-agents",
@@ -56,9 +56,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-budget",
@@ -74,9 +74,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-checkpoint-rewind",
@@ -92,9 +92,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-claude-move",
@@ -110,9 +110,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-click",
@@ -128,9 +128,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-composer-history",
@@ -146,9 +146,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-data-quality",
@@ -164,9 +164,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-defend",
@@ -182,9 +182,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-doublecheck",
@@ -200,9 +200,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-draw",
@@ -218,9 +218,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-fast",
@@ -236,9 +236,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-fund-research",
@@ -254,9 +254,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-github",
@@ -272,9 +272,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-industry-research",
@@ -290,9 +290,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-library",
@@ -308,9 +308,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-local-ai",
@@ -326,9 +326,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-lsp-actions",
@@ -344,9 +344,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-mask",
@@ -362,9 +362,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-mcp-panel",
@@ -380,9 +380,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-memento",
@@ -398,9 +398,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-observe",
@@ -416,9 +416,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-output-styles",
@@ -434,9 +434,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-permission-rules",
@@ -452,9 +452,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-plugin-guide",
@@ -470,9 +470,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-plugin-upgrade-015",
@@ -488,9 +488,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-reach",
@@ -506,9 +506,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-research-report",
@@ -524,9 +524,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-score",
@@ -542,9 +542,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-session-pin",
@@ -560,9 +560,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-session-sync",
@@ -578,9 +578,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-talk",
@@ -596,9 +596,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-team-rooms",
@@ -614,9 +614,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-test-drive",
@@ -632,9 +632,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-ticktick",
@@ -650,9 +650,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     },
     {
       "repo": "PerryLink/dsh-translate",
@@ -668,9 +668,9 @@
       "runId": null,
       "runConclusion": null,
       "runCreatedAt": null,
-      "snapshot": "2026-09-18",
-      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35332629743",
-      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-18"
+      "snapshot": "2026-09-19",
+      "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/35435434850",
+      "evidence": "repo lookup failed: 401 Unauthorized at 2026-09-19"
     }
   ]
 }
