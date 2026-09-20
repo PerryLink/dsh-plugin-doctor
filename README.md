@@ -214,7 +214,7 @@ pin 停在 0.1.6 是有意的：0.2.0 对 R/K 两组的判据与输出形态**�
 
 ## PerryLink DSH Plugin Family
 
-This project is one of the [40 DeepSeek Harness plugins](https://github.com/PerryLink) maintained by [PerryLink](https://github.com/PerryLink). If this one helps you, the others likely will too:
+This project is one of the [41 DeepSeek Harness plugins](https://github.com/PerryLink) maintained by [PerryLink](https://github.com/PerryLink). If this one helps you, the others likely will too:
 
 | Plugin | One-liner |
 |---|---|
