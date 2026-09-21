@@ -121,6 +121,7 @@ node doctor.mjs --purge <隔离目录>              # 清理本工具产生的�
 
 ```markdown
 [![dsh-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/badges/PerryLink__dsh-github.svg)](https://github.com/PerryLink/dsh-plugin-doctor#verified-徽章)
+[![DSH Market](https://raw.githubusercontent.com/2BingLing/dsh-market/master/assets/readme/badge-listed-en.svg)](https://dsh.market/)
 ```
 
 - 注册表 `data/verified.json` 是唯一事实来源，由 `.github/workflows/verified.yml` 每日 + 每次相关 push 刷新。刷新只读 GitHub API：解析各仓 HEAD 的 `plugin-doctor.yml` 门禁配置（必须钉住 `@perrylink/dsh-plugin-doctor@<版本>`、`--only` 参数可用、含 R0/K1 实跑自校验），再核对 HEAD 那次 `plugin-doctor` workflow run 的结论。**本仓 CI 不克隆、不安装、不执行任何第三方代码。**
