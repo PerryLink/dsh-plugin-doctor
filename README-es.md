@@ -217,7 +217,7 @@ La fijación se queda deliberadamente en 0.1.6: 0.2.0 **no cambia en absoluto** 
 
 ## PerryLink DSH Plugin Family
 
-Este proyecto es uno de los [42 complementos de DeepSeek Harness](https://github.com/PerryLink) mantenidos por [PerryLink](https://github.com/PerryLink). Si este te ayuda, probablemente los demás también:
+This project is one of the **45 DeepSeek Harness plugins** maintained by [PerryLink](https://github.com/PerryLink). If this one helps you, the others likely will too:
 
 | Plugin | One-liner |
 |---|---|

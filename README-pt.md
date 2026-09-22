@@ -217,7 +217,7 @@ O pin permanece deliberadamente na 0.1.6: a 0.2.0 **não muda em nada** os crit�
 
 ## PerryLink DSH Plugin Family
 
-Este projeto é um dos [42 plugins de DeepSeek Harness](https://github.com/PerryLink) mantidos por [PerryLink](https://github.com/PerryLink). Se este ajuda você, os outros provavelmente também:
+This project is one of the **45 DeepSeek Harness plugins** maintained by [PerryLink](https://github.com/PerryLink). If this one helps you, the others likely will too:
 
 | Plugin | One-liner |
 |---|---|
