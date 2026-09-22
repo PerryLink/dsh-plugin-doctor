@@ -9,16 +9,16 @@
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
-An all-in-one "integrity + runtime health" checker for dsh plugins. Zero dependencies (it uses
-only what Node ≥22 ships), and one run covers four layers at once:
-**static package-structure checks (R) → Cordis contract scan (K) → dynamic sandbox smoke (D) → ecosystem directory-listing validation (CC)**.
-Every criterion traces back to three first-hand research tracks dated 2026-09-07: the deepseek-harness
-docs and source, the cordiverse/cordis source contracts, and an inventory of every distribution
-channel in the workspace (full text in `SURVEY.md`).
+Un comprobador todo-en-uno de «integridad + salud en tiempo de ejecución» para plugins de dsh. Cero dependencias (usa
+solo lo que trae Node ≥22), y una sola ejecución cubre cuatro capas a la vez:
+**comprobaciones estáticas de la estructura del paquete (R) → escaneo del contrato Cordis (K) → smoke dinámico en sandbox (D) → validación de los listados de directorio del ecosistema (CC)**.
+Cada criterio se remonta a tres líneas de investigación de primera mano fechadas el 2026-09-07: la documentación
+y el código fuente de deepseek-harness, los contratos de código de cordiverse/cordis, y un inventario de cada canal
+de distribución del espacio de trabajo (texto completo en `SURVEY.md`).
 
-## Installation (DSH bundle)
+## Instalación (bundle de DSH)
 
-`dsh-plugin-doctor` declares `dsh.bundle.patch` → `cordis.patch.yml` in package.json, so it can also be installed as a DeepSeek Harness bundle:
+`dsh-plugin-doctor` declara `dsh.bundle.patch` → `cordis.patch.yml` en package.json, así que también puede instalarse como bundle de DeepSeek Harness:
 
 ```powershell
 # git channel (latest main)
@@ -28,7 +28,7 @@ dsh plugin --profile web add "github:PerryLink/dsh-plugin-doctor#main"
 dsh plugin --profile web add @perrylink/dsh-plugin-doctor
 ```
 
-The inserted line loads this package under the standard Cordis plugin contract: the host half is a plain ESM module exporting `apply(ctx)` (declaring `inject` for the services it needs). The package ships no browser UI, so there is no `dsh.client` declaration.
+La línea insertada carga este paquete bajo el contrato estándar de plugins de Cordis: la mitad de host es un módulo ESM normal que exporta `apply(ctx)` (y declara `inject` para los servicios que necesita). El paquete no incluye interfaz de navegador, así que no hay declaración `dsh.client`.
 
 ```js
 // bundle entry (host half) -- the export contract the patch line loads
@@ -37,9 +37,9 @@ export function apply(ctx) {
 }
 ```
 
-Uninstall: `dsh plugin --profile web remove @perrylink/dsh-plugin-doctor` (or delete that line from the profile patch). The CLI usage below is unaffected.
+Desinstalación: `dsh plugin --profile web remove @perrylink/dsh-plugin-doctor` (o borra esa línea del patch del perfil). El uso de la CLI que aparece más abajo no se ve afectado.
 
-## Usage
+## Uso
 
 ```powershell
 node doctor.mjs --repo <plugin-repo-path>       # full run (includes dynamic smoke; needs network + pnpm)
@@ -53,9 +53,9 @@ node doctor.mjs --repo <path> --allow-degraded  # explicitly accept "the whole g
 node doctor.mjs --purge <quarantine-dir>        # clean up quarantine dirs this tool created (doctor-quarantine-* only)
 ```
 
-### Target shapes and coverage (new in 0.2.0)
+### Formas objetivo y cobertura (nuevo en 0.2.0)
 
-`--repo` may be a **source tree** or an **installed package directory / unpacked tarball artifact** (the latter is common at `node_modules/<pkg>`). The criteria change with the shape:
+`--repo` puede ser un **árbol de código fuente** o un **directorio de paquete instalado / artefacto tarball descomprimido** (esto último es habitual en `node_modules/<pkg>`). Los criterios cambian según la forma:
 
 | Shape | K group (Cordis contract) | Notes |
 |---|---|---|
@@ -63,9 +63,9 @@ node doctor.mjs --purge <quarantine-dir>        # clean up quarantine dirs this 
 | **No `src/`, `main` points at `lib/`** | **fallback scan of `lib/**` (`mode: lib-fallback`)** | fixed in 0.2.0: the old implementation keyed on "no build script", but published packages **keep** their build script → the fallback never fired, all nine K checks were skipped, and it still exited 0 (false green) |
 | Neither `src/` nor `lib/` | all nine skipped (`mode: none`) | **the whole group never really ran → exit code 6**, no more false green |
 
-Coverage is written to `coverage.K` in the JSON (`{filesInspected, mode}`) and summarised in `groups.K`.
+La cobertura se escribe en `coverage.K` dentro del JSON (`{filesInspected, mode}`) y se resume en `groups.K`.
 
-### `--only` groups and ASCII aliases
+### Grupos de `--only` y alias ASCII
 
 | Alias | Full group name | Contents |
 |---|---|---|
@@ -74,9 +74,9 @@ Coverage is written to `coverage.K` in the JSON (`{filesInspected, mode}`) and s
 | `D` | dynamic · sandbox smoke | D0–D3, D9 |
 | `CC` | ecosystem · directory listings | CC1–CC5 |
 
-Aliases are case-insensitive, and the Chinese full names still work. **Use the aliases in workflows**: if an editor or script round-trips a Chinese group name through the wrong encoding, `--only` matches no group at all.
+Los alias no distinguen mayúsculas de minúsculas, y los nombres completos en chino siguen funcionando. **Usa los alias en los flujos de trabajo**: si un editor o un script reescribe un nombre de grupo en chino con la codificación equivocada, `--only` no coincide con ningún grupo.
 
-### Exit-code contract
+### Contrato de códigos de salida
 
 | Code | Meaning | Introduced |
 |---|---|---|
@@ -88,29 +88,29 @@ Aliases are case-insensitive, and the Chinese full names still work. **Use the a
 | `5` | unstable result (a step timed out or was killed by a signal) | **0.2.0** |
 | `6` | **degraded**: a requested group never really ran (e.g. no source files to scan) | **0.2.0** |
 
-**Guarding against silent passes** (two layers):
+**Protección contra los aprobados silenciosos** (dos capas):
 
-1. If even one group name in `--only` fails to match → immediately `2`. Versions 0.1.4 and earlier would "check nothing + exit 0" when a group name was mangled, which once turned the CI gates of 35 repos into false green (measured 2026-09-09: `checks_run=0`, `exit=0`).
-2. From 0.2.0: **a requested group whose checks all skipped → `6`**. The old implementation only covered "not a single check ran", not "it ran but everything skipped" — the latter let "K group with zero coverage" count as a pass. To accept that explicitly, use `--allow-degraded` (exit code drops to 0, but `degraded` stays non-empty in the JSON).
+1. Si aunque sea un nombre de grupo en `--only` no coincide → inmediatamente `2`. Las versiones 0.1.4 y anteriores «no comprobaban nada + salían con 0» cuando un nombre de grupo venía mal formado, lo que una vez convirtió las puertas de CI de 35 repos en falsos verdes (medido el 2026-09-09: `checks_run=0`, `exit=0`).
+2. Desde 0.2.0: **un grupo solicitado cuyas comprobaciones se saltaron todas → `6`**. La implementación antigua solo cubría «no se ejecutó ni una sola comprobación», no «se ejecutó pero se saltó todo» — esto último dejaba que «grupo K con cobertura cero» contara como aprobado. Para aceptarlo explícitamente, usa `--allow-degraded` (el código de salida baja a 0, pero `degraded` sigue sin estar vacío en el JSON).
 
-> ⚠️ The existing gates in 37 family repos **do not read the exit code** (their workflows use `set +e` / `out="$(…)"` / `set -e`) and only parse the `R0 ` / `K1 ` prefixes on stdout and `results[].name` in the JSON. So 0.2.0's new exit codes **change nothing for those pipelines**; they serve interactive use and future integrators.
+> ⚠️ Las puertas existentes en 37 repos de la familia **no leen el código de salida** (sus workflows usan `set +e` / `out="$(…)"` / `set -e`) y solo interpretan los prefijos `R0 ` / `K1 ` de stdout y `results[].name` en el JSON. Así que los nuevos códigos de salida de 0.2.0 **no cambian nada para esas canalizaciones**; están pensados para el uso interactivo y para futuros integradores.
 
-- The smoke run keeps its temporary `DSH_HOME`/`DSH_AGENTS_HOME` inside a self-made `%TEMP%` sandbox (prefix `doctor-`, which **does not overlap** the host-protected `%TEMP%\dsh-*` template) and never touches the real `~/.dsh` (red line 3).
-- `dsh plugin add` is always passed `--ignore-scripts`: the tested package's install/prepare scripts never execute on the host. A pnpm ignored-builds block is classified as `environment` (it counts neither as a pass nor as a plugin defect).
-- Every step's subprocess stdout/stderr is written to `%TEMP%\doctor-run-*\logs\`; at the end the run **quarantines instead of deleting** (renames to `%TEMP%\doctor-quarantine-*`), prints that path in the report tail, and leaves removal to `--purge` after a human confirms (red line 4, the three-stage rule).
-- Absolute paths seen at runtime are placeholder-ised to `<path>` before they reach the JSON or the rendered text, so a report can be committed into someone else's repo without tripping its path-leak gate.
+- La ejecución de smoke mantiene su `DSH_HOME`/`DSH_AGENTS_HOME` temporales dentro de un sandbox `%TEMP%` creado por ella misma (prefijo `doctor-`, que **no se solapa** con la plantilla `%TEMP%\dsh-*` protegida por el host) y nunca toca el `~/.dsh` real (línea roja 3).
+- A `dsh plugin add` se le pasa siempre `--ignore-scripts`: los scripts install/prepare del paquete probado nunca se ejecutan en el host. Un bloqueo de ignored-builds de pnpm se clasifica como `environment` (no cuenta ni como aprobado ni como defecto del plugin).
+- El stdout/stderr del subproceso de cada paso se escribe en `%TEMP%\doctor-run-*\logs\`; al final la ejecución **pone en cuarentena en lugar de borrar** (renombra a `%TEMP%\doctor-quarantine-*`), imprime esa ruta al final del informe, y deja la eliminación a `--purge` después de que una persona lo confirme (línea roja 4, la regla de tres etapas).
+- Las rutas absolutas que se ven en tiempo de ejecución se convierten en el marcador `<path>` antes de llegar al JSON o al texto renderizado, así que un informe puede commitearse en el repo de otra persona sin activar su puerta de fuga de rutas.
 
-## Name collisions (important)
+## Colisiones de nombre (importante)
 
-This repository is **`@perrylink/dsh-plugin-doctor`**, and it is **not the same project** as other same-named tools in the ecosystem:
+Este repositorio es **`@perrylink/dsh-plugin-doctor`**, y **no es el mismo proyecto** que otras herramientas del ecosistema con el mismo nombre:
 
-- The bare npm name `dsh-plugin-doctor` belongs to **Xrainsmile/DSH-Plugin-Doctor** (a different project, 0.1.1). So **never run `npx dsh-plugin-doctor`** — that executes someone else's package; always use the scoped full name `@perrylink/dsh-plugin-doctor@<exact version>`.
-- Ten GitHub repos carry `dsh-plugin-doctor` in their name (eight of them **exactly** that name), including `zoahdev/dsh-plugin-doctor` (GitHub-only, never published to npm).
-- `dsh-testkit`'s README links `dsh-plugin-doctor` to the zoahdev repo; that has nothing to do with this one.
+- El nombre npm sin ámbito `dsh-plugin-doctor` pertenece a **Xrainsmile/DSH-Plugin-Doctor** (un proyecto distinto, 0.1.1). Así que **nunca ejecutes `npx dsh-plugin-doctor`** — eso ejecuta el paquete de otra persona; usa siempre el nombre completo con ámbito `@perrylink/dsh-plugin-doctor@<exact version>`.
+- Diez repos de GitHub llevan `dsh-plugin-doctor` en su nombre (ocho de ellos **exactamente** ese nombre), incluido `zoahdev/dsh-plugin-doctor` (solo en GitHub, nunca publicado en npm).
+- El README de `dsh-testkit` enlaza `dsh-plugin-doctor` con el repo de zoahdev; eso no tiene nada que ver con este.
 
-In one line: **zero-dependency, offline-capable (`--only R,K`), and it turns the Cordis v4 contracts (K1–K9) and five ecosystem directory listings (CC1–CC5) into a CI gate whose verdict is readable from the exit code.** (No "the only" style claim — merely that nothing comparable appeared within the set of tools actually surveyed.)
+En una línea: **cero dependencias, apto para uso sin conexión (`--only R,K`), y convierte los contratos de Cordis v4 (K1–K9) y cinco listados de directorio del ecosistema (CC1–CC5) en una puerta de CI cuyo veredicto se lee en el código de salida.** (Ninguna afirmación del estilo «el único» — solo que no apareció nada comparable dentro del conjunto de herramientas que realmente se inspeccionó.)
 
-## Check catalog
+## Catálogo de comprobaciones
 
 | Group | Checks | What the criteria cover |
 |---|---|---|
@@ -121,18 +121,18 @@ In one line: **zero-dependency, offline-capable (`--only R,K`), and it turns the
 
 ## Verified 徽章
 
-Wearing this badge means exactly one auditable thing: **the repo runs dsh-plugin-doctor's static R+K gate (16 checks: R0/R1/R3/R5/R6/R7/R8 + K1–K9) in its own CI, and that gate is green on the current HEAD of the default branch.** It is **not** a certification badge: no Scorecard, no provenance, no install smoke. R2 (tarball integrity) and R4 (entry contract) read the built `lib/`, and building most family repos needs `HARNESS_COMMIT` + `gen-aliases` to pass — those two are covered by each repo's own `ci.yml` (build-drift gate + pack smoke) and are deliberately outside this gate.
+Llevar esta insignia significa exactamente una cosa auditable: **el repo ejecuta la puerta estática R+K de dsh-plugin-doctor (16 comprobaciones: R0/R1/R3/R5/R6/R7/R8 + K1–K9) en su propia CI, y esa puerta está en verde en el HEAD actual de la rama por defecto.** **No** es una insignia de certificación: ni Scorecard, ni procedencia, ni smoke de instalación. R2 (integridad del tarball) y R4 (contrato de entrada) leen el `lib/` compilado, y compilar la mayoría de los repos de la familia necesita que `HARNESS_COMMIT` + `gen-aliases` pasen — esas dos están cubiertas por el propio `ci.yml` de cada repo (puerta de desvío de build + smoke de pack) y quedan deliberadamente fuera de esta puerta.
 
 ```markdown
 [![dsh-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/badges/PerryLink__dsh-github.svg)](https://github.com/PerryLink/dsh-plugin-doctor#verified-徽章)
 [![DSH Market](https://raw.githubusercontent.com/2BingLing/dsh-market/master/assets/readme/badge-listed-en.svg)](https://dsh.market/)
 ```
 
-- The registry `data/verified.json` is the single source of truth, refreshed by `.github/workflows/verified.yml` daily and on every relevant push. A refresh only reads the GitHub API: it parses each repo's HEAD `plugin-doctor.yml` gate configuration (which must pin `@perrylink/dsh-plugin-doctor@<version>`, use a working `--only` argument, and self-verify that R0/K1 actually ran), then checks the conclusion of that HEAD's `plugin-doctor` workflow run. **This repo's CI never clones, installs or executes any third-party code.**
-- Badge appearance: the visual language follows the two newer badges in the ecosystem (`dsh.directory`'s monospace-uppercase + letter-spacing + mark + gradient, and `awesome-dsh-plugin`'s seal block) — **a silver/platinum metallic left segment, a shield tick mark, and ink-blue monospace uppercase**, with the right segment a **solid GitHub-convention status colour** (green/orange/red/grey) carrying a monospace uppercase status word, and the status additionally expressed by a **path-drawn icon** (✓ / ! / ✕ / –) so it stays readable with colour-vision deficiency. 5px corner radius + 1px stroke; **the stroke is required** — without it the silver left segment disappears against a white README background.
-- Four states (value text uses the shields / GitHub Actions conventional words): `passing` (green: the HEAD run succeeded) / `warning` (orange: HEAD has not run yet, a run is still queued, or a gate precondition is missing) / `failing` (red: the HEAD run failed, or the gate configuration does not hold — including a "fake gate" whose `--only` argument is doubly mis-encoded) / `no data` (grey: the API query failed). The badge is **dynamic**: once it stops passing it turns red. The precise R+K scope lives in this section and in the registry's `meaning` field, not in the badge text (the badge links back here).
-- To join: open a PR against `data/verified-repos.json` adding `{ "repo": "<owner>/<name>", "package": "<npm package name>" }`, and add `plugin-doctor.yml` to your own repo as below; the entry must pass the audit above.
-- The gate step (the full workflow lives in any family repo's `.github/workflows/plugin-doctor.yml`; group names use the **ASCII aliases `R,K`** — supported since 0.1.5, keeping file and command line pure ASCII; the tail self-verifies that R0/K1 really ran. **The 37 family repos currently pin `0.1.6`**):
+- El registro `data/verified.json` es la única fuente de verdad, y lo actualiza `.github/workflows/verified.yml` a diario y en cada push relevante. Una actualización solo lee la API de GitHub: analiza la configuración de puerta `plugin-doctor.yml` del HEAD de cada repo (que debe fijar `@perrylink/dsh-plugin-doctor@<version>`, usar un argumento `--only` que funcione, y autoverificar que R0/K1 se ejecutaron de verdad), y luego consulta la conclusión de la ejecución del workflow `plugin-doctor` de ese HEAD. **La CI de este repo nunca clona, instala ni ejecuta código de terceros.**
+- Aspecto de la insignia: el lenguaje visual sigue las dos insignias más recientes del ecosistema (las mayúsculas monoespaciadas + letter-spacing + marca + degradado de `dsh.directory`, y el bloque de sello de `awesome-dsh-plugin`) — **un segmento izquierdo metálico plata/platino, una marca de verificación de escudo, y mayúsculas monoespaciadas en azul tinta**, con el segmento derecho en un **color de estado sólido según la convención de GitHub** (verde/naranja/rojo/gris) que lleva una palabra de estado en mayúsculas monoespaciadas, y el estado expresado además por un **icono dibujado con trazados** (✓ / ! / ✕ / –) para que siga siendo legible con deficiencia en la visión del color. Radio de esquina de 5px + trazo de 1px; **el trazo es obligatorio** — sin él el segmento izquierdo plateado desaparece sobre un fondo blanco de README.
+- Cuatro estados (el texto del valor usa las palabras convencionales de shields / GitHub Actions): `passing` (verde: la ejecución del HEAD tuvo éxito) / `warning` (naranja: el HEAD aún no se ha ejecutado, hay una ejecución todavía en cola, o falta una precondición de la puerta) / `failing` (rojo: la ejecución del HEAD falló, o la configuración de la puerta no se sostiene — incluida una «puerta falsa» cuyo argumento `--only` está doblemente mal codificado) / `no data` (gris: la consulta a la API falló). La insignia es **dinámica**: en cuanto deja de estar en verde se vuelve roja. El alcance preciso de R+K vive en esta sección y en el campo `meaning` del registro, no en el texto de la insignia (la insignia enlaza de vuelta aquí).
+- Para unirte: abre un PR contra `data/verified-repos.json` añadiendo `{ "repo": "<owner>/<name>", "package": "<npm package name>" }`, y añade `plugin-doctor.yml` a tu propio repo como se indica abajo; la entrada debe pasar la auditoría anterior.
+- El paso de la puerta (el workflow completo vive en el `.github/workflows/plugin-doctor.yml` de cualquier repo de la familia; los nombres de grupo usan los **alias ASCII `R,K`** — admitidos desde 0.1.5, manteniendo el archivo y la línea de comandos en ASCII puro; la cola autoverifica que R0/K1 se ejecutaron de verdad. **Los 37 repos de la familia fijan actualmente `0.1.6`**):
 
 ```yaml
       - name: Run dsh-plugin-doctor (static R/K on the committed tree)
@@ -154,27 +154,27 @@ Wearing this badge means exactly one auditable thing: **the repo runs dsh-plugin
           '
 ```
 
-> Why the gate installs and builds nothing, and why this repo does not run the badge itself: the static R/K checks read only the committed tree (no dependencies needed), whereas `npm run build` fails in an environment without the harness aliases, and its prebuild wipes the committed `lib/`, manufacturing a false red. Concentrating third-party dependency installs into this repo's CI, on the other hand, would be a supply-chain risk. So the gate runs inside each repo's own CI against the committed tree, and this repo only audits and issues the badge.
+> Por qué la puerta no instala ni compila nada, y por qué este repo no ejecuta la insignia él mismo: las comprobaciones estáticas R/K leen solo el árbol commiteado (no hacen falta dependencias), mientras que `npm run build` falla en un entorno sin los alias del harness, y su prebuild borra el `lib/` commiteado, fabricando un falso rojo. Concentrar las instalaciones de dependencias de terceros en la CI de este repo, por otro lado, sería un riesgo de cadena de suministro. Así que la puerta se ejecuta dentro de la CI de cada repo contra el árbol commiteado, y este repo solo audita y emite la insignia.
 
-## Where the criteria come from (full text and URLs in SURVEY.md)
+## De dónde vienen los criterios (texto completo y URL en SURVEY.md)
 
-- **harness side**: `docs/user/develop/basic/publish.md`, `apps/cli/src/plugin.ts` (the activation gate is the only switch),
-  `packages/bundle/headless/README.md` (the MISSING_CREDENTIAL criterion), Releases (the 0.1.2-rc.1 / 0.1.3-alpha.1 changes),
-  `@deepseek-ai/dsh-loader-smoke` (the official "temporary DSH_HOME + expected exit code" pattern).
-- **Cordis side**: the cordiverse/cordis v4 source (registry/fiber/reflect/events.ts) + the DSH cordis-primer/tutorial docs +
-  the v3 `@cordisjs/core@3.10.2` d.ts diff (the 3.x→4.x blacklist).
-- **Ecosystem side**: the dsh-plugin-certification spec v1, adp-list `entries.mjs`/`check-submission.mjs`,
-  dsh-catalog `validate.mjs`/`deploy.yml` live smoke, omdsh build-submission, dsh-plugin-kit `verify/*`.
+- **lado harness**: `docs/user/develop/basic/publish.md`, `apps/cli/src/plugin.ts` (la puerta de activación es el único interruptor),
+  `packages/bundle/headless/README.md` (el criterio MISSING_CREDENTIAL), Releases (los cambios de 0.1.2-rc.1 / 0.1.3-alpha.1),
+  `@deepseek-ai/dsh-loader-smoke` (el patrón oficial de «DSH_HOME temporal + código de salida esperado»).
+- **lado Cordis**: el código fuente de cordiverse/cordis v4 (registry/fiber/reflect/events.ts) + los documentos cordis-primer/tutorial de DSH +
+  el diff de los d.ts de v3 `@cordisjs/core@3.10.2` (la lista negra 3.x→4.x).
+- **lado ecosistema**: la especificación dsh-plugin-certification spec v1, `entries.mjs`/`check-submission.mjs` de adp-list,
+  el smoke en vivo de `validate.mjs`/`deploy.yml` de dsh-catalog, omdsh build-submission, `verify/*` de dsh-plugin-kit.
 
-## Known limits (stated honestly)
+## Límites conocidos (declarados con honestidad)
 
-- The K group is a **heuristic static scan**: K1/K3/K4 miss complex wrappers and can also raise false alarms — every warn-level finding needs a human look and never condemns a plugin automatically.
-- D3 only proves that "the composition boots as far as a model request"; it **does not prove the tool schemas are valid or the business logic correct** (that needs a keyed e2e run or a mock LLM).
-- A pnpm `ignored-builds` block is an environment-recipe problem: when D1 hits it, the check degrades to warn and prints the compat.yml allowBuilds recipe, matching the certification spec v1's environment-blocked line, and it never counts as a plugin defect.
-- npm-line hosts (0.1.2-rc.1) have no engines/peerDependencies enforcement in their packument, so R6 is advisory there.
-- A measured trap in this environment: a `$` anchor (without the `m` flag) does not match the position before a lone trailing `\r`, so parsing CRLF text must split on `/\r?\n/` (already handled internally — do not regress it).
+- El grupo K es un **escaneo estático heurístico**: K1/K3/K4 se pierden los envoltorios complejos y también pueden dar falsas alarmas — cada hallazgo de nivel warn necesita una mirada humana y nunca condena un plugin automáticamente.
+- D3 solo demuestra que «la composición arranca hasta llegar a una petición al modelo»; **no demuestra que los esquemas de las herramientas sean válidos ni que la lógica de negocio sea correcta** (eso requiere una ejecución e2e con clave o un LLM simulado).
+- Un bloqueo de `ignored-builds` de pnpm es un problema de receta del entorno: cuando D1 se topa con él, la comprobación degrada a warn e imprime la receta allowBuilds de compat.yml, en línea con el apartado de entorno bloqueado de la especificación de certificación v1, y nunca cuenta como defecto del plugin.
+- Los hosts de la línea npm (0.1.2-rc.1) no tienen aplicación de engines/peerDependencies en su packument, así que R6 allí es orientativo.
+- Una trampa medida en este entorno: un ancla `$` (sin el flag `m`) no coincide con la posición antes de un `\r` final solitario, así que al analizar texto CRLF hay que dividir por `/\r?\n/` (ya está resuelto internamente — no lo rompas).
 
-## Repository layout
+## Estructura del repositorio
 
 ```
 doctor.mjs               CLI entry (group orchestration, exit codes, JSON report)
@@ -196,28 +196,28 @@ data/rk-scans.json       machine-readable form of that scan
 SURVEY.md                the full-channel detection methodology plus every criterion's source
 ```
 
-## Status
+## Estado
 
-Official repository: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.
-**Current version 0.2.0** (the newest on npm before 0.2.0 was 0.1.7); see `CHANGELOG.md`. CI usage (**please use the ASCII aliases**):
+Repositorio oficial: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.
+**Versión actual 0.2.0** (la más reciente en npm antes de 0.2.0 era la 0.1.7); consulta `CHANGELOG.md`. Uso en CI (**usa por favor los alias ASCII**):
 
 ```powershell
 npx --yes @perrylink/dsh-plugin-doctor@0.2.0 --repo . --no-smoke --only "R,K"
 ```
 
-**37 plugin repos** already ship `.github/workflows/plugin-doctor.yml` (a read-only static gate over the committed tree → `--only "R,K"` plus the R0/K1 self-verification, pinned to `@0.1.6`).
-The pin deliberately stays on 0.1.6: 0.2.0 changes the R/K criteria and output shape **not at all** (`tests/contract.mjs` freezes that as an assertion), so raising the pin is a separate wave rather than a precondition of this release.
+**37 repos de plugins** ya incluyen `.github/workflows/plugin-doctor.yml` (una puerta estática de solo lectura sobre el árbol commiteado → `--only "R,K"` más la autoverificación de R0/K1, fijada a `@0.1.6`).
+La fijación se queda deliberadamente en 0.1.6: 0.2.0 **no cambia en absoluto** los criterios ni la forma de la salida de R/K (`tests/contract.mjs` lo congela como aserción), así que subir la fijación es una oleada aparte y no una precondición de esta versión.
 
-> Every 0.2.0 change is **additive** (new fields / new options / new exit codes); the criteria for the existing 37 repos are unchanged, verified against the 37-repo baseline with **diffs = 0**.
+> Todos los cambios de 0.2.0 son **aditivos** (campos nuevos / opciones nuevas / códigos de salida nuevos); los criterios para los 37 repos existentes no cambian, verificado contra la línea base de 37 repos con **diffs = 0**.
 
-### Public result sets
+### Conjuntos de resultados públicos
 
-- [`THIRD-PARTY-RK-SCAN.md`](https://github.com/PerryLink/dsh-plugin-doctor/blob/main/THIRD-PARTY-RK-SCAN.md) — the first static R+K scan of **third-party** (non-PerryLink) dsh plugins: 60 candidates → 20 plugins that really declare `dsh.bundle.patch` → under the 16-check gate, **10 passed / 10 failed**. Method: read-only clones, **zero execution** of third-party code, R2/R4 listed separately and not gated; it includes the reproduction commands, a correction to this scan's own methodology, and a **correction channel for any repo named in it**. Machine-readable form: `data/rk-scans.json`.
-  **It is not a certification, not a rating, and says nothing about a plugin's security**: a pass means only that "the 16 static checks reported no failure on that commit".
+- [`THIRD-PARTY-RK-SCAN.md`](https://github.com/PerryLink/dsh-plugin-doctor/blob/main/THIRD-PARTY-RK-SCAN.md) — el primer escaneo estático R+K de plugins dsh **de terceros** (ajenos a PerryLink): 60 candidatos → 20 plugins que realmente declaran `dsh.bundle.patch` → bajo la puerta de 16 comprobaciones, **10 aprobados / 10 suspensos**. Método: clones de solo lectura, **cero ejecución** de código de terceros, R2/R4 listados aparte y no sujetos a la puerta; incluye los comandos de reproducción, una corrección a la metodología de este mismo escaneo, y un **canal de corrección para cualquier repo mencionado en él**. Forma legible por máquina: `data/rk-scans.json`.
+  **No es una certificación, ni una calificación, y no dice nada sobre la seguridad de un plugin**: un aprobado solo significa que «las 16 comprobaciones estáticas no reportaron ningún fallo en ese commit».
 
 ## PerryLink DSH Plugin Family
 
-This project is one of the [42 DeepSeek Harness plugins](https://github.com/PerryLink) maintained by [PerryLink](https://github.com/PerryLink). If this one helps you, the others likely will too:
+Este proyecto es uno de los [42 complementos de DeepSeek Harness](https://github.com/PerryLink) mantenidos por [PerryLink](https://github.com/PerryLink). Si este te ayuda, probablemente los demás también:
 
 | Plugin | One-liner |
 |---|---|
