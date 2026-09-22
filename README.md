@@ -7,35 +7,39 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/PerryLink/dsh-plugin-doctor/ci.yml?branch=main&label=CI)](https://github.com/PerryLink/dsh-plugin-doctor/actions)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/PerryLink/dsh-plugin-doctor/badge)](https://api.securityscorecards.dev/projects/github.com/PerryLink/dsh-plugin-doctor)
 
-dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22 自带能力），一次运行同时覆盖
-**包结构静态检查（R）→ cordis 契约扫描（K）→ 动态沙箱冒烟（D）→ 生态集合站清单校验（CC）** 四层。
-判据全部来自 2026-09-07 三路一手调研：deepseek-harness 文档/源码、cordiverse/cordis 源码契约、
-工作区全渠道存量盘点（详见 `SURVEY.md`）。
+[English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
-## 安装（DSH bundle）
+An all-in-one "integrity + runtime health" checker for dsh plugins. Zero dependencies (it uses
+only what Node ≥22 ships), and one run covers four layers at once:
+**static package-structure checks (R) → Cordis contract scan (K) → dynamic sandbox smoke (D) → ecosystem directory-listing validation (CC)**.
+Every criterion traces back to three first-hand research tracks dated 2026-09-07: the deepseek-harness
+docs and source, the cordiverse/cordis source contracts, and an inventory of every distribution
+channel in the workspace (full text in `SURVEY.md`).
 
-`dsh-plugin-doctor` 在 package.json 中声明 `dsh.bundle.patch` → `cordis.patch.yml`，因此也可以作为 DeepSeek Harness bundle 安装：
+## Installation (DSH bundle)
+
+`dsh-plugin-doctor` declares `dsh.bundle.patch` → `cordis.patch.yml` in package.json, so it can also be installed as a DeepSeek Harness bundle:
 
 ```powershell
-# git 渠道（最新 main）
+# git channel (latest main)
 dsh plugin --profile web add "github:PerryLink/dsh-plugin-doctor#main"
 
-# npm 渠道（正式发布版；务必使用 scoped 全名——裸名 dsh-plugin-doctor 是另一个项目）
+# npm channel (released version; always use the scoped full name -- the bare name dsh-plugin-doctor is a different project)
 dsh plugin --profile web add @perrylink/dsh-plugin-doctor
 ```
 
-插入的行按标准 Cordis 插件契约加载本包：宿主半区是一个导出 `apply(ctx)` 的纯 ESM 模块（需要服务时声明 `inject`）。本包不带浏览器 UI，因此没有 `dsh.client` 声明。
+The inserted line loads this package under the standard Cordis plugin contract: the host half is a plain ESM module exporting `apply(ctx)` (declaring `inject` for the services it needs). The package ships no browser UI, so there is no `dsh.client` declaration.
 
 ```js
-// bundle 入口（宿主半区）——patch 行加载的导出契约
+// bundle entry (host half) -- the export contract the patch line loads
 export function apply(ctx) {
-  // 注册 /doctor 命令与 plugin_doctor 只读检查工具
+  // registers the /doctor command and the plugin_doctor read-only check tool
 }
 ```
 
-卸载：`dsh plugin --profile web remove @perrylink/dsh-plugin-doctor`（或从 profile patch 中删除该行）。上面的 CLI 用法不受影响。
+Uninstall: `dsh plugin --profile web remove @perrylink/dsh-plugin-doctor` (or delete that line from the profile patch). The CLI usage below is unaffected.
 
-## 用法
+## Usage
 
 ```powershell
 node doctor.mjs --repo <插件仓路径>            # 全量（含动态冒烟，需网络 + pnpm）
@@ -49,86 +53,86 @@ node doctor.mjs --repo <路径> --allow-degraded # 显式接受「整组未真�
 node doctor.mjs --purge <隔离目录>              # 清理本工具产生的隔离目录（仅 doctor-quarantine-*）
 ```
 
-### 目标形态与覆盖率（0.2.0 新增）
+### Target shapes and coverage (new in 0.2.0)
 
-`--repo` 可以是**源码树**，也可以是**已装包目录 / 解包后的 tarball 产物**（后者常见于 `node_modules/<pkg>`）。判据随形态变化：
+`--repo` may be a **source tree** or an **installed package directory / unpacked tarball artifact** (the latter is common at `node_modules/<pkg>`). The criteria change with the shape:
 
-| 形态 | K 组（cordis 契约） | 说明 |
+| Shape | K group (Cordis contract) | Notes |
 |---|---|---|
-| 有 `src/` 的源码树 | 扫 `src/**` + 根层 JS（`mode: src`） | 完整 |
-| **无 `src/`、`main` 指向 `lib/`** | **兜底扫 `lib/**`（`mode: lib-fallback`）** | 0.2.0 修复：旧实现的门槛是"无 build 脚本"，而已发布包**保留** build 脚本 → 兜底永不触发、K 九项全 skip 却仍 exit 0（假绿） |
-| 既无 `src/` 也无 `lib/` | 九项全 skip（`mode: none`） | **整组未真跑 → 退出码 6**，不再假绿 |
+| Source tree with `src/` | scans `src/**` plus root-level JS (`mode: src`) | complete |
+| **No `src/`, `main` points at `lib/`** | **fallback scan of `lib/**` (`mode: lib-fallback`)** | fixed in 0.2.0: the old implementation keyed on "no build script", but published packages **keep** their build script → the fallback never fired, all nine K checks were skipped, and it still exited 0 (false green) |
+| Neither `src/` nor `lib/` | all nine skipped (`mode: none`) | **the whole group never really ran → exit code 6**, no more false green |
 
-覆盖率写入 JSON 的 `coverage.K`（`{filesInspected, mode}`），并汇总到 `groups.K`。
+Coverage is written to `coverage.K` in the JSON (`{filesInspected, mode}`) and summarised in `groups.K`.
 
-### `--only` 分组与 ASCII 别名
+### `--only` groups and ASCII aliases
 
-| 别名 | 分组全名 | 内容 |
+| Alias | Full group name | Contents |
 |---|---|---|
-| `R` | 静态·包结构 | R0–R8 |
-| `K` | 静态·cordis 契约扫描 | K1–K9 |
-| `D` | 动态·沙箱冒烟 | D0–D3、D9 |
-| `CC` | 生态·集合站清单 | CC1–CC5 |
+| `R` | static · package structure | R0–R8 |
+| `K` | static · Cordis contract scan | K1–K9 |
+| `D` | dynamic · sandbox smoke | D0–D3, D9 |
+| `CC` | ecosystem · directory listings | CC1–CC5 |
 
-别名大小写不敏感，中文全名同样可用。**工作流里请一律使用别名**：中文分组名一旦被编辑器/脚本按错误编码往返，`--only` 就会一个分组都匹配不上。
+Aliases are case-insensitive, and the Chinese full names still work. **Use the aliases in workflows**: if an editor or script round-trips a Chinese group name through the wrong encoding, `--only` matches no group at all.
 
-### 退出码契约
+### Exit-code contract
 
-| 码 | 含义 | 引入版本 |
+| Code | Meaning | Introduced |
 |---|---|---|
-| `0` | 无 fail/error（可含 warn/skip），且被请求的分组都真的跑了 | 0.1.x |
-| `1` | 存在 fail/error（插件缺陷） | 0.1.x |
-| `2` | 用法错误、未知分组、**未知选项** | 0.1.x |
-| `3` | 基础设施错误（缺 npm/pnpm 等环境不可用） | **0.2.0** |
-| `4` | 不支持的宿主版本（宿主自身安装失败，**不判插件**） | **0.2.0** |
-| `5` | 结果不稳定（步骤超时/被信号终止） | **0.2.0** |
-| `6` | **降级**：被请求的分组整组未真跑（如无源文件可扫描） | **0.2.0** |
+| `0` | no fail/error (warn/skip allowed), and every requested group really ran | 0.1.x |
+| `1` | fail/error present (a plugin defect) | 0.1.x |
+| `2` | usage error, unknown group, **unknown option** | 0.1.x |
+| `3` | infrastructure error (missing npm/pnpm and the like) | **0.2.0** |
+| `4` | unsupported host version (the host itself failed to install; **not** a plugin verdict) | **0.2.0** |
+| `5` | unstable result (a step timed out or was killed by a signal) | **0.2.0** |
+| `6` | **degraded**: a requested group never really ran (e.g. no source files to scan) | **0.2.0** |
 
-**防静默通过**（两层）：
+**Guarding against silent passes** (two layers):
 
-1. `--only` 里只要有一个分组名不匹配 → 立即 `2`。0.1.4 及更早版本在分组名乱码时会"零检查 + exit 0"，这曾让 35 个仓的 CI 门禁变成假绿（2026-09-09 实测：`checks_run=0`、`exit=0`）。
-2. 0.2.0 起：**被请求的分组若整组未真跑（全 skip）→ `6`**。旧实现只覆盖"一项都没跑"，不覆盖"跑了但全 skip" —— 后者会让"K 组 0 覆盖"被当成通过。如需显式接受，用 `--allow-degraded`（退出码降为 0，但 JSON 里 `degraded` 仍非空）。
+1. If even one group name in `--only` fails to match → immediately `2`. Versions 0.1.4 and earlier would "check nothing + exit 0" when a group name was mangled, which once turned the CI gates of 35 repos into false green (measured 2026-09-09: `checks_run=0`, `exit=0`).
+2. From 0.2.0: **a requested group whose checks all skipped → `6`**. The old implementation only covered "not a single check ran", not "it ran but everything skipped" — the latter let "K group with zero coverage" count as a pass. To accept that explicitly, use `--allow-degraded` (exit code drops to 0, but `degraded` stays non-empty in the JSON).
 
-> ⚠️ 既有家族 37 仓的门禁**不读退出码**（workflow 用 `set +e` / `out="$(…)"` / `set -e`），只读 stdout 的 `R0 ` / `K1 ` 与 JSON 里 `results[].name` 前缀分流。因此 0.2.0 的退出码新增**对既有链路零影响**；它服务于交互式使用与未来的接入方。
+> ⚠️ The existing gates in 37 family repos **do not read the exit code** (their workflows use `set +e` / `out="$(…)"` / `set -e`) and only parse the `R0 ` / `K1 ` prefixes on stdout and `results[].name` in the JSON. So 0.2.0's new exit codes **change nothing for those pipelines**; they serve interactive use and future integrators.
 
-- 冒烟全程使用 `%TEMP%` 自建沙箱（前缀 `doctor-`，**不与宿主保护模板 `%TEMP%\dsh-*` 重叠**）承载临时 `DSH_HOME`/`DSH_AGENTS_HOME`，绝不触碰真实 `~/.dsh`（红线 3）。
-- `dsh plugin add` 显式带 `--ignore-scripts`：被测包的 install/prepare 脚本不在宿主执行。pnpm 的 ignored-builds 阻断归类为 `environment`（不计 pass、不计插件缺陷）。
-- 每步子进程 stdout/stderr 落盘 `%TEMP%\doctor-run-*\logs\`；运行结束**只隔离不删除**（rename 到 `%TEMP%\doctor-quarantine-*`），报告尾部打印该路径，人工确认后用 `--purge` 清理（红线 4 三段式）。
-- 运行期绝对路径在写入 JSON 与渲染文本前统一占位化为 `<path>`，便于把报告提交进别人的仓而不触发其路径泄漏门禁。
+- The smoke run keeps its temporary `DSH_HOME`/`DSH_AGENTS_HOME` inside a self-made `%TEMP%` sandbox (prefix `doctor-`, which **does not overlap** the host-protected `%TEMP%\dsh-*` template) and never touches the real `~/.dsh` (red line 3).
+- `dsh plugin add` is always passed `--ignore-scripts`: the tested package's install/prepare scripts never execute on the host. A pnpm ignored-builds block is classified as `environment` (it counts neither as a pass nor as a plugin defect).
+- Every step's subprocess stdout/stderr is written to `%TEMP%\doctor-run-*\logs\`; at the end the run **quarantines instead of deleting** (renames to `%TEMP%\doctor-quarantine-*`), prints that path in the report tail, and leaves removal to `--purge` after a human confirms (red line 4, the three-stage rule).
+- Absolute paths seen at runtime are placeholder-ised to `<path>` before they reach the JSON or the rendered text, so a report can be committed into someone else's repo without tripping its path-leak gate.
 
-## 同名区分（重要）
+## Name collisions (important)
 
-本仓是 **`@perrylink/dsh-plugin-doctor`**，与生态里其他同名工具**不是同一个项目**：
+This repository is **`@perrylink/dsh-plugin-doctor`**, and it is **not the same project** as other same-named tools in the ecosystem:
 
-- npm 裸名 `dsh-plugin-doctor` 属 **Xrainsmile/DSH-Plugin-Doctor**（另一个项目，0.1.1）。因此**永远不要用 `npx dsh-plugin-doctor`** —— 那会执行别人的包；请始终用 scoped 全名 `@perrylink/dsh-plugin-doctor@<精确版本>`。
-- GitHub 上名称含 `dsh-plugin-doctor` 的仓有 10 个（其中**恰同名者 8 个**），包括 `zoahdev/dsh-plugin-doctor`（GitHub-only，未发布到 npm）。
-- `dsh-testkit` 的 README 把 `dsh-plugin-doctor` 链向 zoahdev 的仓，与本仓无关。
+- The bare npm name `dsh-plugin-doctor` belongs to **Xrainsmile/DSH-Plugin-Doctor** (a different project, 0.1.1). So **never run `npx dsh-plugin-doctor`** — that executes someone else's package; always use the scoped full name `@perrylink/dsh-plugin-doctor@<exact version>`.
+- Ten GitHub repos carry `dsh-plugin-doctor` in their name (eight of them **exactly** that name), including `zoahdev/dsh-plugin-doctor` (GitHub-only, never published to npm).
+- `dsh-testkit`'s README links `dsh-plugin-doctor` to the zoahdev repo; that has nothing to do with this one.
 
-一句话定位：**零依赖、可离线（`--only R,K`）、把 cordis v4 契约（K1–K9）与五大集合站清单（CC1–CC5）做成退出码可判读的 CI 门禁**。（"唯一"这类全称不作声称——仅在已核对的工具集合内未见同类。）
+In one line: **zero-dependency, offline-capable (`--only R,K`), and it turns the Cordis v4 contracts (K1–K9) and five ecosystem directory listings (CC1–CC5) into a CI gate whose verdict is readable from the exit code.** (No "the only" style claim — merely that nothing comparable appeared within the set of tools actually surveyed.)
 
-## 检测目录
+## Check catalog
 
-| 分组 | 项 | 判据要点 |
+| Group | Checks | What the criteria cover |
 |---|---|---|
-| 静态·包结构 | R0–R8 | 基础字段；**激活门 `dsh.bundle.patch`（关键）**；`npm pack --dry-run` tarball 含入口与 patch；cordis.patch.yml 结构；入口 name/apply 导出；rescope 依赖口径（禁裸 `cordis`）；engines 对齐 `^22.19.0 \|\| >=24.0.0`；预构建 + files 白名单；peer 旧 rc 残留（2026-09-05 双基线教训） |
-| 静态·cordis 契约 | K1–K9 | 服务访问 vs inject 声明；ctx 活数据序列化红线；定时器/监听器未包 `ctx.effect`；Schema 含函数；apply 返回形状（v4 Effect 契约）；inject 服务名 seam；**v3 遗留 API（3.x→4.x 已删除清单）**；Config 必须是 Standard Schema；`name==='apply'` 特例 |
-| 动态·沙箱冒烟 | D0–D3、D9 | npm pack → `dsh plugin --profile headless add <tarball>` → 断言 `dsh.profile.bundles` 含包名 → `--dump-config` 层标记 → keyless headless 运行期望 **exit 1 + `dsh: MISSING_CREDENTIAL`**（=组合 boot 到请求阶段；排除 NO_ADAPTER/ERR_MODULE_NOT_FOUND/SyntaxError/TypeError）→ 沙箱清理 |
-| 生态·集合站清单 | CC1–CC5 | 认证注册表 spec v1 五维 evidence；adp-list yml 字段/枚举/描述；dsh-catalog 目录条目约束（禁安装命令、截断启发式）；omdsh `dshWorkshop` activation 5 值；dsh-plugin-kit 三门（license/五语 README/seam 三角色，优先调用 kit 官方 CLI） |
+| static · package structure | R0–R8 | base fields; **the activation gate `dsh.bundle.patch` (critical)**; `npm pack --dry-run` tarball contains the entry and the patch; cordis.patch.yml structure; entry `name`/`apply` exports; rescoped dependency policy (bare `cordis` forbidden); engines aligned to `^22.19.0 \|\| >=24.0.0`; prebuild + files allowlist; leftover old-rc peers (the 2026-09-05 dual-baseline lesson) |
+| static · Cordis contract | K1–K9 | service access vs `inject` declaration; the ctx live-data serialization red line; timers/listeners not wrapped in `ctx.effect`; Schema containing a function; `apply` return shape (the v4 Effect contract); `inject` service-name seam; **v3 legacy APIs (the 3.x→4.x removal list)**; Config must be a Standard Schema; the `name==='apply'` special case |
+| dynamic · sandbox smoke | D0–D3, D9 | `npm pack` → `dsh plugin --profile headless add <tarball>` → assert `dsh.profile.bundles` contains the package name → `--dump-config` layer marker → keyless headless run expected to **exit 1 + `dsh: MISSING_CREDENTIAL`** (= the composition booted as far as a model request; NO_ADAPTER/ERR_MODULE_NOT_FOUND/SyntaxError/TypeError are excluded) → sandbox cleanup |
+| ecosystem · directory listings | CC1–CC5 | the certification registry spec v1 five-dimension evidence; adp-list yml fields/enums/descriptions; dsh-catalog entry constraints (install commands forbidden, truncation heuristics); the omdsh `dshWorkshop` activation five values; the dsh-plugin-kit three gates (license / five-language README / the three seam roles, preferring the kit's official CLI) |
 
 ## Verified 徽章
 
-挂这枚徽章的含义只有一条，且可审计：**该仓在自己的 CI 里跑 dsh-plugin-doctor 的静态 R+K 门禁（16 项：R0/R1/R3/R5/R6/R7/R8 + K1–K9），且门禁在默认分支当前 HEAD 上是绿的**。**不是**认证徽章：不含 Scorecard/provenance/安装冒烟。R2（tarball 完整性）与 R4（入口契约）读取构建产物 `lib/`，而家族多数仓的构建需要 `HARNESS_COMMIT` + `gen-aliases` 才能通过——这两项由各仓自己的 `ci.yml`（build drift gate + pack smoke）把关，不在本门禁内。
+Wearing this badge means exactly one auditable thing: **the repo runs dsh-plugin-doctor's static R+K gate (16 checks: R0/R1/R3/R5/R6/R7/R8 + K1–K9) in its own CI, and that gate is green on the current HEAD of the default branch.** It is **not** a certification badge: no Scorecard, no provenance, no install smoke. R2 (tarball integrity) and R4 (entry contract) read the built `lib/`, and building most family repos needs `HARNESS_COMMIT` + `gen-aliases` to pass — those two are covered by each repo's own `ci.yml` (build-drift gate + pack smoke) and are deliberately outside this gate.
 
 ```markdown
 [![dsh-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/badges/PerryLink__dsh-github.svg)](https://github.com/PerryLink/dsh-plugin-doctor#verified-徽章)
 [![DSH Market](https://raw.githubusercontent.com/2BingLing/dsh-market/master/assets/readme/badge-listed-en.svg)](https://dsh.market/)
 ```
 
-- 注册表 `data/verified.json` 是唯一事实来源，由 `.github/workflows/verified.yml` 每日 + 每次相关 push 刷新。刷新只读 GitHub API：解析各仓 HEAD 的 `plugin-doctor.yml` 门禁配置（必须钉住 `@perrylink/dsh-plugin-doctor@<版本>`、`--only` 参数可用、含 R0/K1 实跑自校验），再核对 HEAD 那次 `plugin-doctor` workflow run 的结论。**本仓 CI 不克隆、不安装、不执行任何第三方代码。**
-- 徽章外观：视觉语言对齐生态里较新的两枚徽章（`dsh.directory` 的等宽大写 + 字距 + 标记 + 渐变，`awesome-dsh-plugin` 的印章块）——**银白/铂金金属左段 + 盾牌勾标记 + 墨蓝等宽大写字**（金行主导、水行在字），右段是**整块 GitHub 惯例状态色**（绿/橙/红/灰）配等宽大写状态词，状态另用**路径绘制的图标**（✓ / ! / ✕ / –）冗余表达，色觉障碍下同样可读。5px 圆角 + 1px 描边；**描边是必需的**——去掉后银白左段在白色 README 背景上会消失。
-- 四种状态（值文本用 shields / GitHub Actions 惯用词）：`passing`（绿，HEAD 上 run success）/ `warning`（橙：HEAD 还没跑、run 仍在队列、或缺少门禁配置的前置条件）/ `failing`（红：HEAD 上 run 失败，或门禁配置不成立——含 `--only` 参数是双重编码乱码的"假门禁"）/ `no data`（灰：API 查询失败）。徽章是**动态**的：不再通过就会变红。R+K 的精确口径不在徽章文字里，而在本节与注册表 `meaning` 字段（徽章链接指回本节）。
-- 加入方式：向 `data/verified-repos.json` 提 PR 增加 `{ "repo": "<owner>/<name>", "package": "<npm 包名>" }`，并按下面的门禁在自己的仓里加 `plugin-doctor.yml`；条目必须通过上面的门禁核对。
-- 门禁步骤（完整工作流见任一家族仓的 `.github/workflows/plugin-doctor.yml`；分组名用 **ASCII 别名 `R,K`**——0.1.5 起支持，文件与命令行全程纯 ASCII；末尾自校验 R0/K1 确实跑了。**家族 37 仓当前 pin `0.1.6`**）：
+- The registry `data/verified.json` is the single source of truth, refreshed by `.github/workflows/verified.yml` daily and on every relevant push. A refresh only reads the GitHub API: it parses each repo's HEAD `plugin-doctor.yml` gate configuration (which must pin `@perrylink/dsh-plugin-doctor@<version>`, use a working `--only` argument, and self-verify that R0/K1 actually ran), then checks the conclusion of that HEAD's `plugin-doctor` workflow run. **This repo's CI never clones, installs or executes any third-party code.**
+- Badge appearance: the visual language follows the two newer badges in the ecosystem (`dsh.directory`'s monospace-uppercase + letter-spacing + mark + gradient, and `awesome-dsh-plugin`'s seal block) — **a silver/platinum metallic left segment, a shield tick mark, and ink-blue monospace uppercase**, with the right segment a **solid GitHub-convention status colour** (green/orange/red/grey) carrying a monospace uppercase status word, and the status additionally expressed by a **path-drawn icon** (✓ / ! / ✕ / –) so it stays readable with colour-vision deficiency. 5px corner radius + 1px stroke; **the stroke is required** — without it the silver left segment disappears against a white README background.
+- Four states (value text uses the shields / GitHub Actions conventional words): `passing` (green: the HEAD run succeeded) / `warning` (orange: HEAD has not run yet, a run is still queued, or a gate precondition is missing) / `failing` (red: the HEAD run failed, or the gate configuration does not hold — including a "fake gate" whose `--only` argument is doubly mis-encoded) / `no data` (grey: the API query failed). The badge is **dynamic**: once it stops passing it turns red. The precise R+K scope lives in this section and in the registry's `meaning` field, not in the badge text (the badge links back here).
+- To join: open a PR against `data/verified-repos.json` adding `{ "repo": "<owner>/<name>", "package": "<npm package name>" }`, and add `plugin-doctor.yml` to your own repo as below; the entry must pass the audit above.
+- The gate step (the full workflow lives in any family repo's `.github/workflows/plugin-doctor.yml`; group names use the **ASCII aliases `R,K`** — supported since 0.1.5, keeping file and command line pure ASCII; the tail self-verifies that R0/K1 really ran. **The 37 family repos currently pin `0.1.6`**):
 
 ```yaml
       - name: Run dsh-plugin-doctor (static R/K on the committed tree)
@@ -150,68 +154,66 @@ node doctor.mjs --purge <隔离目录>              # 清理本工具产生的�
           '
 ```
 
-> 为什么门禁不 install/build、徽章也不由本仓自跑：静态 R/K 检查只读已提交的树（无需依赖）；而 `npm run build` 在缺 harness 别名的环境里会失败，其 prebuild 还会清空已提交的 `lib/`，制造假红。把第三方仓的依赖安装集中到本仓 CI 执行则是供应链风险。因此门禁在各仓自己的 CI 里执行、只读提交树，本仓只做审计与发徽。
+> Why the gate installs and builds nothing, and why this repo does not run the badge itself: the static R/K checks read only the committed tree (no dependencies needed), whereas `npm run build` fails in an environment without the harness aliases, and its prebuild wipes the committed `lib/`, manufacturing a false red. Concentrating third-party dependency installs into this repo's CI, on the other hand, would be a supply-chain risk. So the gate runs inside each repo's own CI against the committed tree, and this repo only audits and issues the badge.
 
-## 判据来源（SURVEY.md 有全文与 URL）
+## Where the criteria come from (full text and URLs in SURVEY.md)
 
-- **harness 侧**：`docs/user/develop/basic/publish.md`、`apps/cli/src/plugin.ts`（激活门=唯一开关）、
-  `packages/bundle/headless/README.md`（MISSING_CREDENTIAL 判据）、Releases（0.1.2-rc.1 / 0.1.3-alpha.1 变更）、
-  `@deepseek-ai/dsh-loader-smoke`（官方化"临时 DSH_HOME + 期望退出码"模式）。
-- **cordis 侧**：cordiverse/cordis v4 源码（registry/fiber/reflect/events.ts）+ DSH cordis-primer/tutorial 文档 +
-  v3 `@cordisjs/core@3.10.2` d.ts 差异（3.x→4.x 黑名单）。
-- **生态侧**：dsh-plugin-certification spec v1、adp-list `entries.mjs`/`check-submission.mjs`、
-  dsh-catalog `validate.mjs`/`deploy.yml` live smoke、omdsh build-submission、dsh-plugin-kit `verify/*`。
+- **harness side**: `docs/user/develop/basic/publish.md`, `apps/cli/src/plugin.ts` (the activation gate is the only switch),
+  `packages/bundle/headless/README.md` (the MISSING_CREDENTIAL criterion), Releases (the 0.1.2-rc.1 / 0.1.3-alpha.1 changes),
+  `@deepseek-ai/dsh-loader-smoke` (the official "temporary DSH_HOME + expected exit code" pattern).
+- **Cordis side**: the cordiverse/cordis v4 source (registry/fiber/reflect/events.ts) + the DSH cordis-primer/tutorial docs +
+  the v3 `@cordisjs/core@3.10.2` d.ts diff (the 3.x→4.x blacklist).
+- **Ecosystem side**: the dsh-plugin-certification spec v1, adp-list `entries.mjs`/`check-submission.mjs`,
+  dsh-catalog `validate.mjs`/`deploy.yml` live smoke, omdsh build-submission, dsh-plugin-kit `verify/*`.
 
-## 已知局限（诚实声明）
+## Known limits (stated honestly)
 
-- K 组为**启发式静态扫描**：K1/K3/K4 会漏掉复杂包装、也可能误报——warn 级均需人工复核，不自动判死。
-- D3 只证明「组合可 boot 到模型请求」，**不证明工具 schema 合法或业务逻辑正确**（需带钥 e2e 或 mock LLM 补充）。
-- pnpm `ignored-builds` 属环境配方问题：D1 命中时降级为 warn 并给出 compat.yml allowBuilds 配方提示，
-  与认证 spec v1 的 environment-blocked 口径一致，不计为插件缺陷。
-- npm 线宿主（0.1.2-rc.1）packument 无 engines/peerDependencies 强制，R6 为建议门。
-- 本环境实测陷阱：`$` 锚点（无 m 标志）不匹配行尾孤立 `\r` 之前的位置，解析 CRLF 文本必须按
-  `/\r?\n/` 切行（已内建处理，勿回退）。
+- The K group is a **heuristic static scan**: K1/K3/K4 miss complex wrappers and can also raise false alarms — every warn-level finding needs a human look and never condemns a plugin automatically.
+- D3 only proves that "the composition boots as far as a model request"; it **does not prove the tool schemas are valid or the business logic correct** (that needs a keyed e2e run or a mock LLM).
+- A pnpm `ignored-builds` block is an environment-recipe problem: when D1 hits it, the check degrades to warn and prints the compat.yml allowBuilds recipe, matching the certification spec v1's environment-blocked line, and it never counts as a plugin defect.
+- npm-line hosts (0.1.2-rc.1) have no engines/peerDependencies enforcement in their packument, so R6 is advisory there.
+- A measured trap in this environment: a `$` anchor (without the `m` flag) does not match the position before a lone trailing `\r`, so parsing CRLF text must split on `/\r?\n/` (already handled internally — do not regress it).
 
-## 目录结构
+## Repository layout
 
 ```
-doctor.mjs               CLI 入口（分组编排、退出码、JSON 报告）
-lib/framework.mjs        检查注册/运行/判定/渲染（零依赖）
-lib/util.mjs             临时沙箱 + 子进程执行（stdout/stderr 落盘，规避管道捕获限制）
-lib/checks-package.mjs   静态·包结构 R0–R8
-lib/checks-cordis.mjs    静态·cordis 契约 K1–K9
-lib/checks-smoke.mjs     动态·沙箱冒烟 D0–D3、D9
-lib/checks-collections.mjs  生态·集合站清单 CC1–CC5
-tests/selftest.mjs       14 例真实 CLI 自检（既有 7 例退出码契约逐字不变 + 新增降级/用法守卫 7 例）
-tests/contract.mjs       31 项契约测试（冻结既有 37 仓 CI 依赖的 5 个可观测量）
-scripts/verify.mjs       verified 注册表与徽章刷新（只读 GitHub API 审计各仓门禁）
-scripts/badge.mjs        verified SVG 渲染
-data/verified-repos.json verified 声明仓清单
-data/verified.json       verified 注册表（CI 生成）
-badges/                  verified 徽章（CI 生成）
-THIRD-PARTY-RK-SCAN.md   第三方插件静态 R+K 扫描结果集（公开报告）
-data/rk-scans.json       上述扫描的机器可读形态
-SURVEY.md                全渠道检测方法梳理 + 判据出处
+doctor.mjs               CLI entry (group orchestration, exit codes, JSON report)
+lib/framework.mjs        check registration/run/verdict/rendering (zero dependencies)
+lib/util.mjs             temporary sandbox + subprocess execution (stdout/stderr to disk, avoiding pipe-capture limits)
+lib/checks-package.mjs   static · package structure R0–R8
+lib/checks-cordis.mjs    static · Cordis contract K1–K9
+lib/checks-smoke.mjs     dynamic · sandbox smoke D0–D3, D9
+lib/checks-collections.mjs  ecosystem · directory listings CC1–CC5
+tests/selftest.mjs       14 real-CLI self-tests (the 7 existing exit-code-contract cases byte-identical, plus 7 new degraded/usage-guard cases)
+tests/contract.mjs       31 contract tests (freezing the 5 observables the existing 37-repo CI depends on)
+scripts/verify.mjs       verified registry and badge refresh (reads the GitHub API to audit each repo's gate)
+scripts/badge.mjs        verified SVG rendering
+data/verified-repos.json verified declaring repos
+data/verified.json       verified registry (CI-generated)
+badges/                  verified badges (CI-generated)
+THIRD-PARTY-RK-SCAN.md   third-party plugin static R+K scan result set (public report)
+data/rk-scans.json       machine-readable form of that scan
+SURVEY.md                the full-channel detection methodology plus every criterion's source
 ```
 
-## 状态
+## Status
 
-正式仓库：GitHub `PerryLink/dsh-plugin-doctor`（Apache-2.0），npm `@perrylink/dsh-plugin-doctor`。
-**当前版本 0.2.0**（npm 上 0.2.0 之前的最新为 0.1.7），见 `CHANGELOG.md`。CI 用法（**请用 ASCII 别名**）：
+Official repository: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.
+**Current version 0.2.0** (the newest on npm before 0.2.0 was 0.1.7); see `CHANGELOG.md`. CI usage (**please use the ASCII aliases**):
 
 ```powershell
 npx --yes @perrylink/dsh-plugin-doctor@0.2.0 --repo . --no-smoke --only "R,K"
 ```
 
-**37 个插件仓**已内置 `.github/workflows/plugin-doctor.yml`（只读已提交树 → `--only "R,K"` 静态门禁 + R0/K1 实跑自校验，pin `@0.1.6`）。
-pin 停在 0.1.6 是有意的：0.2.0 对 R/K 两组的判据与输出形态**逐字不变**（`tests/contract.mjs` 已把这条冻成断言），所以提升 pin 是一波独立动作，不是本次发布的前置条件。
+**37 plugin repos** already ship `.github/workflows/plugin-doctor.yml` (a read-only static gate over the committed tree → `--only "R,K"` plus the R0/K1 self-verification, pinned to `@0.1.6`).
+The pin deliberately stays on 0.1.6: 0.2.0 changes the R/K criteria and output shape **not at all** (`tests/contract.mjs` freezes that as an assertion), so raising the pin is a separate wave rather than a precondition of this release.
 
-> 0.2.0 的改动全部是**加法式**（新增字段 / 新增选项 / 新增退出码），既有 37 仓的判据不变；已用 37 仓基线逐项比对验证 **diffs = 0**。
+> Every 0.2.0 change is **additive** (new fields / new options / new exit codes); the criteria for the existing 37 repos are unchanged, verified against the 37-repo baseline with **diffs = 0**.
 
-### 公开结果集
+### Public result sets
 
-- [`THIRD-PARTY-RK-SCAN.md`](https://github.com/PerryLink/dsh-plugin-doctor/blob/main/THIRD-PARTY-RK-SCAN.md) —— 首份**第三方**（非 PerryLink）dsh 插件的静态 R+K 扫描：60 个候选 → 20 个真正声明 `dsh.bundle.patch` 的插件 → 16 项门禁下 **10 通过 / 10 失败**。方法：只读克隆、**零执行**第三方代码、R2/R4 单列不入门禁；含复现命令、本次扫描自身的方法学更正，以及**被点名仓的更正通道**。机器可读形态：`data/rk-scans.json`。
-  **它不是认证、不是评级，也不代表插件安全**：pass 仅表示「该 commit 上 16 项静态门禁未报失败」。
+- [`THIRD-PARTY-RK-SCAN.md`](https://github.com/PerryLink/dsh-plugin-doctor/blob/main/THIRD-PARTY-RK-SCAN.md) — the first static R+K scan of **third-party** (non-PerryLink) dsh plugins: 60 candidates → 20 plugins that really declare `dsh.bundle.patch` → under the 16-check gate, **10 passed / 10 failed**. Method: read-only clones, **zero execution** of third-party code, R2/R4 listed separately and not gated; it includes the reproduction commands, a correction to this scan's own methodology, and a **correction channel for any repo named in it**. Machine-readable form: `data/rk-scans.json`.
+  **It is not a certification, not a rating, and says nothing about a plugin's security**: a pass means only that "the 16 static checks reported no failure on that commit".
 
 ## PerryLink DSH Plugin Family
 
