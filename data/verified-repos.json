@@ -20,6 +20,10 @@
       "package": "dsh-budget"
     },
     {
+      "repo": "PerryLink/dsh-cert-mcp",
+      "package": "dsh-cert-mcp"
+    },
+    {
       "repo": "PerryLink/dsh-checkpoint-rewind",
       "package": "dsh-checkpoint-rewind"
     },
@@ -106,6 +110,10 @@
     {
       "repo": "PerryLink/dsh-plugin-guide",
       "package": "dsh-plugin-guide"
+    },
+    {
+      "repo": "PerryLink/dsh-plugin-kit",
+      "package": "@perrylink/dsh-plugin-kit"
     },    {
       "repo": "PerryLink/dsh-plugin-upgrade-015",
       "package": "dsh-plugin-upgrade-015"
@@ -149,6 +157,10 @@
     {
       "repo": "PerryLink/dsh-translate",
       "package": "dsh-translate"
+    },
+    {
+      "repo": "PerryLink/dsh-wechat",
+      "package": "dsh-wechat"
     }
   ]
 }
