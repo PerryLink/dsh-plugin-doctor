@@ -123,7 +123,9 @@ In one line: **zero-dependency, offline-capable (`--only R,K`), and it turns the
 ## Verified 徽章
 
 There are **two badge paths**, and they make different claims. Pick the one whose
-claim you can actually back.
+claim you can actually back. **[`FOR-ADOPTERS.md`](FOR-ADOPTERS.md) is the
+step-by-step version of this section** — the exact file to copy, the exact badge
+markdown, what each verdict means, and what this check does *not* prove.
 
 ### Path A — self-serve gate badge (no permission needed, no author involvement)
 
@@ -222,6 +224,7 @@ GOVERNANCE.md            authorship, spec versioning, and what attribution is as
 NOTICE                   Apache-2.0 attribution notice (must travel with redistributions)
 CITATION.cff             citation metadata (for citing the tool or the criteria)
 plugin-doctor.yml        the canonical CI gate, shipped ready to copy into your repo
+FOR-ADOPTERS.md          the adopter's landing page: gate, badge, verdicts, limits
 SELF-CHECK.md            this tool's own result against its own criteria
 OUTREACH.md              adoption notes: channel states, positioning, actions
 ```
@@ -229,14 +232,14 @@ OUTREACH.md              adoption notes: channel states, positioning, actions
 ## Status
 
 Official repository: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.
-**Current version 0.2.3**; see `CHANGELOG.md`. CI usage (**please use the ASCII aliases**):
+**Current version 0.2.4**; see `CHANGELOG.md`. CI usage (**please use the ASCII aliases**):
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.2.3 --repo . --no-smoke --only "R,K"
+npx --yes @perrylink/dsh-plugin-doctor@0.2.4 --repo . --no-smoke --only "R,K"
 ```
 
 **38 plugin repos** already ship `.github/workflows/plugin-doctor.yml` (a read-only static gate over the committed tree → `--only "R,K"` plus the R0/K1 self-verification, pinned to `@0.1.6`).
-The gate pin deliberately stays on 0.1.6: 0.2.0 changed the R/K criteria and output shape **not at all** (`tests/contract.mjs` freezes that as an assertion), so raising the pin is a separate wave rather than a precondition of this release. New adopters should pin the **current** version instead — 0.2.3.
+The gate pin deliberately stays on 0.1.6: 0.2.0 changed the R/K criteria and output shape **not at all** (`tests/contract.mjs` freezes that as an assertion), so raising the pin is a separate wave rather than a precondition of this release. New adopters should pin the **current** version instead — 0.2.4.
 
 > Every 0.2.0 change is **additive** (new fields / new options / new exit codes); the criteria for the existing 37 repos are unchanged, verified against the 37-repo baseline with **diffs = 0**.
 

@@ -51,6 +51,22 @@ makeFixture(withSrc, { src: true, lib: true })
 makeFixture(libOnly, { src: false, lib: true })
 makeFixture(bare, { src: false, lib: false })
 
+// 未构建的源码树：main 指向 lib/ 产物，lib/ 不存在，files 已声明且覆盖它。
+// 这是最常见的第三方形态（仓库不提交构建产物），R2/R4 必须报「环境未构建」，
+// 绝不能报 plugin-defect —— 实测 15 个家族仓里有 4 个曾因此被判「插件缺陷」。
+const unbuilt = path.join(sandbox, 'unbuilt')
+makeFixture(unbuilt, { src: true, lib: false })
+
+// 反向夹具：构建产物不在 files 白名单内 —— 这是真缺陷，构建后依然存在，
+// 必须继续 fail，不能因为「没构建」被一并放过。
+const unbuiltBadFiles = path.join(sandbox, 'unbuilt-bad-files')
+makeFixture(unbuiltBadFiles, { src: true, lib: false })
+{
+  const p = JSON.parse(fs.readFileSync(path.join(unbuiltBadFiles, 'package.json'), 'utf8'))
+  p.files = ['cordis.patch.yml', 'README.md', 'LICENSE']   // lib/ 不在白名单
+  fs.writeFileSync(path.join(unbuiltBadFiles, 'package.json'), JSON.stringify(p, null, 2) + '\n')
+}
+
 function run(repo, args) {
   const json = path.join(sandbox, `out-${Math.random().toString(36).slice(2)}.json`)
   const r = spawnSync(process.execPath, ['doctor.mjs', '--repo', repo, ...args, '--json', json], {
@@ -82,6 +98,30 @@ assert('R2/R4 前缀被排除（buildDep=2）', buildDep.length === 2, `实际 $
 const badGated = gated.filter((x) => x.status === 'fail' || x.status === 'error')
 assert('gated 无 fail/error（干净 fixture）', badGated.length === 0, badGated.map((x) => x.name).join(', '))
 assert('gated status 全在允许集合内', gated.every((x) => ['pass', 'warn', 'skip'].includes(x.status)))
+
+// ── 观测 6：未构建的源码树上 R2/R4 属「环境」而非「插件缺陷」───────────────
+// 这两项读构建产物；仓库不提交产物时它们缺席是构造性的，不是缺陷。
+// 旧实现在 15 个家族仓里把 4 个误判为 plugin-defect。
+const unbuiltRun = run(unbuilt, ['--no-smoke', '--only', 'R,K'])
+const unbuiltRes = unbuiltRun.report?.results ?? []
+for (const id of ['R2', 'R4']) {
+  const r = unbuiltRes.find((x) => x.id === id)
+  assert(`未构建树 ${id} 判为 skip`, r?.status === 'skip', `实际 ${r?.status ?? '(缺此项)'}`)
+  assert(`未构建树 ${id} category=environment`, r?.category === 'environment', `实际 ${r?.category}`)
+  assert(`未构建树 ${id} 不计作缺陷`, !(r?.status === 'fail' || r?.status === 'error'), `实际 ${r?.status}`)
+}
+const unbuiltBad = (unbuiltRes.filter((x) => !/^R[24] /.test(x.name)) || [])
+  .filter((x) => x.status === 'fail' || x.status === 'error')
+assert('未构建树不产生任何 gated 失败', unbuiltBad.length === 0, unbuiltBad.map((x) => x.name).join(', '))
+
+// ── 观测 7：产物不在 files 白名单 → 即使未构建也继续 fail ──────────────────
+// 「没构建」不能成为真缺陷的免罪符：构建后该缺陷依然存在。
+const badFilesRun = run(unbuiltBadFiles, ['--no-smoke', '--only', 'R,K'])
+const badFilesRes = badFilesRun.report?.results ?? []
+const r7bad = badFilesRes.find((x) => x.id === 'R7')
+assert('files 未覆盖产物 → R7 fail（不受未构建影响）', r7bad?.status === 'fail', `实际 ${r7bad?.status}`)
+const r2bad = badFilesRes.find((x) => x.id === 'R2')
+assert('files 未覆盖产物 → R2 不伪装成 environment', r2bad?.category !== 'environment', `实际 category=${r2bad?.category} status=${r2bad?.status}`)
 
 // ── 观测 5：退出码语义不变（0 通过 / 2 用法）──────────────────────────────
 assert('干净 fixture → exit 0', base.exit === 0, `实际 ${base.exit}`)

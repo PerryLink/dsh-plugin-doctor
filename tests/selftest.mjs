@@ -3,13 +3,18 @@
 // 用法: node tests/selftest.mjs
 //
 // 前 7 例是 0.1.x 起的既有契约（逐字不变）；其后为本轮新增的 3/4/5/6 码与降级语义。
+//
+// ⚠️ 沙箱前缀必须是 `doctor-`，绝不能是 `dsh-doctor-`：宿主对 `%TEMP%\dsh-*`
+// 设了保护模板（工作区红线 1），带 `dsh-` 前缀的自建目录会落进该模板。本文件曾用
+// `dsh-doctor-selftest-` / `dsh-doctor-dash-`，每次运行都新增两个违反红线的目录，
+// 且从不清理 —— 被 tests/contract.mjs 的「不再新增 %TEMP%\dsh-doctor-*」断言抓出。
 import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
-const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-doctor-selftest-'))
+const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'doctor-selftest-'))
 
 const GOOD_PKG = {
   name: 'dsh-selftest-fixture',
@@ -104,7 +109,7 @@ for (const c of usageCases) {
 
 // ── --json - ：JSON 写 stdout，不落名为 "-" 的文件 ─────────────────────
 {
-  const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-doctor-dash-'))
+  const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'doctor-dash-'))
   const r = spawnSync(process.execPath, [path.join(ROOT, 'doctor.mjs'), '--repo', good, '--no-smoke', '--only', 'R', '--json', '-'], { cwd, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 })
   let parsed = false
   try { parsed = Array.isArray(JSON.parse(r.stdout).results) } catch { parsed = false }

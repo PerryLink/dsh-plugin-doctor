@@ -143,9 +143,16 @@ never activates. This is why `R1` is the only critical check.
 **Requirement.** `npm pack --dry-run --json --ignore-scripts` succeeds, and the
 resulting file list contains both the declared entry point and the declared patch
 file, both non-empty; the tarball filename matches the package name and version.
-**Verdicts.** `fail` · `pass`.
+**Verdicts.** `fail` · `pass` · `skip` (see the unbuilt-tree rule below).
 **Requires.** A built tree. **Excluded from the canonical gate** (§1) — see
 §5 for why.
+**Unbuilt-tree rule.** When the entry resolves into a build-output directory
+(`lib/`, `dist/`, `build/`, `out/`, `esm/`, `cjs/`), that file is absent, and
+`files` is declared and *does* cover it, the check reports `skip` with category
+`environment` rather than `fail`. An absent build output on a tree that was never
+built is an environment fact, not a plugin defect. If `main` points into `src/`,
+or the build output is missing from `files`, the check still **fails** — those
+defects survive a build.
 
 #### R3 — `cordis.patch.yml` structure (heuristic)
 **Requirement.** The declared patch file exists; after comment lines are
@@ -162,7 +169,7 @@ profile's `node_modules`; a name that is not the package name will not resolve.
 **Requirement.** The entry file named by `main`/`exports` exists and exports
 both `apply` and `name`; a declared `inject` array contains only string literals.
 **Verdicts.** `fail` (entry missing) · `warn` (exports or `inject` shape
-suspect) · `pass`.
+suspect) · `pass` · `skip` (unbuilt tree — same rule as R2).
 **Requires.** A built tree. **Excluded from the canonical gate** (§1, §5).
 
 #### R5 — Dependency policy

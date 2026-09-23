@@ -1,6 +1,11 @@
 # Changelog
 
-## [Unreleased]
+## [0.2.4] - 2026-09-23
+
+This release is the one that finally **ships the specification and the
+attribution**: through 0.2.3 the published tarball contained neither `SPEC.md`
+nor `NOTICE` nor the gate template, so `npx @perrylink/dsh-plugin-doctor` gave
+every adopter a build in which the criteria had no author and no normative text.
 
 ### Added
 
@@ -13,6 +18,26 @@
 
 ### Fixed
 
+- **R2/R4 blamed the plugin for an unbuilt tree.** Both checks read *built*
+  artifacts, and on a source tree that ships no build output — most third-party
+  repositories, and every clone that has not been built — the entry is absent by
+  construction. They reported that as `plugin-defect`, which is the tool telling
+  a maintainer their plugin is broken when they had simply not run
+  `npm run build`. A sweep of 15 family repositories found 4 mislabelled this
+  way. Both now report `skip` with category `environment` when the entry resolves
+  into a build-output directory, is absent, and is *correctly* covered by `files`.
+  The condition is deliberately narrow: if `main` points into `src/`, or the
+  build output is missing from `files`, the check still **fails**, because those
+  defects survive a build. `tests/contract.mjs` now pins both directions (an
+  unbuilt tree is not a defect; a real `files` defect is still a defect).
+- **Two self-test sandboxes violated the host's protected temp namespace.**
+  `tests/selftest.mjs` created `%TEMP%\dsh-doctor-selftest-*` and
+  `%TEMP%\dsh-doctor-dash-*`. The host reserves the `%TEMP%\dsh-*` template, and
+  the tool's own comment in `lib/util.mjs` records that the `doctor-` prefix was
+  chosen precisely to avoid it — but the tests did not follow it, leaking two
+  directories per run and never cleaning them up. Caught by the existing
+  "no new `%TEMP%\dsh-doctor-*` directories" assertion. Both now use the
+  `doctor-` prefix.
 - **The Path B audit failed as one opaque line, 37 times.** With no usable `DOCTOR_AUDIT_TOKEN` the script fell back to the workflow-scoped `GITHUB_TOKEN`, which holds no cross-repository read permission and is therefore treated as an anonymous caller (60 requests/hour) — a full audit needs 200+. Every entry came back `no-data` with the identical `403 rate limit exceeded`, and an earlier run reported `401 Unauthorized`; both are configuration faults that read as a broken badge program. `scripts/verify.mjs` now stops at the first `401`/rate-limited `403`, exits `3`, and writes an all-grey registry whose reasons name the actual cause. The `GITHUB_TOKEN` fallback is gone: it could never have worked. `--allow-anonymous` (or `DOCTOR_ALLOW_ANONYMOUS=1`) keeps the local, partial-audit convenience but warns first.
 - **`LICENSE` credited the wrong project.** The appendix copyright line read `Copyright 2026 dsh-memento contributors` — a different PerryLink plugin, inherited when the file was copied from a sibling repository. The Apache-2.0 text itself carries no other copyright line, so the only copyright statement in the licence named a project that is not this one. It now reads `Copyright 2026 PerryLink`. The same wrong line was present in 15 sibling repositories and has been corrected there too, each a verified one-line diff.
 
