@@ -1,19 +1,34 @@
 # Changelog
 
-## [0.2.4] - 2026-09-23
+## [0.3.0] - 2026-09-23
+
+This is the release that actually ships the specification and the attribution.
+Through 0.2.3 the published tarball contained neither `SPEC.md` nor `NOTICE` nor
+the gate template, so `npx @perrylink/dsh-plugin-doctor` gave every adopter a
+build in which the criteria had no author and no normative text.
+
+It is a **minor** bump rather than 0.2.4 because it adds a CLI surface
+(`--format`) and because `v0.2.4` was already tagged and published to the
+repository while pointing at a commit that predates these documentation fixes —
+moving a pushed tag would have been worse than bumping. `0.2.4` was never
+released to npm; see its entry below for the failure record.
+
+Everything in the 0.2.4 entry below is included here, plus the `--format check`
+contract view and the documentation corrections.
+
+## [0.2.4] - 2026-09-23 — repository tag only, never published to npm
 
 This release is the one that finally **ships the specification and the
 attribution**: through 0.2.3 the published tarball contained neither `SPEC.md`
 nor `NOTICE` nor the gate template, so `npx @perrylink/dsh-plugin-doctor` gave
 every adopter a build in which the criteria had no author and no normative text.
 
-> **Not on npm yet.** The `v0.2.4` tag was pushed and the `publish` workflow ran,
+> **Not on npm.** The `v0.2.4` tag was pushed and the `publish` workflow ran,
 > but the npm publish step failed with `npm error 404 Not Found - PUT
 > https://registry.npmjs.org/@perrylink%2fdsh-plugin-doctor`. The `NPM_TOKEN`
 > secret is present but not usable (invalid, expired, or lacking this package), so
-> `latest` on npm is still **0.2.3** and none of this section has reached
-> adopters. The workflow correctly refused to report success. Fix the token and
-> re-run the `publish` workflow (or re-push the tag) to complete the release.
+> `latest` on npm is still **0.2.3**. The workflow correctly refused to report
+> success. Its contents are superseded by **0.3.0**.
 
 ### Added
 
