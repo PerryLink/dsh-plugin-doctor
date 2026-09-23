@@ -43,7 +43,63 @@ conventions.
   form at `2BingLing/dsh-market/issues/new?template=submit_plugin.md`.
   Note the operator is `2BingLing/dsh-market`, **not** `dsh-market/dsh-market`.
 
-### The name collision will mislead you
+### A method warning that cuts both ways
+
+Grepping a repository for `PerryLink/dsh-plugin-doctor` gives false answers **in
+both directions**, and this file has already been wrong once because of it:
+
+- **False negative.** GitHub code search does not index large generated
+  registries, so a zero result proves nothing. Repositories that DO list the
+  plugin but are missed by `search/code` include `LivXue/dsh-plugin-shop` (877★),
+  `Zhiyuan-Fan/Awesome-DeepSeek-Harness-Plugins` (568★),
+  `Dominic789654/awesome-deepseek-harness`, `walkinglabs/…` and
+  `2BingLing/dsh-market`.
+- **False positive from the name collision.** Many catalogues list *a*
+  `dsh-plugin-doctor` that is not this one — `lin-cheng-lab`, `zoahdev`,
+  `white-sand-grand`, `Oo0520` and `Xrainsmile/DSH-Plugin-Doctor` all appear in
+  real registries. On npm, both the unscoped `dsh-plugin-doctor` (Xrainsmile) and
+  `dsh-doctor` exist and are different projects.
+
+**And the decisive case: a repository can be a live aggregator that stores no
+entry at all.** `dsh-market/dsh-market` (4.4k★) contains the string nowhere in
+its own tree, which reads as "genuine gap" under any grep — and its README says:
+
+> **This repo is the market app, not the catalog.** The plugin list comes from
+> the curated awesome-dsh-plugin registry… Fetched live on every open from
+> `awesome-dsh-plugin.com/plugins.json`.
+
+That feed does contain the plugin (verified: two occurrences). So the app
+displays it, and the grep was measuring the wrong thing. **Before recording
+"absent", check whether the repository is a static catalogue or a live consumer
+of one.** An earlier version of this file made exactly that mistake in the other
+direction, calling `dsh-market/dsh-market` "not a submission channel" on the
+strength of its README while getting the listing question right by accident.
+
+### A hard gate worth knowing before approaching anyone
+
+`PerryLink/dsh-plugin-doctor` has **0 stars**. `bruc3van/awesome-dsh-plugin`'s
+CONTRIBUTING requires `stargazers_count > 10` for its **self-submission** lane, so
+that lane is closed regardless of merit — the project is in that catalogue only
+because a curator added it. Any submission route with a star or traction
+threshold should be checked before writing the submission, not after.
+
+### Confirmed listing catalogues (owner-verified, by reading the file)
+
+`awesome-dsh-plugin/awesome-dsh-plugin` ·
+`AdamPlatin123/dsh-plugin-radar` · `0xsline/awesome-deepseek-harness` ·
+`LivXue/dsh-plugin-shop` · `Zhiyuan-Fan/Awesome-DeepSeek-Harness-Plugins` ·
+`Dominic789654/awesome-deepseek-harness` ·
+`walkinglabs/awesome-deepseek-harness-plugins` · `beancookie` ·
+`bruc3van/awesome-dsh-plugin` · `diegosouzapw` · `imsai-sh` ·
+`like-study1/Oh-My-DSH` · `YELEBAI/dsh-plugin-marketplace` ·
+`2BingLing/dsh-market` · `unStone/dsh-xray` · `ysyyhhh/agent-ecosystem-observatory` ·
+`ZeroPointRepo/awesome-dsh-plugins` · `helloHupc/dsh-plugin-hub` ·
+`hikariming/dshfind` · `losebird/dsh-plugin-market` · `majiayu000/dsh-plugin-registry` ·
+`wink-run/dsh-plugin-store` · `HaydenSmith1121/dsh-plugins` · `lwmxiaobei/dsh-plugins` ·
+`billLiao/awesome-dsh-plugin` · `UntR/dsh-plugin-marketplace` ·
+`hotpot-labs/awesome-dsh-industry-plugins` · `zhu1090093659/dsh-web`
+
+That is a far wider footprint than this file previously recorded.
 
 At least five repositories are called `dsh-plugin-doctor`: `lin-cheng-lab`,
 `Oo0520`, `white-sand-grand`, `zoahdev` and PerryLink's. A name-based search or a
@@ -69,15 +125,35 @@ collisions" section warns about on the npm side.
 
 ### Real remaining work — the GitHub collections
 
-1. **`dshworks/awesome-dsh-plugins` — PR #107 is open and now mergeable** (CI
-   green, `mergeable_state: clean` as of 2026-09-23). It needs a maintainer
-   decision, not a rebase.
+Beyond the sites above, a wider sweep found these catalogues with active
+maintenance that do **not** carry the plugin. Treat each as a candidate, not a
+confirmed gap: verify by reading the catalogue's own file at submission time,
+because both grep directions mislead (see the method warning above).
+
+| Catalogue | Stars | Note |
+|---|---|---|
+| `pax-beehive/dsh-hub-cli` | 448 | CLI for a hub; largest of this group |
+| `Alex-Yanggg/awesome-DSH-plugin` | 98 | stale since 2026-08-15 |
+| `Noob-stupid/dsh-plugin-gating-hub` | 88 | |
+| `gityuanbao/DSH-Plugins` | 65 | stale |
+| `vlln/plugin-registry` | 58 | |
+| `AwesomeHou/dsh-plugin-marketplace` | 30 | |
+| `alexchenzl/dsh-plugin-directory` | 27 | **submitted 2026-09-23** — 44 issues, #276–#319 |
+
+1. **`dshworks/awesome-dsh-plugins` — PR #107 is open and mergeable** (CI green,
+   `mergeable_state: clean` as of 2026-09-23). It needs a maintainer decision,
+   not a rebase. Largest reach of any gap: 13,756 entries, and 35 sibling
+   PerryLink repositories are already in while this one is not.
 2. **`kejixiaoliang/awesome-dsh-plugins`** — open PR #98 conflicts with a
    star-sync bot that recommits every ~3 hours.
 3. **`awesome-deepseekharness/awesome-deepseek-harness`** — PR #103 was closed
    because `.github/curator-policy.yml` puts `PerryLink` on a `watchlist`
    (one running PR at a time) with a 4-strike `self_promo` auto-close. That is
    author-level policy, not a plugin-quality objection.
+4. **`bruc3van/awesome-dsh-plugin`** — already lists the plugin via curation, but
+   its **self-submission lane is closed** to this repository: CONTRIBUTING
+   requires `stargazers_count > 10` and the repo has 0. Do not spend an approach
+   on it.
 
 ### Dead ends — do not spend effort
 
