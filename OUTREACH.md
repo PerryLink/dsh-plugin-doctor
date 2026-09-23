@@ -26,9 +26,22 @@ project's.
 | Official request: `dsh plugin check` | open | (folded into #1629) | — |
 | Community demand for an official market + standards | open, high-traffic | — | [#1115](https://github.com/deepseek-ai/deepseek-harness/discussions/1115) |
 | Community proposal: repository-layout standard | open | — | [#2269](https://github.com/deepseek-ai/deepseek-harness/discussions/2269) |
-| Third-party write-up of **this** project | published | independent | [blog.yeyupiaoling.cn](https://blog.yeyupiaoling.cn/article/1788746484665?lang=zh-cn) |
-| npm distribution | published, 12 versions | PerryLink | `@perrylink/dsh-plugin-doctor` |
+| Third-party write-up of **this** project | **none — corrected 2026-09-23** | — | see the correction below |
+| npm distribution | published, 13 versions | PerryLink | `@perrylink/dsh-plugin-doctor` |
 | Public third-party result set | published | PerryLink | [`THIRD-PARTY-RK-SCAN.md`](THIRD-PARTY-RK-SCAN.md) |
+
+> **Correction: the one "known" blog post is about a different project.** An
+> earlier version of this file listed
+> [blog.yeyupiaoling.cn/article/1788746484665](https://blog.yeyupiaoling.cn/article/1788746484665)
+> as independent coverage. It is not. The post is *titled*
+> "dsh-plugin-doctor：装 DSH 插件前，先做一次体检", but its body states that
+> dsh-plugin-doctor is maintained by **lin-cheng-lab** under **MIT**. Verified
+> directly: the page mentions `lin-cheng-lab` six times and `PerryLink` zero
+> times. PerryLink's project is Apache-2.0.
+>
+> **This project currently has no blog or press coverage at all.** Seven
+> roundups were checked (Aliyun developer, Leiphone ×2, Tencent Cloud ×2 and two
+> more) and none mentions PerryLink or any PerryLink plugin.
 
 > **Correction to an earlier note in this file.** An earlier version of these
 > notes recorded #1814 and #1693 as *this* project's posts. They are not: both
