@@ -243,19 +243,17 @@ OUTREACH.md              adoption notes: channel states, positioning, actions
 ## Status
 
 Official repository: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.
-**Current version 0.3.0.** Published on npm: **0.2.3** — the 0.2.4 tag was pushed
-but its npm publish failed (`404` on `PUT`: the `NPM_TOKEN` secret is invalid,
-expired or lacks this package), so 0.2.4 never reached the registry and 0.3.0 has
-not been released yet either. Until a publish succeeds, the version below is what
-the repository says, not what `npx` resolves. See `CHANGELOG.md`. CI usage
+**Current version 0.3.1**, published to npm. Releases go out through **npm Trusted
+Publishing (OIDC)** — no long-lived token — after the `NPM_TOKEN` secret expired
+and blocked the 0.2.4 and 0.3.0 attempts. See `CHANGELOG.md`. CI usage
 (**please use the ASCII aliases**):
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.2.3 --repo . --no-smoke --only "R,K"
+npx --yes @perrylink/dsh-plugin-doctor@0.3.1 --repo . --no-smoke --only "R,K"
 ```
 
 **42 plugin repos** already ship `.github/workflows/plugin-doctor.yml` (a read-only static gate over the committed tree → `--only "R,K"` plus the R0/K1 self-verification, pinned to `@0.1.6`).
-The gate pin deliberately stays on 0.1.6: 0.2.0 changed the R/K criteria and output shape **not at all** (`tests/contract.mjs` freezes that as an assertion), so raising the pin is a separate wave rather than a precondition of this release. New adopters should pin the **newest published** version — currently 0.2.3, not the unreleased 0.3.0.
+The gate pin deliberately stays on 0.1.6: 0.2.0 changed the R/K criteria and output shape **not at all** (`tests/contract.mjs` freezes that as an assertion), so raising the pin is a separate wave rather than a precondition of this release. New adopters should pin the **newest published** version — currently 0.3.1.
 
 > Every 0.2.0 change is **additive** (new fields / new options / new exit codes); the criteria for the existing 37 repos are unchanged, verified against the 37-repo baseline with **diffs = 0**.
 

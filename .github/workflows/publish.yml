@@ -126,7 +126,17 @@ jobs:
             sleep 15
           done
           echo "::warning::@perrylink/dsh-plugin-doctor@${version} is still not visible on the registry after ~3 minutes (the publish step reported success; npm's read side is lagging)"
+      # Resolve the tag explicitly. On a workflow_dispatch run the ref is the
+      # branch name, which is not a tag, and action-gh-release then fails with
+      # "GitHub Releases requires a tag" — after a successful publish, turning a
+      # good release red. Deriving the tag from package.json makes the step work
+      # on both trigger paths.
+      - name: Resolve the release tag
+        id: tag
+        shell: bash
+        run: echo "name=v$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
+          tag_name: ${{ steps.tag.outputs.name }}
           generate_release_notes: true

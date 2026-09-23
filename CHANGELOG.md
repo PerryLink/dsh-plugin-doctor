@@ -1,22 +1,38 @@
 # Changelog
 
-## [Unreleased]
+## [0.3.1] - 2026-09-23
 
-These changes and the four newly gated repositories are **not yet tagged**.
+Published via **npm Trusted Publishing (OIDC)** — no token involved. The
+`NPM_TOKEN` secret had expired, which had blocked this work for several rounds,
+so the release path was switched to a credential that cannot expire. See the
+token rotation checklist, section 7.
+
+### Fixed
+
+- **`GOVERNANCE.md` and `CITATION.cff` were missing from the npm tarball.** Both
+  were added to the repository in 0.3.0 but never added to `package.json`'s
+  `files` list, so neither reached any adopter — and `CITATION.cff` is pointless
+  unless it ships with the artifact it describes, because its whole purpose is to
+  produce a correct author line for anyone citing the tool. Found by packing the
+  published 0.3.0 tarball and listing it, not by reading the manifest.
+- **A successful publish reported as a red run.** `softprops/action-gh-release`
+  needs a tag, and on a `workflow_dispatch` run the ref is a branch, so the step
+  failed after npm had already published — and no GitHub Release was created. The
+  workflow now derives the tag from `package.json` and passes it explicitly, so
+  the step works on both the tag-push and manual-dispatch paths.
+
+### Added
+
+- **`workflow_dispatch` on the publish workflow**, so a release can be retried
+  after a credential fix without inventing a version. The tag-matches-version
+  check is skipped for non-tag refs, where it is meaningless.
 
 ### Changed
 
 - **The third-party scan is refreshed, and the refresh is re-runnable.** `THIRD-PARTY-RK-SCAN.md` was a 2026-09-10 snapshot from 0.2.0. A published result set that keeps asserting superseded verdicts is the documentation-that-lies failure this project exists to catch, so `scripts/refresh-third-party-scan.ps1` re-clones each candidate read-only, re-applies the qualification gate, re-runs the gate, and records the verdict — never installing, building or booting third-party code. Result: **19 qualified, 6 pass, 13 fail** (was 10/10). Comparing repository by repository, the `R3`/`R7` corrections changed **no** repository's verdict; the movement is entirely `R8`, which went from 3 to 9 without a line of code changing, because the ecosystem's peer lines moved on. That is an argument for re-running this on a schedule rather than treating a snapshot as standing fact.
 - **`R8` now says what it means.** A peer pinned to a superseded release-candidate line is a package that *works* and has fallen behind this family's release train — staleness, not breakage. The verdict stays `fail` (the exit code is a frozen contract 42 downstream gates read) but the message now states the narrower meaning first, and `SPEC.md` §5.4 makes that scope limit normative. Without it, a third-party maintainer reading the output would reasonably conclude their plugin is broken.
-
-### Fixed
-
-- **R3 rejected a valid empty patch layer.** The harness's patch schema is a top-level YAML array (`entryListSchema = yaml.JSON_SCHEMA.extend(JsExpr)`, `vendor/include/src/index.ts`), and the harness writes `[]` as its own template for a new profile's patch layer (`packages/boot/app-boot/src/profile.ts`). A bundle that mounts no rows of its own — a library that only needs to travel through the bundle channel — is therefore a normal shape, and a `cordis.patch.yml` containing `[]` is valid. R3 demanded an `- insert:` structure and an `id:` row from every patch, so it failed such a package. It now passes an empty layer explicitly, and keeps the `insert`/`id` requirement for non-empty patches, where there is actually a row to locate. Found on `dsh-plugin-kit`, whose patch is deliberately empty and documents why.
-- **R7 rejected a working plain-JavaScript package.** It failed any `main` pointing into `src/`, on the premise that npm publication must ship build output. The harness documents that only a *TypeScript* package needs prebuilding — a git install fetches sources and never runs `build` (`docs/user/develop/basic/publish.md`) — and that guide's own manifest example points `main` at `index.js`. A package with no build step and JavaScript sources is a normal, working layout. R7 now fails a `src/` entry only when the package actually needs a build: it declares a `build` script, its entry is TypeScript, or it ships TypeScript under `src/`. Found on `dsh-cert-mcp`, a zero-build MCP server. Its pass message also stopped claiming "main points at build output" for an entry that is source.
-
-### Changed
-
-- **Gate coverage 38 → 42 repositories.** `dsh-wechat`, `dsh-personal-directive`, `dsh-cert-mcp` and `dsh-plugin-kit` now ship `.github/workflows/plugin-doctor.yml`. Each was dry-run first and passes its own gate (exit 0, 16 gated checks, `R0 `/`K1 ` self-check green). `dsh-plugin-upgrade-016` is gate-eligible but was left alone: it sits on an active `ci/bootstrap-ops` branch. A regression sweep over 49 family repositories confirmed the R3/R7 changes turned **no** previously-passing repository red — the only movement was the two intended fixes.
+- **Gate coverage 38 → 42 repositories.** `dsh-wechat`, `dsh-personal-directive`, `dsh-cert-mcp` and `dsh-plugin-kit` now ship `.github/workflows/plugin-doctor.yml`. Each was dry-run first and passes its own gate (exit 0, 16 gated checks, `R0 `/`K1 ` self-check green). `dsh-plugin-upgrade-016` is gate-eligible but was left alone: it sits on an active `ci/bootstrap-ops` branch. A regression sweep over 49 family repositories confirmed the R3/R7 changes turned **no** previously-passing repository red.
+- **`R3` and `R7` stopped rejecting valid packages** (landed in the 0.3.0 build but first shipped to npm here — see the 0.3.0 entry for the detail).
 
 ## [0.3.0] - 2026-09-23
 
