@@ -13,6 +13,7 @@ import { addChecks as addCordisChecks } from './lib/checks-cordis.mjs'
 import { addSmokeChecks } from './lib/checks-smoke.mjs'
 import { addChecks as addCollectionChecks } from './lib/checks-collections.mjs'
 import { quarantineSandbox, redact } from './lib/util.mjs'
+import { toContract, contractExitCode } from './lib/compat.mjs'
 
 const VERSION = JSON.parse(readFileSync(path.join(import.meta.dirname, 'package.json'), 'utf8')).version
 const SCHEMA_VERSION = '2'
@@ -39,6 +40,12 @@ const USAGE = `dsh-plugin-doctor ${VERSION} —— dsh 插件完整性 + 运行�
                     中文全名同样可用；大小写不敏感。
   --allow-degraded  允许「被请求的组整组未真跑」时仍返回 0（默认返回 6）
   --json <路径|->   另存 JSON 报告；传 "-" 写 stdout（此时抑制人类可读报告）
+  --format <名称>   JSON 报告的形态（默认 doctor）:
+                      doctor = 本工具的完整信封（5 种状态、退出码 3/4/5/6、逐项 id/分组/覆盖率）
+                      check  = 生态正在收敛的三值契约（PASS/WARN/FAIL + 0/1/2），
+                               见 RFC #1846。供其它 check 工具与 Action 直接消费；
+                               本工具的语义差异（尤其 skip != pass）在 doctor 字段里保留，
+                               并在无法无损表达时置 approximated=true
   --purge <隔离目录> 删除本工具自己产生的隔离目录（仅接受 ${QUARANTINE_PREFIX}* 前缀）
   -h, --help        显示帮助
   -v, --version     显示版本
@@ -65,12 +72,13 @@ const GROUP_ALIASES = {
   CC: '生态·集合站清单',
 }
 
-const FLAGS_WITH_VALUE = new Set(['--repo', '-r', '--workspace', '-w', '--dsh', '--json', '--only', '--purge'])
+const FLAGS_WITH_VALUE = new Set(['--repo', '-r', '--workspace', '-w', '--dsh', '--json', '--only', '--purge', '--format'])
 
 function parseArgs(argv) {
   const opts = {
     repo: null, workspace: null, smoke: true, dshVersion: '0.1.2-rc.1', json: null,
     groups: null, help: false, version: false, allowDegraded: false, purge: null,
+    format: 'doctor',
   }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
@@ -81,6 +89,7 @@ function parseArgs(argv) {
     else if (a === '--json') opts.json = argv[++i]
     else if (a === '--only') opts.groups = String(argv[++i] ?? '').split(',').map((s) => s.trim())
     else if (a === '--purge') opts.purge = argv[++i]
+    else if (a === '--format') opts.format = String(argv[++i] ?? '')
     else if (a === '--allow-degraded') opts.allowDegraded = true
     else if (a === '--help' || a === '-h') opts.help = true
     else if (a === '--version' || a === '-v') opts.version = true
@@ -93,6 +102,9 @@ function parseArgs(argv) {
       return { ...opts, error: `多余的位置参数: ${a}（--repo 已由前一个位置参数占用）` }
     }
     if (FLAGS_WITH_VALUE.has(a) && argv[i] === undefined) return { ...opts, error: `选项 ${a} 缺少取值` }
+  }
+  if (!['doctor', 'check'].includes(opts.format)) {
+    return { ...opts, error: `未知 --format: ${opts.format}（可选: doctor, check）` }
   }
   return opts
 }
@@ -212,10 +224,26 @@ function finish(results, { opts, ctx, repoPath, pkg, runRoot, logDir, started })
   const qPath = quarantineSandbox({ root: runRoot })
   envelope.quarantine = qPath
 
-  const code = exitCodeFor(results, { degraded, allowDegraded: opts.allowDegraded })
+  // --format check restates the same run in the ecosystem's three-value contract
+  // (RFC #1846). It never changes whether a project passes; it only changes the
+  // vocabulary, and it keeps the doctor semantics in a side field so nothing is
+  // silently lost.
+  const contract = opts.format === 'check'
+    ? toContract({ results, degraded, repoPath, doctorVersion: VERSION })
+    : null
+
+  const code = contract
+    ? contractExitCode(results, { degraded })
+    : exitCodeFor(results, { degraded, allowDegraded: opts.allowDegraded })
 
   if (opts.json === '-') {
-    process.stdout.write(JSON.stringify(envelope, null, 2) + '\n')
+    process.stdout.write(JSON.stringify(contract ?? envelope, null, 2) + '\n')
+  } else if (contract) {
+    console.log(JSON.stringify(contract, null, 2))
+    if (opts.json) {
+      writeFileSync(opts.json, JSON.stringify(contract, null, 2) + '\n', 'utf8')
+      console.log(`JSON 报告: ${opts.json}`)
+    }
   } else {
     console.log(`# dsh-plugin-doctor 报告\n目标: ${repoPath}\n包名: ${pkg.name}`)
     console.log(render(results))

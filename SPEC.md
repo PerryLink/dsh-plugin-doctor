@@ -45,6 +45,38 @@ than left as an emergent convention, so that a result can be cited as
   and `R4`, which read **built** artifacts. A project that gates a different set
   has not thereby conformed to the same claim.
 
+### 1.1 Interoperating with the ecosystem check contract
+
+During 2026-08 the ecosystem's plugin checkers converged on one interface: a
+three-value status vocabulary (`PASS`/`WARN`/`FAIL`), exit codes `0`/`1`/`2`, and
+a flat `checks` array carrying `{name, status, detail}`. It is written up as
+[RFC #1846](https://github.com/deepseek-ai/deepseek-harness/discussions/1846),
+and the reference implementations named there follow it.
+
+This specification is **not** that contract. It is richer in three ways that
+matter, and a conforming implementation must not silently discard them:
+
+| This specification | The three-value contract | Why the difference is kept |
+|---|---|---|
+| five statuses, including `skip` | three | `skip` means **not evaluated**. Collapsing it into `pass` is the false-green this specification exists to prevent. |
+| exit codes `3`/`4`/`5`/`6` | `0`/`1`/`2` | `4` (unsupported host) and `6` (degraded) are *not* plugin defects. Reporting them as `1` blames the plugin for the environment. |
+| per-check `id`, `groupId`, `category`, `coverage` | `name`/`status`/`detail` | §3.3 makes the ID the citable, frozen handle. |
+
+An implementation MAY therefore expose a **contract view** in addition to its own
+output, provided that:
+
+1. the contract view never changes whether a project passes — the two views must
+   agree on pass/fail for the same run;
+2. a check that returned `skip` is never presented as `PASS` in the contract view
+   (the reference implementation reports it as `WARN` and marks it
+   `skipped: true`);
+3. any distinction the contract cannot express is either carried in an extra
+   field or flagged as approximated — never dropped in silence.
+
+The reference implementation provides this as `--format check`, and
+`tests/compat.mjs` asserts all three properties, including that the default view
+is unchanged.
+
 ## 2. Verdict vocabulary (normative)
 
 Five statuses exist. Their meanings are fixed and may not be interchanged.

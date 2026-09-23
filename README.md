@@ -49,6 +49,7 @@ node doctor.mjs --repo <路径> --dsh 0.1.7-alpha.1 # 冒烟宿主版本（默�
 node doctor.mjs --repo <路径> --only R,K       # 只跑静态两层（推荐用 ASCII 别名）
 node doctor.mjs --repo <路径> --json report.json
 node doctor.mjs --repo <路径> --json -         # JSON 写 stdout（此时抑制人类可读报告）
+node doctor.mjs --repo <路径> --format check --json -   # 生态三值契约视图（PASS/WARN/FAIL + 0/1/2）
 node doctor.mjs --repo <路径> --workspace <工作区根>   # 指定兄弟仓所在工作区（CC 组核对用）
 node doctor.mjs --repo <路径> --allow-degraded # 显式接受「整组未真跑」（默认 exit 6）
 node doctor.mjs --purge <隔离目录>              # 清理本工具产生的隔离目录（仅 doctor-quarantine-*）
@@ -110,6 +111,14 @@ This repository is **`@perrylink/dsh-plugin-doctor`**, and it is **not the same 
 - `dsh-testkit`'s README links `dsh-plugin-doctor` to the zoahdev repo; that has nothing to do with this one.
 
 In one line: **zero-dependency, offline-capable (`--only R,K`), and it turns the Cordis v4 contracts (K1–K9) and five ecosystem directory listings (CC1–CC5) into a CI gate whose verdict is readable from the exit code.** (No "the only" style claim — merely that nothing comparable appeared within the set of tools actually surveyed.)
+
+**Inline one-liner.** `--format check` emits the ecosystem's three-value contract
+(`PASS`/`WARN`/`FAIL`, exit `0`/`1`/`2`, flat `checks[]`) instead of this
+project's enriched envelope, so another checker or Action can consume the result
+directly. It is a *view*: it never changes whether a project passes, and a `skip`
+is never rendered as `PASS` (it becomes `WARN` with `skipped: true`). The full
+semantics stay in a `doctor` side field. See `SPEC.md` §1.1 — those three
+properties are normative and `tests/compat.mjs` asserts them.
 
 ## Check catalog
 
@@ -211,6 +220,8 @@ tests/contract.mjs       31 contract tests (freezing the 5 observables the exist
 tests/spec-drift.mjs     guard tying SPEC.md to the implementation (check IDs, gate set, the single critical check, authorship)
 tests/spec-id-token.mjs  shared parser for SPEC §1 ID lists, including `K1–K9` range expansion
 tests/spec-drift-meta.mjs  tests the drift guard itself, so it cannot pass vacuously
+tests/compat.mjs         25 tests for `--format check`: the two views must agree on pass/fail,
+                         and a `skip` must never be rendered as a `PASS`
 scripts/verify.mjs       verified registry and badge refresh (reads the GitHub API to audit each repo's gate)
 scripts/badge.mjs        verified SVG rendering
 data/verified-repos.json verified declaring repos

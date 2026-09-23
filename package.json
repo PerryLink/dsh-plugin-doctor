@@ -63,7 +63,7 @@
   },
   "scripts": {
     "check:readmes": "node scripts/check-readme-sync.mjs",
-    "test": "node --check doctor.mjs && node --check lib/framework.mjs && node --check lib/util.mjs && node --check lib/checks-package.mjs && node --check lib/checks-cordis.mjs && node --check lib/checks-smoke.mjs && node --check lib/checks-collections.mjs && node --check scripts/badge.mjs && node --check scripts/verify.mjs && node --check tests/selftest.mjs && node --check tests/contract.mjs && node --check tests/spec-drift.mjs && node --check tests/spec-id-token.mjs && node --check tests/spec-drift-meta.mjs && node tests/selftest.mjs && node tests/contract.mjs && node tests/spec-drift.mjs && node tests/spec-drift-meta.mjs",
+    "test": "node --check doctor.mjs && node --check lib/framework.mjs && node --check lib/util.mjs && node --check lib/checks-package.mjs && node --check lib/checks-cordis.mjs && node --check lib/checks-smoke.mjs && node --check lib/checks-collections.mjs && node --check lib/compat.mjs && node --check scripts/badge.mjs && node --check scripts/verify.mjs && node --check tests/selftest.mjs && node --check tests/contract.mjs && node --check tests/spec-drift.mjs && node --check tests/spec-id-token.mjs && node --check tests/spec-drift-meta.mjs && node --check tests/compat.mjs && node tests/selftest.mjs && node tests/contract.mjs && node tests/spec-drift.mjs && node tests/spec-drift-meta.mjs && node tests/compat.mjs",
     "prepublishOnly": "npm test",
     "verify:registry": "node scripts/verify.mjs",
     "badge": "node scripts/badge.mjs"

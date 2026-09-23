@@ -9,29 +9,61 @@ The normative text is [`SPEC.md`](SPEC.md).
 
 ---
 
-## 1. The premise is already satisfied
+## 1. The premise: visible, but not the incumbent
 
-This is not a cold-start problem. The project is publicly visible in the
-official harness repository, and an adoption proposal is already open. What
-remains is **conversion**, not awareness.
+This is not a cold-start problem, and it is also **not** a solved one. The
+project is publicly visible in the official harness repository, but the threads
+that would carry it to official adoption are **someone else's**, not this
+project's.
 
-| Channel | State | Where |
-|---|---|---|
-| Official proposal to adopt it as the official check | open (title states it is a proposal) | [discussion #1814](https://github.com/deepseek-ai/deepseek-harness/discussions/1814) |
-| Official "show and tell" | posted, framed as the implementation of the official plugin-scaffold RFC | [discussion #1693](https://github.com/deepseek-ai/deepseek-harness/discussions/1693) |
-| Related official RFC (plugin scaffold) | open | [discussion #1629](https://github.com/deepseek-ai/deepseek-harness/discussions/1629) |
-| Community demand for an official market + standards | open, high-traffic | [discussion #1115](https://github.com/deepseek-ai/deepseek-harness/discussions/1115) |
-| Community proposal for a repository-layout standard | open | [discussion #2269](https://github.com/deepseek-ai/deepseek-harness/discussions/2269) |
-| Third-party write-up | published | [blog.yeyupiaoling.cn](https://blog.yeyupiaoling.cn/article/1788746484665?lang=zh-cn) |
-| npm distribution | published, 12 versions | `@perrylink/dsh-plugin-doctor` |
-| Public third-party result set | published | [`THIRD-PARTY-RK-SCAN.md`](THIRD-PARTY-RK-SCAN.md) |
+| Channel | State | Owner | Where |
+|---|---|---|---|
+| Proposal to adopt a "dsh-plugin-doctor" as the official check | open, stale (last activity 2026-08-15) | **zoahdev** — a *different* project of the same name | [#1814](https://github.com/deepseek-ai/deepseek-harness/discussions/1814) |
+| Show-and-tell for that project | posted | **zoahdev** | [#1693](https://github.com/deepseek-ai/deepseek-harness/discussions/1693) |
+| **RFC: official plugin scaffold** | open, 6 comments | zoahdev | [#1629](https://github.com/deepseek-ai/deepseek-harness/discussions/1629) |
+| **RFC #1846: registry contract + `dsh plugin check` + `dsh doctor`** | open, 11 comments — the one that matters | zoahdev | [#1846](https://github.com/deepseek-ai/deepseek-harness/discussions/1846) |
+| Official request: `dsh doctor` command | open, **68 comments** — real demand | mohitmathur95 | [#1719](https://github.com/deepseek-ai/deepseek-harness/discussions/1719) |
+| Official request: `dsh plugin check` | open | (folded into #1629) | — |
+| Community demand for an official market + standards | open, high-traffic | — | [#1115](https://github.com/deepseek-ai/deepseek-harness/discussions/1115) |
+| Community proposal: repository-layout standard | open | — | [#2269](https://github.com/deepseek-ai/deepseek-harness/discussions/2269) |
+| Third-party write-up of **this** project | published | independent | [blog.yeyupiaoling.cn](https://blog.yeyupiaoling.cn/article/1788746484665?lang=zh-cn) |
+| npm distribution | published, 12 versions | PerryLink | `@perrylink/dsh-plugin-doctor` |
+| Public third-party result set | published | PerryLink | [`THIRD-PARTY-RK-SCAN.md`](THIRD-PARTY-RK-SCAN.md) |
 
-> Every row above is a claim about the outside world and dates from this
-> writing. **Confirm each one before acting on it** — discussions move, threads
-> get answered, and repositories get renamed. In particular, confirm whether
-> #1814 and #1693 are this project's own posts and what state they are in; that
-> was not verifiable through an unauthenticated read (GitHub rate-limits it to
-> 60 requests/hour, so a fetch failure here is not evidence a thread is gone).
+> **Correction to an earlier note in this file.** An earlier version of these
+> notes recorded #1814 and #1693 as *this* project's posts. They are not: both
+> were opened by `zoahdev`, and `zoahdev/dsh-plugin-doctor` is the different
+> project this repository's README warns about under "Name collisions". Read
+> via `gh api repos/deepseek-ai/deepseek-harness/discussions/<n>` — do not
+> repeat the claim without re-checking the `author` field.
+>
+> Every row is a dated observation. Confirm before acting; discussions move.
+
+### 1.1 The finding that changes the plan
+
+Three independent checkers — this project, `zoahdev/dsh-plugin-doctor`, and
+`boyin111-1/dsh-doctor` (with `moonquake2004/dsh-doctor` alongside) — **converged
+on the same interface** without coordinating:
+
+- three status values `PASS` / `WARN` / `FAIL`
+- exit codes `0` pass / `1` fixable / `2` not a plugin
+- a flat `checks: [{name, status, detail}]` array
+
+A commenter on #1814 states it outright: *"The JSON schema + exit-code contract
+(0/1/2, PASS|WARN|FAIL) is the right call — we already use the same convention,
+so a future merge is mechanical."* That is an interface standard forming in
+public, and #1846 is its formal RFC.
+
+**This project's output does not speak it.** Its envelope carries five statuses
+(`skip` distinct from `pass`), seven exit codes, per-check ids and coverage. That
+richness is the point — but it also means every interoperating tool is blind to
+this one.
+
+The response is `--format check` (0.2.4): a view that restates the same run in
+the contract's vocabulary while keeping the semantics, plus `SPEC.md` §1.1 making
+the guarantees normative. It is **not** a capitulation: the projection is
+required never to change a verdict, never to render `skip` as `PASS`, and never
+to drop a distinction silently.
 
 ## 2. The real problem: credibility, not reach
 
@@ -100,28 +132,52 @@ Ordered. The first two are unblocked; the rest each need a decision.
 Create a fine-grained PAT with read access to the 37 declared repositories, store
 it as the `DOCTOR_AUDIT_TOKEN` repository secret, then run the `verified badges`
 workflow. Until this is done, do not present Path B as the default — Path A is
-self-serve and cannot break.
+self-serve and cannot break. Note that `gh` is authenticated as PerryLink on this
+machine, so `gh secret set DOCTOR_AUDIT_TOKEN` is available if a suitable token is
+at hand.
 
-### B. Post to the official standards threads (unblocked, owner: PerryLink)
-The two threads where criteria are actually decided are
-[#2269](https://github.com/deepseek-ai/deepseek-harness/discussions/2269) (a
-repository-layout standard proposal) and
-[#1814](https://github.com/deepseek-ai/deepseek-harness/discussions/1814) (this
-project's own proposal). A useful reply on #2269 is not "use my tool" but a
-concrete contribution to *their* document:
+### A2. Speak the ecosystem's contract (done in 0.2.4)
+`--format check` and `SPEC.md` §1.1 — see §1.1 above for why this was the highest
+-value move available.
 
-> On the layout question: the criteria I maintain treat `dsh.bundle.patch` as
-> the single activation switch, and its absence is the most silent failure mode
-> in the ecosystem — the install succeeds, nothing errors, and the plugin never
-> loads. If the standard is going to state one mandatory field, that is the one
-> I would state, and it is checkable offline by anyone.
-> Normative text: `SPEC.md` §4.1/R1.
+### B. Reply on RFC #1846 (unblocked, owner: PerryLink)
+[#1846](https://github.com/deepseek-ai/deepseek-harness/discussions/1846) is where
+the check contract is actually being decided, and it has 11 comments. A useful
+reply is a *contribution to their document*, not an advert. The strongest thing
+this project can offer that no other implementation in that thread has:
 
-### C. Reply to the competing checker (unblocked, owner: PerryLink)
-On `bowenliang123/dsh-plugin-checker`, offer interoperability rather than
-competition: the Action can consume `SPEC.md` check IDs, and this project will
-not claim an independent implementation is invalid. Linking the spec gives that
-author a reason to cite it — which is how a specification acquires users.
+> On the `dsh plugin check` contract: one gap worth closing before it is frozen.
+> The three-value vocabulary has no way to say **"not evaluated"**, so a check
+> that could not run must be reported as `WARN` — which reads as "evaluated and
+> suboptimal". That is the false-green this ecosystem keeps re-learning: a group
+> whose checks all skipped is not a group that passed. This project's `skip`
+> status exists for exactly that, and §3.2 of its spec makes a requested group
+> that never really ran a non-zero exit rather than a silent pass.
+>
+> Concretely, I would add either a fourth value or a `skipped: true` boolean on
+> the check object. I have implemented the `skipped` form in
+> `@perrylink/dsh-plugin-doctor` 0.2.4 (`--format check`), so it is testable
+> against a real implementation today rather than being a hypothetical.
+> Spec: https://github.com/PerryLink/dsh-plugin-doctor/blob/main/SPEC.md §1.1
+> and §3.2.
+
+That is a genuine improvement to their RFC, offered with a running
+implementation and a citable spec. It also happens to be the single best
+argument for why this project belongs in the conversation.
+
+### C. Offer interoperability to the other checkers (unblocked, owner: PerryLink)
+`boyin111-1/dsh-doctor` and `moonquake2004/dsh-doctor` both converged on the same
+contract and are natural allies, not rivals. Offer them the mapping rather than
+competition: `--format check` means either tool can consume this one's output
+today, and `SPEC.md` §1.1 says an independent conforming implementation is valid
+and this project will not claim otherwise. A specification acquires users by
+being citable, not by being enforced.
+
+Do **not** post on `zoahdev`'s threads as a correction or a challenge. #1814
+proposes adopting *their* project under the same name; a competitor arriving to
+contest it reads badly regardless of the merits. Contribute where the contract is
+being designed (#1846) and where the demand is (#1719), and let the name
+collision stay a documented caveat in this README.
 
 ### D. Directory submissions (needs verification first)
 `awesome-dsh-plugins` has several forks/owners (`kejixiaoliang`,
