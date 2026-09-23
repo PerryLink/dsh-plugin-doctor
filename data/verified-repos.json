@@ -106,7 +106,8 @@
     {
       "repo": "PerryLink/dsh-plugin-guide",
       "package": "dsh-plugin-guide"
-    },    {
+    },
+    {
       "repo": "PerryLink/dsh-plugin-upgrade-015",
       "package": "dsh-plugin-upgrade-015"
     },
@@ -149,6 +150,10 @@
     {
       "repo": "PerryLink/dsh-translate",
       "package": "dsh-translate"
+    },
+    {
+      "repo": "taltara/prae-harness",
+      "package": "prae-gate"
     }
   ]
 }
