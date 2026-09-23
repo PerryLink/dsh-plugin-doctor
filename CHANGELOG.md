@@ -1,5 +1,24 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **`SPEC.md` — the criteria now exist as a versioned, citable specification.** Until now the 28 checks were defined only by the Chinese label string passed to `doctor.add()` in `lib/*.mjs`, with the ID derived from that display string by regex; a third party could not write "conforms to dsh-plugin-doctor SPEC v1 §K3" and have it resolve to anything, and `README.md`'s catalog was a five-row group table. `SPEC.md` gives every check a stable ID, its normative requirement, its verdict vocabulary, what a failure means, its scope limits, and change control — so a result can be cited and stay meaningful. Authored by PerryLink, who is named as such.
+- **`NOTICE` + `CITATION.cff` + `GOVERNANCE.md` — attribution that travels with the artifact.** Apache-2.0 §4(d) requires a redistributor to preserve a `NOTICE` file; with no `NOTICE` present there was nothing to preserve, so attribution could not survive a fork. `GOVERNANCE.md` records who authored the criteria, how spec versions change, and separates what is *asked* (keep the criteria attributed to PerryLink) from what is *required* (the licence term).
+- **`plugin-doctor.yml` at the repository root — the gate is shipped, not scraped.** The canonical workflow lived only in `reports/`, which `.gitignore` excludes and `package.json` `files[]` omitted, so every adopter had to reconstruct the 15-line step from a README code block. It is now a tracked, published file inside the npm tarball.
+- **A self-serve badge path (README "Path A").** The existing badge is a centralized, single-operator service: an adopter must open a PR, the author must merge, and the author's CI must render the SVG with a PAT. That is a single point of failure, and it has failed — `data/verified.json` currently holds 37/37 `no-data` entries reading `repo lookup failed: 401 Unauthorized`, so every issued badge renders grey. Path A uses shields.io against the adopter's own workflow and needs no registry entry, no PR, and no token from anyone.
+- `author` and `contributors` in `package.json` (both were absent, so the npm page named no author).
+
+### Fixed
+
+- **`LICENSE` credited the wrong project.** The appendix copyright line read `Copyright 2026 dsh-memento contributors` — a different PerryLink plugin, inherited when the file was copied from a sibling repository. The Apache-2.0 text itself carries no other copyright line, so the only copyright statement in the licence named a project that is not this one. It now reads `Copyright 2026 PerryLink`. *The same wrong line is present in 15 sibling repositories; this release does not fix those.*
+
+### Changed
+
+- `README` version drift corrected: the body said "Current version 0.2.0" and pinned the gate example to `0.1.6` while `package.json` and npm were both `0.2.3`. New adopters are now told to pin the current version; the family's existing `0.1.6` pin is left untouched and explained.
+- The README's inline gate YAML was replaced by a pointer to the shipped `plugin-doctor.yml`.
+
 ## [0.2.2] - 2026-09-12
 
 ### Fixed

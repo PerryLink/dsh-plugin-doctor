@@ -2,6 +2,16 @@
   "name": "@perrylink/dsh-plugin-doctor",
   "version": "0.2.3",
   "description": "Zero-dependency static + sandbox smoke detector for DeepSeek Harness (dsh) plugins: package-structure gates (R), cordis contract scans (K), keyless-headless sandbox smoke (D), and ecosystem-listing checks (CC).",
+  "author": {
+    "name": "PerryLink",
+    "url": "https://github.com/PerryLink"
+  },
+  "contributors": [
+    {
+      "name": "PerryLink",
+      "url": "https://github.com/PerryLink"
+    }
+  ],
   "type": "module",
   "main": "./plugin.mjs",
   "exports": {
@@ -16,9 +26,12 @@
     "plugin.mjs",
     "lib/",
     "cordis.patch.yml",
+    "plugin-doctor.yml",
     "README.md",
     "CHANGELOG.md",
-    "SURVEY.md"
+    "SURVEY.md",
+    "SPEC.md",
+    "NOTICE"
   ],
   "engines": {
     "node": "^22.19.0 || >=24.0.0"

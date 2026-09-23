@@ -122,40 +122,53 @@ In one line: **zero-dependency, offline-capable (`--only R,K`), and it turns the
 
 ## Verified 徽章
 
-Wearing this badge means exactly one auditable thing: **the repo runs dsh-plugin-doctor's static R+K gate (16 checks: R0/R1/R3/R5/R6/R7/R8 + K1–K9) in its own CI, and that gate is green on the current HEAD of the default branch.** It is **not** a certification badge: no Scorecard, no provenance, no install smoke. R2 (tarball integrity) and R4 (entry contract) read the built `lib/`, and building most family repos needs `HARNESS_COMMIT` + `gen-aliases` to pass — those two are covered by each repo's own `ci.yml` (build-drift gate + pack smoke) and are deliberately outside this gate.
+There are **two badge paths**, and they make different claims. Pick the one whose
+claim you can actually back.
+
+### Path A — self-serve gate badge (no permission needed, no author involvement)
+
+This badge makes **one narrow, checkable claim**: *the repository runs
+dsh-plugin-doctor's static R+K gate in its own CI, and that workflow is green on
+the repository's default branch.* It is rendered by shields.io directly from your
+own workflow's status, so it needs no registry entry, no pull request, no token
+from anyone, and it cannot be broken by this project's infrastructure:
+
+```markdown
+[![dsh-doctor R+K](https://img.shields.io/github/actions/workflow/status/<owner>/<repo>/plugin-doctor.yml?branch=main&label=dsh-doctor%20R%2BK)](https://github.com/PerryLink/dsh-plugin-doctor/blob/main/SPEC.md)
+```
+
+Replace `<owner>/<repo>` (and `branch=` if your default branch is not `main`).
+The link target is `SPEC.md` — the criteria you are claiming to meet, and an
+explicit statement of who authored them.
+
+**Use Path A.** It is the whole standard, self-serve, and it is what this
+specification is designed for. It requires nothing of this project.
+
+Two honest caveats about Path A: the badge reflects *your* workflow, so it is
+only as trustworthy as your CI configuration — it is not verified by anyone
+else; and it is served by shields.io, which learns your repository name.
+
+### Path B — author-issued audited badge
+
+Wearing this badge means exactly one auditable thing: **the repo runs dsh-plugin-doctor's static R+K gate (16 checks: R0/R1/R3/R5/R6/R7/R8 + K1–K9) in its own CI, and that gate is green on the current HEAD of the default branch**, *as re-checked by this project's auditor*. It is **not** a certification badge: no Scorecard, no provenance, no install smoke. R2 (tarball integrity) and R4 (entry contract) read the built `lib/`, and building most family repos needs `HARNESS_COMMIT` + `gen-aliases` to pass — those two are covered by each repo's own `ci.yml` (build-drift gate + pack smoke) and are deliberately outside this gate.
 
 ```markdown
 [![dsh-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/badges/PerryLink__dsh-github.svg)](https://github.com/PerryLink/dsh-plugin-doctor#verified-徽章)
 [![DSH Market](https://raw.githubusercontent.com/2BingLing/dsh-market/master/assets/readme/badge-listed-en.svg)](https://dsh.market/)
 ```
 
-- The registry `data/verified.json` is the single source of truth, refreshed by `.github/workflows/verified.yml` daily and on every relevant push. A refresh only reads the GitHub API: it parses each repo's HEAD `plugin-doctor.yml` gate configuration (which must pin `@perrylink/dsh-plugin-doctor@<version>`, use a working `--only` argument, and self-verify that R0/K1 actually ran), then checks the conclusion of that HEAD's `plugin-doctor` workflow run. **This repo's CI never clones, installs or executes any third-party code.**
+**Path B is a centralized, single-operator service and should be treated as
+such.** It depends on this project's `DOCTOR_AUDIT_TOKEN` and on
+`.github/workflows/verified.yml` running; if the token lapses, every issued
+badge renders grey `NO DATA`. That is a real single point of failure, it has
+happened, and it is the reason Path A exists and is recommended.
+- The registry `data/verified.json` is the single source of truth for Path B, refreshed by `.github/workflows/verified.yml` daily and on every relevant push. A refresh only reads the GitHub API: it parses each repo's HEAD `plugin-doctor.yml` gate configuration (which must pin `@perrylink/dsh-plugin-doctor@<version>`, use a working `--only` argument, and self-verify that R0/K1 actually ran), then checks the conclusion of that HEAD's `plugin-doctor` workflow run. **This repo's CI never clones, installs or executes any third-party code.**
 - Badge appearance: the visual language follows the two newer badges in the ecosystem (`dsh.directory`'s monospace-uppercase + letter-spacing + mark + gradient, and `awesome-dsh-plugin`'s seal block) — **a silver/platinum metallic left segment, a shield tick mark, and ink-blue monospace uppercase**, with the right segment a **solid GitHub-convention status colour** (green/orange/red/grey) carrying a monospace uppercase status word, and the status additionally expressed by a **path-drawn icon** (✓ / ! / ✕ / –) so it stays readable with colour-vision deficiency. 5px corner radius + 1px stroke; **the stroke is required** — without it the silver left segment disappears against a white README background.
 - Four states (value text uses the shields / GitHub Actions conventional words): `passing` (green: the HEAD run succeeded) / `warning` (orange: HEAD has not run yet, a run is still queued, or a gate precondition is missing) / `failing` (red: the HEAD run failed, or the gate configuration does not hold — including a "fake gate" whose `--only` argument is doubly mis-encoded) / `no data` (grey: the API query failed). The badge is **dynamic**: once it stops passing it turns red. The precise R+K scope lives in this section and in the registry's `meaning` field, not in the badge text (the badge links back here).
-- To join: open a PR against `data/verified-repos.json` adding `{ "repo": "<owner>/<name>", "package": "<npm package name>" }`, and add `plugin-doctor.yml` to your own repo as below; the entry must pass the audit above.
-- The gate step (the full workflow lives in any family repo's `.github/workflows/plugin-doctor.yml`; group names use the **ASCII aliases `R,K`** — supported since 0.1.5, keeping file and command line pure ASCII; the tail self-verifies that R0/K1 really ran. **The 37 family repos currently pin `0.1.6`**):
+- To join Path B: open a PR against `data/verified-repos.json` adding `{ "repo": "<owner>/<name>", "package": "<npm package name>" }`, and add `plugin-doctor.yml` to your own repo; the entry must pass the audit above. **Path A needs none of this.**
+- **The gate file is shipped, not scraped.** Copy [`plugin-doctor.yml`](plugin-doctor.yml) — the canonical, ready-to-use workflow — to `.github/workflows/plugin-doctor.yml` in your repository and adjust the pin. It is also inside the npm tarball, so `npx @perrylink/dsh-plugin-doctor` users can read the shipped copy instead of reconstructing the step from this README. Group names use the **ASCII aliases `R,K`** (supported since 0.1.5, keeping file and command line pure ASCII), and the tail self-verifies that R0/K1 really ran.
 
-```yaml
-      - name: Run dsh-plugin-doctor (static R/K on the committed tree)
-        run: |
-          set +e
-          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.1.6 --repo . --no-smoke --only "R,K" --json /tmp/doctor.json 2>&1)"
-          set -e
-          printf '%s\n' "$out"
-          echo "$out" | grep -q 'R0 ' || { echo "::error::doctor ran no R checks"; exit 1; }
-          echo "$out" | grep -q 'K1 ' || { echo "::error::doctor ran no K checks"; exit 1; }
-          if [ ! -f /tmp/doctor.json ]; then echo "::error::doctor produced no JSON report"; exit 1; fi
-          node -e '
-            const r = JSON.parse(require("fs").readFileSync("/tmp/doctor.json", "utf8")).results
-            const buildDep = r.filter((x) => /^R[24] /.test(x.name))
-            const gated = r.filter((x) => !/^R[24] /.test(x.name))
-            const bad = gated.filter((x) => x.status === "fail" || x.status === "error")
-            console.log("gated " + gated.length + " checks; build-dependent (reported, not gated): " + (buildDep.map((x) => x.name.split(" ")[0] + "=" + x.status).join(" ") || "none"))
-            if (bad.length) { console.error("::error::failing: " + bad.map((x) => x.name).join(" | ")); process.exit(1) }
-          '
-```
-
-> Why the gate installs and builds nothing, and why this repo does not run the badge itself: the static R/K checks read only the committed tree (no dependencies needed), whereas `npm run build` fails in an environment without the harness aliases, and its prebuild wipes the committed `lib/`, manufacturing a false red. Concentrating third-party dependency installs into this repo's CI, on the other hand, would be a supply-chain risk. So the gate runs inside each repo's own CI against the committed tree, and this repo only audits and issues the badge.
+> Why the gate installs and builds nothing, and why this repo does not run the badge itself: the static R/K checks read only the committed tree (no dependencies needed), whereas `npm run build` fails in an environment without the harness aliases, and its prebuild wipes the committed `lib/`, manufacturing a false red. Concentrating third-party dependency installs into this repo's CI, on the other hand, would be a supply-chain risk. So the gate runs inside each repo's own CI against the committed tree, and this repo only audits and issues the Path B badge.
 
 ## Where the criteria come from (full text and URLs in SURVEY.md)
 
@@ -195,21 +208,39 @@ badges/                  verified badges (CI-generated)
 THIRD-PARTY-RK-SCAN.md   third-party plugin static R+K scan result set (public report)
 data/rk-scans.json       machine-readable form of that scan
 SURVEY.md                the full-channel detection methodology plus every criterion's source
+SPEC.md                  the normative verification criteria (authored by PerryLink)
+GOVERNANCE.md            authorship, spec versioning, and what attribution is asked vs required
+NOTICE                   Apache-2.0 attribution notice (must travel with redistributions)
+CITATION.cff             citation metadata (for citing the tool or the criteria)
+plugin-doctor.yml        the canonical CI gate, shipped ready to copy into your repo
 ```
 
 ## Status
 
 Official repository: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.
-**Current version 0.2.0** (the newest on npm before 0.2.0 was 0.1.7); see `CHANGELOG.md`. CI usage (**please use the ASCII aliases**):
+**Current version 0.2.3**; see `CHANGELOG.md`. CI usage (**please use the ASCII aliases**):
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.2.0 --repo . --no-smoke --only "R,K"
+npx --yes @perrylink/dsh-plugin-doctor@0.2.3 --repo . --no-smoke --only "R,K"
 ```
 
-**37 plugin repos** already ship `.github/workflows/plugin-doctor.yml` (a read-only static gate over the committed tree → `--only "R,K"` plus the R0/K1 self-verification, pinned to `@0.1.6`).
-The pin deliberately stays on 0.1.6: 0.2.0 changes the R/K criteria and output shape **not at all** (`tests/contract.mjs` freezes that as an assertion), so raising the pin is a separate wave rather than a precondition of this release.
+**38 plugin repos** already ship `.github/workflows/plugin-doctor.yml` (a read-only static gate over the committed tree → `--only "R,K"` plus the R0/K1 self-verification, pinned to `@0.1.6`).
+The gate pin deliberately stays on 0.1.6: 0.2.0 changed the R/K criteria and output shape **not at all** (`tests/contract.mjs` freezes that as an assertion), so raising the pin is a separate wave rather than a precondition of this release. New adopters should pin the **current** version instead — 0.2.3.
 
 > Every 0.2.0 change is **additive** (new fields / new options / new exit codes); the criteria for the existing 37 repos are unchanged, verified against the 37-repo baseline with **diffs = 0**.
+
+### Authorship of the criteria
+
+The verification criteria — not only the tool that implements them — were
+authored by **PerryLink** (<https://github.com/PerryLink>). Their normative text
+is [`SPEC.md`](SPEC.md), and this repository is the canonical source for both the
+specification and the reference implementation. See [`GOVERNANCE.md`](GOVERNANCE.md)
+for how the criteria change and for what attribution is requested (versus
+required by Apache-2.0 §4(d) via [`NOTICE`](NOTICE)).
+
+Adopting the gate needs no permission. If you adopt it, please keep the criteria
+attributed to PerryLink and do not present them as your own standard.
+
 
 ### Public result sets
 

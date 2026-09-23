@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you reference this tool or the verification criteria it defines, please cite it as below."
+title: "dsh-plugin-doctor: static, contract and sandbox-smoke verification criteria for DeepSeek Harness plugins"
+abstract: >-
+  dsh-plugin-doctor is a zero-dependency checker for DeepSeek Harness (dsh)
+  plugins, and the specification of the verification criteria it implements.
+  One run covers four layers: static package-structure checks (R0-R8), Cordis v4
+  contract scans (K1-K9), a keyless-headless sandbox smoke (D0-D3, D9), and
+  ecosystem directory-listing checks (CC1-CC5). The criteria are authored by
+  PerryLink; SPEC.md in the repository is their normative text.
+type: software
+authors:
+  - name: "PerryLink"
+    website: "https://github.com/PerryLink"
+repository-code: "https://github.com/PerryLink/dsh-plugin-doctor"
+url: "https://github.com/PerryLink/dsh-plugin-doctor"
+license: Apache-2.0
+keywords:
+  - deepseek-harness
+  - dsh
+  - dsh-plugin
+  - cordis
+  - plugin-verification
+  - conformance
+  - continuous-integration
