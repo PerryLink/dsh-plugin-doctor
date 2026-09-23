@@ -219,6 +219,8 @@ GOVERNANCE.md            authorship, spec versioning, and what attribution is as
 NOTICE                   Apache-2.0 attribution notice (must travel with redistributions)
 CITATION.cff             citation metadata (for citing the tool or the criteria)
 plugin-doctor.yml        the canonical CI gate, shipped ready to copy into your repo
+SELF-CHECK.md            this tool's own result against its own criteria
+OUTREACH.md              adoption notes: channel states, positioning, actions
 ```
 
 ## Status
