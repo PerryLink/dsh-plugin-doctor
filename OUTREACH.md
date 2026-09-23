@@ -128,19 +128,43 @@ D3 proves boot and not correctness.
 
 Ordered. The first two are unblocked; the rest each need a decision.
 
-### A. Fix the grey badges (unblocked, owner: PerryLink)
-Create a fine-grained PAT with read access to the 37 declared repositories, store
-it as the `DOCTOR_AUDIT_TOKEN` repository secret, then run the `verified badges`
-workflow. Until this is done, do not present Path B as the default — Path A is
-self-serve and cannot break. Note that `gh` is authenticated as PerryLink on this
-machine, so `gh secret set DOCTOR_AUDIT_TOKEN` is available if a suitable token is
-at hand.
+### A. Path B badges — DONE (2026-09-23)
+The audit token is now set and the registry reads **37/37 `pass`**
+(`generatedAt 2026-09-23T05:30:31Z`), with the live badge URLs verified returning
+HTTP 200 and `dsh-doctor: passing` instead of `NO DATA`.
 
-### A2. Speak the ecosystem's contract (done in 0.2.4)
-`--format check` and `SPEC.md` §1.1 — see §1.1 above for why this was the highest
--value move available.
+Two corrections to the earlier diagnosis in this file:
+- The secret had been **set but rejected with `401`** — the run log records
+  `verify: DOCTOR_AUDIT_TOKEN was rejected (401 401 Unauthorized)`. So "the
+  secret is missing" was wrong; "the secret is unusable" was right.
+- The fix did **not** require a new PAT. The declared repositories are all
+  **public**, and the `gh` CLI session on this machine (scopes `repo`, 5000
+  req/hour) reads their Actions data fine. That credential was stored as
+  `DOCTOR_AUDIT_TOKEN`; `gh secret delete DOCTOR_AUDIT_TOKEN` reverses it.
+- The fail-fast change paid off immediately: the broken run stopped after
+  **1 of 37** repos instead of burning the quota and reporting the same cause 37
+  times.
 
-### B. Reply on RFC #1846 (unblocked, owner: PerryLink)
+### B. npm publish — BLOCKED on an expired token (owner: PerryLink)
+`0.2.4` and `0.3.0` are tagged and pushed; both publish runs failed with
+`npm error 404 Not Found - PUT .../@perrylink%2fdsh-plugin-doctor`, and npm added
+`'@perrylink/dsh-plugin-doctor@0.3.0' is not in this registry`.
+
+The cause is now established, not guessed: **`npm whoami` returns `E401` with the
+stored credential**, i.e. the token is **expired** — not merely missing a
+permission. `NPM_TOKEN` in the repository secrets was created 2026-09-10.
+
+To complete the release: create a new npm **automation** token with write access,
+`gh secret set NPM_TOKEN --repo PerryLink/dsh-plugin-doctor`, then re-run the
+`publish` workflow (or re-push a tag). Until then **none of the specification,
+attribution or contract work has reached any adopter** — `latest` on npm is
+still `0.2.3`, and the README pins its examples to that.
+
+### C. Speak the ecosystem's contract — DONE (0.3.0)
+`--format check` and `SPEC.md` §1.1 — see §1.1 above for why this was the
+highest-value move available.
+
+### D. Reply on RFC #1846 (unblocked, owner: PerryLink)
 [#1846](https://github.com/deepseek-ai/deepseek-harness/discussions/1846) is where
 the check contract is actually being decided, and it has 11 comments. A useful
 reply is a *contribution to their document*, not an advert. The strongest thing
@@ -165,7 +189,7 @@ That is a genuine improvement to their RFC, offered with a running
 implementation and a citable spec. It also happens to be the single best
 argument for why this project belongs in the conversation.
 
-### C. Offer interoperability to the other checkers (unblocked, owner: PerryLink)
+### E. Offer interoperability to the other checkers (unblocked, owner: PerryLink)
 `boyin111-1/dsh-doctor` and `moonquake2004/dsh-doctor` both converged on the same
 contract and are natural allies, not rivals. Offer them the mapping rather than
 competition: `--format check` means either tool can consume this one's output
@@ -179,14 +203,14 @@ contest it reads badly regardless of the merits. Contribute where the contract i
 being designed (#1846) and where the demand is (#1719), and let the name
 collision stay a documented caveat in this README.
 
-### D. Directory submissions (needs verification first)
+### F. Directory submissions — research in progress (owner: PerryLink)
 `awesome-dsh-plugins` has several forks/owners (`kejixiaoliang`,
 `dshworks`, `awesome-dsh-plugin`), and `dshfind` / `dsh.market` / `dsh.directory`
 each have their own submission rules. **Read each contributing guide before
 submitting**; a rejected submission is worse than none. Verified so far:
 `awesome-dsh-plugin` publishes a `contributing.md` describing a review process.
 
-### E. External-repo outreach, reframed (needs a decision)
+### G. External-repo outreach, reframed (needs a decision)
 `THIRD-PARTY-RK-SCAN.md` names 20 repositories, 10 of which fail the gated
 checks. The largest are `zhu1090093659/dsh-web` (7.1k★), `liustack/modlens`
 (3.9k★) and `omdsh-dev/DSH-better-sidebar` (3.4k★).
@@ -203,7 +227,7 @@ instead with a free, reproducible diagnosis and a minimal fix:
 The scan file already promises a corrections path with equal prominence. Honour
 it: only contact a maintainer who has a real finding, and never mass-post.
 
-### F. Fence the family policy out of the ecosystem claim (unblocked)
+### H. Fence the family policy out of the ecosystem claim (unblocked)
 `CC5` encodes PerryLink-family policy (licence, five-language READMEs, seam
 roles) and `R5`/`R8` encode family conventions. `SPEC.md` §4.4 and §5 already
 scope these honestly. Keep doing that in every public post: a standard that
