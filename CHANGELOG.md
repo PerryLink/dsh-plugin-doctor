@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased]
+
+These two fixes and the four newly gated repositories are **not yet tagged**.
+
+### Fixed
+
+- **R3 rejected a valid empty patch layer.** The harness's patch schema is a top-level YAML array (`entryListSchema = yaml.JSON_SCHEMA.extend(JsExpr)`, `vendor/include/src/index.ts`), and the harness writes `[]` as its own template for a new profile's patch layer (`packages/boot/app-boot/src/profile.ts`). A bundle that mounts no rows of its own — a library that only needs to travel through the bundle channel — is therefore a normal shape, and a `cordis.patch.yml` containing `[]` is valid. R3 demanded an `- insert:` structure and an `id:` row from every patch, so it failed such a package. It now passes an empty layer explicitly, and keeps the `insert`/`id` requirement for non-empty patches, where there is actually a row to locate. Found on `dsh-plugin-kit`, whose patch is deliberately empty and documents why.
+- **R7 rejected a working plain-JavaScript package.** It failed any `main` pointing into `src/`, on the premise that npm publication must ship build output. The harness documents that only a *TypeScript* package needs prebuilding — a git install fetches sources and never runs `build` (`docs/user/develop/basic/publish.md`) — and that guide's own manifest example points `main` at `index.js`. A package with no build step and JavaScript sources is a normal, working layout. R7 now fails a `src/` entry only when the package actually needs a build: it declares a `build` script, its entry is TypeScript, or it ships TypeScript under `src/`. Found on `dsh-cert-mcp`, a zero-build MCP server. Its pass message also stopped claiming "main points at build output" for an entry that is source.
+
+### Changed
+
+- **Gate coverage 38 → 42 repositories.** `dsh-wechat`, `dsh-personal-directive`, `dsh-cert-mcp` and `dsh-plugin-kit` now ship `.github/workflows/plugin-doctor.yml`. Each was dry-run first and passes its own gate (exit 0, 16 gated checks, `R0 `/`K1 ` self-check green). `dsh-plugin-upgrade-016` is gate-eligible but was left alone: it sits on an active `ci/bootstrap-ops` branch. A regression sweep over 49 family repositories confirmed the R3/R7 changes turned **no** previously-passing repository red — the only movement was the two intended fixes.
+
 ## [0.3.0] - 2026-09-23
 
 This is the release that actually ships the specification and the attribution.

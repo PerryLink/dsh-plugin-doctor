@@ -44,6 +44,50 @@ function makeFixture(dir, { src = false, lib = true } = {}) {
   fs.writeFileSync(path.join(dir, 'LICENSE'), 'Apache-2.0\n')
 }
 
+// ── 空 patch 层：官方生成的 profile 模板就是 `[]` ────────────────────────────
+// harness 自己写新 profile 时用的模板是空数组（app-boot/src/profile.ts:193-197，
+// 注释："a top-level YAML array of loader patch entries"），官方 patch schema 也是
+// 数组（vendor/include/src/index.ts:23）。一个不挂载任何行的组合包（纯库、只为走
+// bundle 通道）因此是正当形态，R3 不得判 fail。
+const emptyPatch = path.join(sandbox, 'empty-patch')
+makeFixture(emptyPatch, { src: false, lib: true })
+fs.writeFileSync(path.join(emptyPatch, 'cordis.patch.yml'), '# comment only\n[]\n')
+
+// 反向夹具：patch 有内容却没有 insert 结构 / id 行 —— 这是真缺陷。
+const badPatch = path.join(sandbox, 'bad-patch')
+makeFixture(badPatch, { src: false, lib: true })
+fs.writeFileSync(path.join(badPatch, 'cordis.patch.yml'), 'this: is not a patch list\n')
+
+// ── 纯 JS 包把 main 指向自己的 src/ ─────────────────────────────────────────
+// 官方口径（publish.md:167）：git 安装取源码、不跑 build，所以 **TypeScript** 包必须
+// 预构建；纯 JS 包直接发布源码是正常并可用的形态（该文档示例入口就是 "index.js"）。
+const plainJsSrcMain = path.join(sandbox, 'plain-js-src-main')
+makeFixture(plainJsSrcMain, { src: false, lib: false })
+{
+  fs.mkdirSync(path.join(plainJsSrcMain, 'src'), { recursive: true })
+  fs.writeFileSync(path.join(plainJsSrcMain, 'src', 'plugin.js'), ENTRY)
+  const p = JSON.parse(fs.readFileSync(path.join(plainJsSrcMain, 'package.json'), 'utf8'))
+  p.main = './src/plugin.js'
+  p.files = ['src', 'cordis.patch.yml', 'README.md', 'LICENSE']
+  // Remove the build script: this fixture is a plain-JS package with no build
+  // step at all. `dsh.bundle.patch` stays, so R1 still passes and this fixture
+  // isolates R3/R7.
+  delete p.scripts.build
+  fs.writeFileSync(path.join(plainJsSrcMain, 'package.json'), JSON.stringify(p, null, 2) + '\n')
+}
+
+// 反向夹具：有 TS 源码、main 指向 src/、没有构建步骤 —— 这是真缺陷，npm 会发布出
+// 宿主无法加载的 .ts。needsBuild() 必须把它判为需要构建。
+const tsSrcMainNoBuild = path.join(sandbox, 'ts-src-main-no-build')
+makeFixture(tsSrcMainNoBuild, { src: true, lib: false })
+{
+  const p = JSON.parse(fs.readFileSync(path.join(tsSrcMainNoBuild, 'package.json'), 'utf8'))
+  p.main = './src/index.ts'
+  p.files = ['src', 'cordis.patch.yml', 'README.md', 'LICENSE']
+  delete p.scripts.build
+  fs.writeFileSync(path.join(tsSrcMainNoBuild, 'package.json'), JSON.stringify(p, null, 2) + '\n')
+}
+
 const withSrc = path.join(sandbox, 'with-src')   // src/ + lib/：常规源码树
 const libOnly = path.join(sandbox, 'lib-only')   // 无 src/ 有 lib/ 且带 build 脚本：= 已发布产物形态
 const bare = path.join(sandbox, 'bare')          // 无 src/ 无 lib/：K 组结构性不可跑
@@ -183,6 +227,27 @@ assert('本次运行不再新增 %TEMP%\\dsh-doctor-* 目录', (() => {
   const now = fs.readdirSync(os.tmpdir()).filter((e) => e.startsWith('dsh-doctor-') && !legacyDshDirs.has(e))
   return now.length === 0
 })(), `历史遗留 ${legacyDshDirs.size} 个（不在本次范围）`)
+
+// ── 观测 8：空 patch 层合法，非空但与 patch 语义不符才是缺陷 ────────────────
+const emptyPatchRun = run(emptyPatch, ['--no-smoke', '--only', 'R,K'])
+const emptyR3 = (emptyPatchRun.report?.results ?? []).find((x) => x.id === 'R3')
+assert('空 patch [] → R3 pass（官方模板就是 []）', emptyR3?.status === 'pass', `实际 ${emptyR3?.status}`)
+
+const badPatchRun = run(badPatch, ['--no-smoke', '--only', 'R,K'])
+const badR3 = (badPatchRun.report?.results ?? []).find((x) => x.id === 'R3')
+assert('非空但无 insert/id 的 patch → R3 fail', badR3?.status === 'fail', `实际 ${badR3?.status}`)
+
+// ── 观测 9：纯 JS 包 main 指向 src/ 合法；TS 包没有构建步骤才是缺陷 ─────────
+const plainRun = run(plainJsSrcMain, ['--no-smoke', '--only', 'R,K'])
+const plainRes = plainRun.report?.results ?? []
+const plainR7 = plainRes.find((x) => x.id === 'R7')
+assert('纯 JS 包 main→src/ 且无构建 → R7 pass', plainR7?.status === 'pass', `实际 ${plainR7?.status} :: ${String(plainR7?.message).slice(0, 80)}`)
+const plainGated = plainRes.filter((x) => !/^R[24] /.test(x.name) && (x.status === 'fail' || x.status === 'error'))
+assert('纯 JS 包不产生任何 gated 失败', plainGated.length === 0, plainGated.map((x) => x.name).join(', '))
+
+const tsRun = run(tsSrcMainNoBuild, ['--no-smoke', '--only', 'R,K'])
+const tsR7 = (tsRun.report?.results ?? []).find((x) => x.id === 'R7')
+assert('TS 包 main→src/ 且无构建 → R7 fail', tsR7?.status === 'fail', `实际 ${tsR7?.status}`)
 
 fs.rmSync(sandbox, { recursive: true, force: true })
 

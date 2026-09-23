@@ -187,12 +187,18 @@ or the build output is missing from `files`, the check still **fails** — those
 defects survive a build.
 
 #### R3 — `cordis.patch.yml` structure (heuristic)
-**Requirement.** The declared patch file exists; after comment lines are
-removed it contains an `- insert:` structure and at least one `id:` line; every
-`name:` equals the package name or is namespaced under it.
+**Requirement.** The declared patch file exists and parses as a top-level YAML
+array of loader patch entries. An **empty** array is valid: it declares a bundle
+layer that mounts no rows of its own, which is the normal shape for a library
+that only needs to travel through the bundle channel — the harness itself writes
+`[]` as the template for a new profile's patch layer, and the patch schema is a
+JSON array with `!!js` expressions. For a **non-empty** patch, after comment lines
+are removed it must contain an `- insert:` structure and at least one `id:` line,
+and every `name:` must equal the package name or be namespaced under it.
 **Verdicts.** `skip` (no declared patch) · `fail` · `pass`.
 **Why `id:` is required.** Row ids are how a patch line is located for whole-row
-replacement upstream.
+replacement upstream. That requirement applies only when there is a row to
+locate — hence not to an empty layer.
 **Why `name:` must be the package name.** The row is resolved through the
 profile's `node_modules`; a name that is not the package name will not resolve.
 **Limit.** Heuristic. `D2` is the authoritative check for layer insertion.
@@ -231,13 +237,23 @@ than the host and its services do not connect.
 `engines`.
 
 #### R7 — Prebuild and `files` allowlist
-**Requirement.** `main` does not point into `src/` (npm publication must ship
-built output); a `files` allowlist is declared and covers both the entry point
-and the patch file.
+**Requirement.** A `files` allowlist is declared and covers both the entry point
+and the patch file. Additionally, **if the package needs a build**, the entry
+must not point into source.
+**When a build is needed.** The package declares a `build` script, or its entry
+is a TypeScript file, or it ships TypeScript sources under `src/`. The harness
+documents that a git install fetches *sources and never runs `build`*, so a
+TypeScript package that is not prebuilt cannot load.
+**A plain-JavaScript package pointing `main` at its own `src/` is valid** and
+passes. The official publish documentation's own manifest example uses
+`"index.js"`, and it presents shipping build output as one distribution option
+rather than an obligation. Requiring `lib/` unconditionally rejected working,
+zero-build packages.
 **Verdicts.** `fail` · `pass`.
 **Failure meaning.** A missing or incomplete `files` allowlist silently drops
 the entry point or the patch file from the published tarball — the package
-installs and never activates.
+installs and never activates. A build-needing package whose entry points at
+source publishes `.ts` that the host cannot import.
 
 #### R8 — Stale peer ranges (dual-baseline lesson)
 **Requirement.** No `@deepseek-ai/dsh*` or cordis peer range names a
