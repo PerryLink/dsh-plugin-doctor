@@ -1,0 +1,266 @@
+[
+    {
+        "Repo":  "dsh-auto-review",
+        "Title":  "[Plugin]: dsh-auto-review",
+        "Url":  "https://github.com/PerryLink/dsh-auto-review",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-auto-review\n\n### Primary category\n\nSecurity \u0026 Permissions (security)\n\n### One-line description\n\nSecond-model AI auto-review for DeepSeek Harness approval requests: a read-only reviewer subagent decides allow/deny on the approval answerer chain, with fail-closed fallback and full session-log audit.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-auto-review\n```"
+    },
+    {
+        "Repo":  "dsh-autotier",
+        "Title":  "[Plugin]: dsh-autotier",
+        "Url":  "https://github.com/PerryLink/dsh-autotier",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-autotier\n\n### Primary category\n\nModels \u0026 Providers (models)\n\n### One-line description\n\nAutomatic strong/cheap model-tier routing for DeepSeek Harness: intent-gated tier landing on the agent/request waterfall, plan-mode handoff (strong plans, cheap implements), deterministic high-risk guards on tools/pre-execute, failure escalation with TTL fallback, a /tier command, and tier status tools.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-autotier\n```"
+    },
+    {
+        "Repo":  "dsh-background-agents",
+        "Title":  "[Plugin]: dsh-background-agents",
+        "Url":  "https://github.com/PerryLink/dsh-background-agents",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-background-agents\n\n### Primary category\n\nAgents \u0026 Automation (agents)\n\n### One-line description\n\nInteractive long-session background agents plus persistent multi-agent team rooms for DeepSeek Harness: durable continuable child agents with progress, steering and interruption, and cross-session team rooms with a message bus, shared task board, approval-gated handoffs and a shared timeline that survive DSH restarts.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-background-agents\n```"
+    },
+    {
+        "Repo":  "dsh-budget",
+        "Title":  "[Plugin]: dsh-budget",
+        "Url":  "https://github.com/PerryLink/dsh-budget",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-budget\n\n### Primary category\n\nUsage \u0026 Cost (usage)\n\n### One-line description\n\nCost governance for DeepSeek Harness: aggregated token/cost metering per model, session and day, session/daily/monthly budget caps with threshold alerts (desktop notification + webhook) and alert/block/degrade over-limit policies, built-in carbon footprint estimation and per-model latency benchmarks, a Settings budget tab, and the /budget command.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-budget\n```"
+    },
+    {
+        "Repo":  "dsh-cert-mcp",
+        "Title":  "[Plugin]: dsh-cert-mcp",
+        "Url":  "https://github.com/PerryLink/dsh-cert-mcp",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-cert-mcp\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nRead-only MCP server exposing the dsh-plugin-certification registry: certification grades, snapshots and five-dimension evidence for DeepSeek Harness plugins.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-cert-mcp\n```"
+    },
+    {
+        "Repo":  "dsh-checkpoint-rewind",
+        "Title":  "[Plugin]: dsh-checkpoint-rewind",
+        "Url":  "https://github.com/PerryLink/dsh-checkpoint-rewind",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-checkpoint-rewind\n\n### Primary category\n\nSessions \u0026 History (sessions)\n\n### One-line description\n\nUnified DSH checkpoints: session + workspace + config three-state snapshots with one-shot rollback — /checkpoint and /rewind commands, a checkpoint tool, automatic interval snapshots, a Settings page timeline with pairwise diffs, and seed-replay session rollback via the official sessions.create API.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-checkpoint-rewind\n```"
+    },
+    {
+        "Repo":  "dsh-claude-move",
+        "Title":  "[Plugin]: dsh-claude-move",
+        "Url":  "https://github.com/PerryLink/dsh-claude-move",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-claude-move\n\n### Primary category\n\nSessions \u0026 History (sessions)\n\n### One-line description\n\nFour-source migration wizard: copy Claude Code, Codex, OpenCode and Hermes sessions, memories, skills, instructions and slash commands into DeepSeek Harness as resumable sessions — copy-only, approval-gated, idempotent.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-claude-move\n```"
+    },
+    {
+        "Repo":  "dsh-click",
+        "Title":  "[Plugin]: dsh-click",
+        "Url":  "https://github.com/PerryLink/dsh-click",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-click\n\n### Primary category\n\nCoding \u0026 Dev Tools (coding)\n\n### One-line description\n\nCross-platform native desktop control tools for DeepSeek Harness (Windows first): screen_shot, screen_read (accessibility tree + pixel description for text-only models), click/type/scroll/key, and app_list/app_launch — every mutating action gated by approval, never stealing foreground focus, with stale-observation rejection and process-identity checks.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-click\n```"
+    },
+    {
+        "Repo":  "dsh-composer-history",
+        "Title":  "[Plugin]: dsh-composer-history",
+        "Url":  "https://github.com/PerryLink/dsh-composer-history",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-composer-history\n\n### Primary category\n\nUI Enhancements (ui)\n\n### One-line description\n\nTerminal-style input history for the DeepSeek Harness web composer: edge-first arrows with exact draft/caret restore, browser-local persisted history, Ctrl+R reverse search, workspace-scoped recall, and fully configurable keys — plus sliding-context awareness (compaction summaries join recall/search, a compaction notice with one-click /compact fill) layered on the ordinary composer draft only.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-composer-history\n```"
+    },
+    {
+        "Repo":  "dsh-data-quality",
+        "Title":  "[Plugin]: dsh-data-quality",
+        "Url":  "https://github.com/PerryLink/dsh-data-quality",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-data-quality\n\n### Primary category\n\nCoding \u0026 Dev Tools (coding)\n\n### One-line description\n\nDeterministic data profiling, cleaning, and verification for DeepSeek Harness: a ctx.dataQuality capability seam (Service Definition / local Provider / tool Consumers) with data_profile, data_clean, and data_verify model tools, a frozen cross-plugin verifyCitations contract, durable reports in a storage domain, and data-quality/* session events on hosts that support them.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-data-quality\n```"
+    },
+    {
+        "Repo":  "dsh-defend",
+        "Title":  "[Plugin]: dsh-defend",
+        "Url":  "https://github.com/PerryLink/dsh-defend",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-defend\n\n### Primary category\n\nSecurity \u0026 Permissions (security)\n\n### One-line description\n\nPrompt-injection, jailbreak, and secret-leak detection with allow/ask/block interception for DeepSeek Harness: an Aho-Corasick pattern engine and heuristics ported from the Prompt-Injection-Payloads, Jailbreak-Detector, and Secret-Key-Leaker-Detect assets, gating user messages on agent/pre-step, tool arguments on tools/pre-execute, and tool results on tools/post-execute, with sanitized defend/* session audit events, a defend_report tool, and a /defend command.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-defend\n```"
+    },
+    {
+        "Repo":  "dsh-doublecheck",
+        "Title":  "[Plugin]: dsh-doublecheck",
+        "Url":  "https://github.com/PerryLink/dsh-doublecheck",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-doublecheck\n\n### Primary category\n\nAgents \u0026 Automation (agents)\n\n### One-line description\n\nDelivery quality gate for DeepSeek Harness: grill the requirements, test the implementation, prove the delivery, and gate the handoff with a deliverable/rework decision.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-doublecheck\n```"
+    },
+    {
+        "Repo":  "dsh-draw",
+        "Title":  "[Plugin]: dsh-draw",
+        "Url":  "https://github.com/PerryLink/dsh-draw",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-draw\n\n### Primary category\n\nMultimodal \u0026 Media (multimodal)\n\n### One-line description\n\nUnified static-image generation router for DeepSeek Harness: one image_generate tool with standard parameters, config-driven OpenAI-compatible engine routing (OpenAI Images, Zhipu CogView, and any compatible endpoint) with health-aware fallback, durable workspace attachment results, per-session quota accounting, an in-conversation result card, and a Plugins settings panel that stores API keys as credential references.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-draw\n```"
+    },
+    {
+        "Repo":  "dsh-fast",
+        "Title":  "[Plugin]: dsh-fast",
+        "Url":  "https://github.com/PerryLink/dsh-fast",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-fast\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nRead-only performance diagnostics for DeepSeek Harness: session load (open/restore) timing, spill-hit counts, compaction count and trigger, context-injection volume (AGENTS.md/skills/tool-schema token share), and LLM cache hit rate — surfaced via the /fast command and the fast_report tool, persisted as reconstructable fast/* session events with async sampling off the model path.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-fast\n```"
+    },
+    {
+        "Repo":  "dsh-fund-research",
+        "Title":  "[Plugin]: dsh-fund-research",
+        "Url":  "https://github.com/PerryLink/dsh-fund-research",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-fund-research\n\n### Primary category\n\nMemory \u0026 Knowledge (memory)\n\n### One-line description\n\nResearch plugin for Chinese public mutual funds on DeepSeek Harness: collects fund data from public sources (Tiantian Fund / Eastmoney), computes deterministic metrics (manager profile, holdings penetration, style attribution, performance decomposition), and seals versioned Markdown research reports whose every key number traces back to a hashed source snapshot.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-fund-research\n```"
+    },
+    {
+        "Repo":  "dsh-github",
+        "Title":  "[Plugin]: @perrylink/dsh-github",
+        "Url":  "https://github.com/PerryLink/dsh-github",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-github\n\n### Primary category\n\nCoding \u0026 Dev Tools (coding)\n\n### One-line description\n\nOfficial-grade GitHub CI for DeepSeek Harness: composite action (review PRs / fix CI / report), polling PR review bot with idempotent inline comments, a status-check gate, and approval-gated PR/issue/repo/file tools.\n\n### Install command\n\n```shell\ndsh plugin --profile web add @perrylink/dsh-github\n```"
+    },
+    {
+        "Repo":  "dsh-industry-research",
+        "Title":  "[Plugin]: dsh-industry-research",
+        "Url":  "https://github.com/PerryLink/dsh-industry-research",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-industry-research\n\n### Primary category\n\nMemory \u0026 Knowledge (memory)\n\n### One-line description\n\nIndustry and company research domain pack for DeepSeek Harness: methodology skills, an industry-chain structure model (industry_map), public-source policy/news tracking over ctx.web (industry_track), company scan cards (company_scan), and auditable research reports with an optional ctx.researchReport sealing bridge and a builtin Markdown fallback (industry_report).\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-industry-research\n```"
+    },
+    {
+        "Repo":  "dsh-library",
+        "Title":  "[Plugin]: dsh-library",
+        "Url":  "https://github.com/PerryLink/dsh-library",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-library\n\n### Primary category\n\nMemory \u0026 Knowledge (memory)\n\n### One-line description\n\nLocal document knowledge base for DeepSeek Harness: library_add/remove/list, hybrid semantic+keyword library_search with diversity re-ranking, relevance filtering and lost-in-the-middle avoidance, citation-aware injection, library_cite_check and library_diagnose —SQLite-backed index via the storage domain, local embedding, zero model downloads.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-library\n```"
+    },
+    {
+        "Repo":  "dsh-local-ai",
+        "Title":  "[Plugin]: dsh-local-ai",
+        "Url":  "https://github.com/PerryLink/dsh-local-ai",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-local-ai\n\n### Primary category\n\nModels \u0026 Providers (models)\n\n### One-line description\n\nLocal-model (Ollama) integration for DeepSeek Harness: discover, pull, remove, and inspect local models, route requests to them by task type or keyword with automatic fallback to the cloud, and get a one-shot status overview via /ollama.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-local-ai\n```"
+    },
+    {
+        "Repo":  "dsh-lsp-actions",
+        "Title":  "[Plugin]: dsh-lsp-actions",
+        "Url":  "https://github.com/PerryLink/dsh-lsp-actions",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-lsp-actions\n\n### Primary category\n\nCoding \u0026 Dev Tools (coding)\n\n### One-line description\n\nLSP action surface for DeepSeek Harness: diagnostics, formatting, completion, code actions, symbols, signature help, inlay hints, and rename tools over language servers, plus the editor action protocol (lsp.actions.*) that makes the plugin the IDE integration backend.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-lsp-actions\n```"
+    },
+    {
+        "Repo":  "dsh-mask",
+        "Title":  "[Plugin]: dsh-mask",
+        "Url":  "https://github.com/PerryLink/dsh-mask",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-mask\n\n### Primary category\n\nSecurity \u0026 Permissions (security)\n\n### One-line description\n\nPII masking middleware for DeepSeek Harness: regex-detect and replace phones, emails, ID cards, bank cards, keys, and (opt-in) IPs with placeholders before they reach the model, keep the restore table host-side (memory plus a controlled storage domain, never the session log) with the /mask restore command and the exported RestoreStore seam, and expose /mask status and the mask_test tool.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-mask\n```"
+    },
+    {
+        "Repo":  "dsh-mcp-panel",
+        "Title":  "[Plugin]: dsh-mcp-panel",
+        "Url":  "https://github.com/PerryLink/dsh-mcp-panel",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-mcp-panel\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nMCP management console for the official DeepSeek Harness MCP client: /mcp command with health diagnostics and pipeline trial calls, a Settings MCP tab with server CRUD (append-only profile-patch fragments, approval-gated writes with automatic backups), a tool trial console over the official tool pipeline, connection status, reconnect counts and sanitized tool inventory, plus an optional Streamable HTTP probe.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-mcp-panel\n```"
+    },
+    {
+        "Repo":  "dsh-memento",
+        "Title":  "[Plugin]: dsh-memento",
+        "Url":  "https://github.com/PerryLink/dsh-memento",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-memento\n\n### Primary category\n\nMemory \u0026 Knowledge (memory)\n\n### One-line description\n\nBounded, layered, approval-gated, auditable cross-session memory for DeepSeek Harness — a capability seam (ctx.memory service + local SQLite provider + memory tool + frozen snapshot injection), not another memory warehouse.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-memento\n```"
+    },
+    {
+        "Repo":  "dsh-observe",
+        "Title":  "[Plugin]: dsh-observe",
+        "Url":  "https://github.com/PerryLink/dsh-observe",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-observe\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nOpenTelemetry and Langfuse observability exporter for DeepSeek Harness: turn/step/tool/LLM spans, token and cost metrics, and sanitized LLM prompt/completion capture from the session/event stream, with async batching, bounded offline buffering, and retry with backoff.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-observe\n```"
+    },
+    {
+        "Repo":  "dsh-output-styles",
+        "Title":  "[Plugin]: dsh-output-styles",
+        "Url":  "https://github.com/PerryLink/dsh-output-styles",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-output-styles\n\n### Primary category\n\nUI Enhancements (ui)\n\n### One-line description\n\nClaude Code outputStyles-equivalent runtime output-style switching for DeepSeek Harness.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-output-styles\n```"
+    },
+    {
+        "Repo":  "dsh-permission-rules",
+        "Title":  "[Plugin]: dsh-permission-rules",
+        "Url":  "https://github.com/PerryLink/dsh-permission-rules",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-permission-rules\n\n### Primary category\n\nSecurity \u0026 Permissions (security)\n\n### One-line description\n\nDeclarative Claude Code-style permission rules plus a Codex-style process-level network policy for DeepSeek Harness: ordered allow/deny/ask rules with tool-name, argument (glob/regex), workspace-path, and network-target (domain/ip/port/scheme) matching on the tools/pre-execute waterfall, a built-in local HTTP/CONNECT proxy governing shell subprocess traffic, three network modes mapped onto the official sandbox presets, full session-log audit, HMR rule reload, and a settings page with a rule editor, block counters, and recent interception lists.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-permission-rules\n```"
+    },
+    {
+        "Repo":  "dsh-plugin-doctor",
+        "Title":  "[Plugin]: @perrylink/dsh-plugin-doctor",
+        "Url":  "https://github.com/PerryLink/dsh-plugin-doctor",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-plugin-doctor\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nZero-dependency static + sandbox smoke detector for DeepSeek Harness (dsh) plugins: package-structure gates (R), cordis contract scans (K), keyless-headless sandbox smoke (D), and ecosystem-listing checks (CC).\n\n### Install command\n\n```shell\ndsh plugin --profile web add @perrylink/dsh-plugin-doctor\n```"
+    },
+    {
+        "Repo":  "dsh-plugin-guide",
+        "Title":  "[Plugin]: dsh-plugin-guide",
+        "Url":  "https://github.com/PerryLink/dsh-plugin-guide",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-plugin-guide\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nThe dsh-plugin-guide knowledge base plus the dsh-plugin-dev CLI toolchain: official docs, Cordis primer, community deep-dives, and battle-tested pitfalls registered as an on-demand agent skill, with a scaffolder, static checker, and pack verifier for building DSH plugins.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-plugin-guide\n```"
+    },
+    {
+        "Repo":  "dsh-plugin-kit",
+        "Title":  "[Plugin]: @perrylink/dsh-plugin-kit",
+        "Url":  "https://github.com/PerryLink/dsh-plugin-kit",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-plugin-kit\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nShared zero-runtime-dependency toolkit for PerryLink DSH plugins: a pluggable Provider registry seam, fail-closed approval and adaptive session-event gates, mechanical verify scripts, shared sanitize/pricing/judge modules, and a new-plugin skeleton.\n\n### Install command\n\n```shell\ndsh plugin --profile web add @perrylink/dsh-plugin-kit\n```"
+    },
+    {
+        "Repo":  "dsh-plugin-upgrade",
+        "Title":  "[Plugin]: dsh-plugin-upgrade",
+        "Url":  "https://github.com/PerryLink/dsh-plugin-upgrade",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-plugin-upgrade\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nPlugin-author upgrade skill for DeepSeek Harness: one package, one corridor index - the scanner detects the caller peer band and routes to the matching closed corridor card (0.1.3-alpha.1 -\u003e 0.1.5-rc.1 as legs A+B, and 0.1.5-rc.2 -\u003e 0.1.6-alpha.2 as leg C), with a zero-dependency seam scanner shipped as a bundle skill and an npx CLI.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-plugin-upgrade\n```"
+    },
+    {
+        "Repo":  "dsh-plugin-upgrade-015",
+        "Title":  "[Plugin]: dsh-plugin-upgrade-015",
+        "Url":  "https://github.com/PerryLink/dsh-plugin-upgrade-015",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-plugin-upgrade-015\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nPlugin-author upgrade skill for DeepSeek Harness: the merged version-locked 0.1.3-alpha.1 -\u003e 0.1.5-rc.1 corridor card plus a zero-dependency seam scanner over one 20-seam catalog — leg A (V3 session format, assistant/message.stream, SessionHandleReadResult, ctx.agent, Inbox, SubprocessHandle.pid, SystemPrompt persona, PTC rename, EpochHeader.system, and the tsconfig stale-path false green) and leg B (the removed bare `conversation` client slot, the sidebar textpreview -\u003e documentpreview package rename, the stale-type-line false green, the new global main-panel model and usePanelInfo standard prop, the new `present` tool key, two new session event types, and the peer-range trap where \u003e=0.1.2-rc.1 \u003c0.2.0 alone rejects 0.1.5-rc.1) — packaged as a bundle skill and an npx CLI.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-plugin-upgrade-015\n```"
+    },
+    {
+        "Repo":  "dsh-plugin-upgrade-016",
+        "Title":  "[Plugin]: dsh-plugin-upgrade-016",
+        "Url":  "https://github.com/PerryLink/dsh-plugin-upgrade-016",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-plugin-upgrade-016\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nPlugin-author upgrade skill for DeepSeek Harness: the closed 0.1.5-rc.2 -\u003e 0.1.6-alpha.2 corridor card plus a zero-dependency seam scanner over one five-seam catalog - E1 (agent/created listener throwing blocks creation), E2 (async apply race: registration after the first await), E3 (removed slot keys settings.plugin.item and SessionListState.current), E4 (removed client APIs sessions.open/openSubagent/clear) and E5 (removed model literals deepseek-v4-flash*/deepseek-v4-vision-exp) - packaged as a bundle skill and an npx CLI.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-plugin-upgrade-016\n```"
+    },
+    {
+        "Repo":  "dsh-reach",
+        "Title":  "[Plugin]: dsh-reach",
+        "Url":  "https://github.com/PerryLink/dsh-reach",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-reach\n\n### Primary category\n\nChannels \u0026 Notifications (channels)\n\n### One-line description\n\nMulti-channel decision \u0026 remote-control bridge for DeepSeek Harness: pushes any workspace\u0027s approval/question cards to IM channels (WeChat iLink first) and answers them from chat, with a session console, per-channel security, and an open push service.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-reach\n```"
+    },
+    {
+        "Repo":  "dsh-research-report",
+        "Title":  "[Plugin]: dsh-research-report",
+        "Url":  "https://github.com/PerryLink/dsh-research-report",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-research-report\n\n### Primary category\n\nMemory \u0026 Knowledge (memory)\n\n### One-line description\n\nVerifiable research-report engine for DeepSeek Harness: a content-addressed evidence ledger (claim — snapshot binding, tamper-evident) plus versioned sealed reports where every claim carries a verification verdict and the manifest hash seals the directory.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-research-report\n```"
+    },
+    {
+        "Repo":  "dsh-score",
+        "Title":  "[Plugin]: dsh-score",
+        "Url":  "https://github.com/PerryLink/dsh-score",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-score\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nMulti-dimensional quality scoring for DeepSeek Harness plugins: scores one repo or npm package across install success (consuming dsh-test-drive results), maintenance activity, documentation completeness, security scan, and protocol compliance — every conclusion backed by real CLI evidence with audit timestamps — and produces a JSON/Markdown leaderboard report.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-score\n```"
+    },
+    {
+        "Repo":  "dsh-session-pin",
+        "Title":  "[Plugin]: dsh-session-pin",
+        "Url":  "https://github.com/PerryLink/dsh-session-pin",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-session-pin\n\n### Primary category\n\nUI Enhancements (ui)\n\n### One-line description\n\nPin sessions and workspaces to the top of the DeepSeek Harness sidebar with per-pin row colors — a dual-face (host + client) dsh plugin with row [pin][swatch] controls, a header toggle, and a pinned panel.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-session-pin\n```"
+    },
+    {
+        "Repo":  "dsh-session-sync",
+        "Title":  "[Plugin]: dsh-session-sync",
+        "Url":  "https://github.com/PerryLink/dsh-session-sync",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-session-sync\n\n### Primary category\n\nSessions \u0026 History (sessions)\n\n### One-line description\n\nCross-device sync for DeepSeek Harness sessions: a dedicated git mirror of the session store, append-only three-way merge with keep-both + fork conflict resolution, /sync command, sync_pull/sync_push/sync_status tools, and configurable auto push/pull.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-session-sync\n```"
+    },
+    {
+        "Repo":  "dsh-skill-pack-security",
+        "Title":  "[Plugin]: dsh-skill-pack-security",
+        "Url":  "https://github.com/PerryLink/dsh-skill-pack-security",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-skill-pack-security\n\n### Primary category\n\nSecurity \u0026 Permissions (security)\n\n### One-line description\n\nAutomated plugin supply-chain security gate for DeepSeek Harness (dsh): eight agent skills in Chinese and English editions teach the audit methodology, and the plugin_vet tool executes the pre-install gate (license / SBOM / commit pinning / malicious patterns / five-dimension risk card) with findings that cite the matching skill sections.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-skill-pack-security\n```"
+    },
+    {
+        "Repo":  "dsh-talk",
+        "Title":  "[Plugin]: dsh-talk",
+        "Url":  "https://github.com/PerryLink/dsh-talk",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-talk\n\n### Primary category\n\nMultimodal \u0026 Media (multimodal)\n\n### One-line description\n\nVoice-first session loop for DeepSeek Harness: a composer microphone button with browser/local speech-to-text (Web Speech, FunASR, whisper.cpp), a speak tool for text-to-speech replies (browser, edge-tts, piper), event announcements with mute, and speak-to-interrupt.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-talk\n```"
+    },
+    {
+        "Repo":  "dsh-team-rooms",
+        "Title":  "[Plugin]: dsh-team-rooms",
+        "Url":  "https://github.com/PerryLink/dsh-team-rooms",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-team-rooms\n\n### Primary category\n\nAgents \u0026 Automation (agents)\n\n### One-line description\n\nPersistent multi-agent team rooms for DeepSeek Harness: cross-session rooms with a message bus, a shared task board, approval-gated handoffs and a shared timeline that survive DSH restarts.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-team-rooms\n```"
+    },
+    {
+        "Repo":  "dsh-test-drive",
+        "Title":  "[Plugin]: dsh-test-drive",
+        "Url":  "https://github.com/PerryLink/dsh-test-drive",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-test-drive\n\n### Primary category\n\nPlugins \u0026 Runtime (plugin-tools)\n\n### One-line description\n\nIsolated install-and-smoke test drives for DeepSeek Harness plugins: installs a repo or npm package into a throwaway DSH_HOME profile, verifies the bundle patch layer and boot logs, records a structured pass/fail result matrix (JSON/Markdown) for scoring pipelines, and quarantines every temp directory it owns.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-test-drive\n```"
+    },
+    {
+        "Repo":  "dsh-ticktick",
+        "Title":  "[Plugin]: @perrylink/dsh-ticktick",
+        "Url":  "https://github.com/PerryLink/dsh-ticktick",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-ticktick\n\n### Primary category\n\nChannels \u0026 Notifications (channels)\n\n### One-line description\n\nTickTick (Dida365) task bridge for DeepSeek Harness: a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder) over the official TickTick MCP endpoint, a Ticktick Remote service, curated agent tools, and a plugin settings card.\n\n### Install command\n\n```shell\ndsh plugin --profile web add @perrylink/dsh-ticktick\n```"
+    },
+    {
+        "Repo":  "dsh-translate",
+        "Title":  "[Plugin]: dsh-translate",
+        "Url":  "https://github.com/PerryLink/dsh-translate",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-translate\n\n### Primary category\n\nModels \u0026 Providers (models)\n\n### One-line description\n\nVendor parameter translation and deterministic JSON repair for DeepSeek Harness: the /translate command maps temperature/top_p/max_tokens/stop/system across 11 vendors, and the tools/post-execute repair layer (plus the fix_json tool) fixes broken JSON tool output with escape repair, trailing-comma removal, truncation closure, and required-field completion — never fabricating data.\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-translate\n```"
+    },
+    {
+        "Repo":  "dsh-wechat",
+        "Title":  "[Plugin]: dsh-wechat",
+        "Url":  "https://github.com/PerryLink/dsh-wechat",
+        "Body":  "### Plugin package URL\n\nhttps://github.com/PerryLink/dsh-wechat\n\n### Primary category\n\nChannels \u0026 Notifications (channels)\n\n### One-line description\n\nBridge WeChat (iLink bot) to DeepSeek Harness (DSH).\n\n### Install command\n\n```shell\ndsh plugin --profile web add dsh-wechat\n```"
+    }
+]
