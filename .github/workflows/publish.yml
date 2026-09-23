@@ -3,6 +3,10 @@ name: publish
 on:
   push:
     tags: ['v*']
+  # Allows re-running the release after fixing a credential or configuring a
+  # trusted publisher, without inventing a new version. A published version is
+  # skipped rather than republished, so this is safe to press.
+  workflow_dispatch:
 
 permissions:
   contents: write # GitHub Release
@@ -35,10 +39,27 @@ jobs:
         shell: bash
         run: |
           tag="v$(node -p "require('./package.json').version")"
+          # A workflow_dispatch run has no tag ref; the version check only means
+          # something on a tag push, so skip it there and publish the version in
+          # package.json.
+          if [ "${GITHUB_REF_TYPE}" != "tag" ]; then
+            echo "not a tag ref (${GITHUB_REF_TYPE}); releasing ${tag} from package.json"
+            exit 0
+          fi
           if [ "${GITHUB_REF_NAME}" != "${tag}" ]; then
             echo "tag ${GITHUB_REF_NAME} does not match package version ${tag}"
             exit 1
           fi
+      # Trusted publishing needs a recent npm. The runner's bundled npm may
+      # predate OIDC support, and a too-old npm fails with a 404 rather than a
+      # clear error. Pinned major, so a future npm 12 does not silently change
+      # release behaviour.
+      - name: Ensure an npm that supports trusted publishing
+        shell: bash
+        run: |
+          echo "npm before: $(npm --version)"
+          npm install -g npm@^11 --no-audit --no-fund
+          echo "npm after : $(npm --version)"
       - name: Publish to npm
         shell: bash
         env:
@@ -68,10 +89,19 @@ jobs:
           fi
 
           # Trusted Publishing (OIDC): no long-lived secret involved, so this
-          # path cannot rot the way a token does. Requires the package to have a
-          # GitHub Actions trusted publisher configured on npmjs.com — see
-          # 发布令牌轮换清单.md §7.
+          # path cannot rot the way a token did. Requires a GitHub Actions
+          # trusted publisher bound to this package on npmjs.com — see the token
+          # rotation checklist, section 7.
+          #
+          # The environment must not carry a token at all. `actions/setup-node`
+          # writes an .npmrc containing ${NODE_AUTH_TOKEN}, and npm treats a set
+          # but empty value as a real (invalid) credential rather than falling
+          # back to OIDC — it then fails with the same misleading 404. Unsetting
+          # is not the same as emptying, and the .npmrc has to go with it.
           echo "publishing via OIDC Trusted Publishing"
+          unset NODE_AUTH_TOKEN
+          rm -f "$NPM_CONFIG_USERCONFIG" "$HOME/.npmrc" .npmrc
+          npm config delete //registry.npmjs.org/:_authToken 2>/dev/null || true
           if npm publish --access public --provenance; then
             echo "published via OIDC"
           else
