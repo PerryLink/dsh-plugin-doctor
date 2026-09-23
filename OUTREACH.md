@@ -177,12 +177,11 @@ still `0.2.3`, and the README pins its examples to that.
 `--format check` and `SPEC.md` §1.1 — see §1.1 above for why this was the
 highest-value move available.
 
-### C2. The family's gate pin is stale, and it is hiding the fixes — OPEN
+### C2. The family's gate pin is stale, and it is hiding the fixes — **RAISED 2026-09-23**
 
-Measured 2026-09-23, not inferred. The 42 family repositories pin
-`@perrylink/dsh-plugin-doctor@0.1.6` in their gates. **0.1.6 predates every
-false-positive fix made since**, so the family is still being judged by
-criteria that reject valid packages:
+**Resolved.** The 42 gated repositories were pinned to `@perrylink/dsh-plugin-doctor@0.1.6`
+(38) or `0.2.3` (4). 0.1.6 predates every false-positive fix made since, so the
+family was judged by rules that reject valid packages:
 
 | check | fixed in | what 0.1.6 still does |
 |---|---|---|
@@ -191,24 +190,41 @@ criteria that reject valid packages:
 | `R7` | 0.3.0 | rejects a zero-build plain-JavaScript package |
 | `R8` | 0.3.1 | reports staleness as if it were breakage |
 
-The proof is a real CI run, not a hypothetical: `dsh-plugin-kit`'s new gate
-**failed on master** with
+**The fix was verified before it was applied, not after.** The current published
+0.3.1 was run against all 42 gated repositories using the exact command the gate
+uses (`--no-smoke --only "R,K"`). **41 passed clean**; the one that did not is
+`dsh-ticktick`, below.
 
-```
-[FAIL] R3 cordis.patch.yml 结构（启发式）
-    未找到 "- insert:" 结构
-```
+**Result, measured on each repository's real remote default branch:**
 
-on a `cordis.patch.yml` that is a deliberately empty layer — which the current
-tool passes, verified locally the same day. The same run shows `R2=fail R4=fail`
-for the ordinary reason that CI does not build.
+| state | count |
+|---|---|
+| on `0.3.1` | **37** |
+| still on `0.1.6` | 3 |
+| no gate on the remote default branch | 9 |
 
-**Consequence for promotion:** until the family is moved onto a current pin, its
-own repositories run an older rulebook than the one being promoted, and any newly
-gated repository will go red for reasons already fixed. Raising the pin is the
-prerequisite for further family adoption — and it is a real wave (42 repos, one
-canary first), not a one-line change, which is why it has not been done
-unilaterally.
+The 9 without a gate are the repositories that never had one committed — the ones
+with no `dsh.bundle.patch` (`dsh-catalog`, `dsh-kit`, `dsh-plugin-certification`,
+`dsh-plugin-portal`), the withdrawn `dsh-personal-directive`, this repository
+itself, and the four where the gate file has only ever existed untracked in a
+working tree: `dsh-cert-mcp`, `dsh-plugin-upgrade-016`, `dsh-skill-pack-security`.
+
+**`dsh-ticktick` was deliberately left on 0.1.6.** It passes R8 on 0.1.6 and fails
+it on 0.3.1, because 0.2.0 added the single-arm prerelease-range rule and its
+permanent peers are single-arm (`>=0.1.7-alpha.1 <0.2.0`). Moving its pin would
+have turned its CI red over a rule added after those ranges were written. That is
+a criterion decision, not a mechanical one, so it waits for a human:
+
+- the rule exists to stop a false green — a single-arm tuple range admits only the
+  prerelease it names, so `>=0.1.2-rc.1 <0.2.0` silently rejects `0.1.5-rc.1`;
+- but a range targeting a *current* line (`0.1.7-alpha.1`) is not that trap, and
+  failing it reports a deliberate target as a defect.
+
+`dsh-local-ai` and `dsh-plugin-upgrade-015` have the change staged on a branch cut
+from `origin/main` — `ci/doctor-pin-0.3.1-main`, a one-line diff — because their
+local `main` has diverged from the remote and the pin could not be landed without
+either force-pushing or carrying another session's commits along. Merge those
+branches to finish.
 
 ### C3. Three repositories gated but not badged — PARTLY DONE
 
