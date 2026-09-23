@@ -7,6 +7,14 @@ attribution**: through 0.2.3 the published tarball contained neither `SPEC.md`
 nor `NOTICE` nor the gate template, so `npx @perrylink/dsh-plugin-doctor` gave
 every adopter a build in which the criteria had no author and no normative text.
 
+> **Not on npm yet.** The `v0.2.4` tag was pushed and the `publish` workflow ran,
+> but the npm publish step failed with `npm error 404 Not Found - PUT
+> https://registry.npmjs.org/@perrylink%2fdsh-plugin-doctor`. The `NPM_TOKEN`
+> secret is present but not usable (invalid, expired, or lacking this package), so
+> `latest` on npm is still **0.2.3** and none of this section has reached
+> adopters. The workflow correctly refused to report success. Fix the token and
+> re-run the `publish` workflow (or re-push the tag) to complete the release.
+
 ### Added
 
 - **`--format check` — a view that speaks the ecosystem's plugin-check contract.** Three independent DSH checkers (this one, `zoahdev/dsh-plugin-doctor`, `boyin111-1/dsh-doctor`, `moonquake2004/dsh-doctor`) converged during 2026-08 on a three-value status vocabulary (`PASS`/`WARN`/`FAIL`), exit codes `0`/`1`/`2`, and a flat `checks` array — written up as [RFC #1846](https://github.com/deepseek-ai/deepseek-harness/discussions/1846). This project's envelope is deliberately richer (five statuses, seven exit codes, per-check ids and coverage), so no interoperating tool could read it. `--format check` restates the same run in the contract's vocabulary without changing it: the two views must agree on pass/fail, a `skip` is never rendered as `PASS` (it becomes `WARN` plus `skipped: true`), and anything the contract cannot express is carried in a `doctor` side field or flagged `approximated`. `SPEC.md` §1.1 makes these three properties normative. The default view is untouched, so the 38 downstream gates are unaffected. `tests/compat.mjs` asserts 25 of these properties, including that `--format check` and the default view never disagree.

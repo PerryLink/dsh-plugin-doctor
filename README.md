@@ -243,10 +243,14 @@ OUTREACH.md              adoption notes: channel states, positioning, actions
 ## Status
 
 Official repository: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.
-**Current version 0.2.4**; see `CHANGELOG.md`. CI usage (**please use the ASCII aliases**):
+**Current version 0.2.4.** Published on npm: **0.2.3** — the 0.2.4 release build
+failed to publish (npm returned `404` on `PUT`, i.e. the `NPM_TOKEN` secret is
+invalid, expired or lacks this package), so the version below is what the
+repository and tag say, not yet what `npx` resolves. See `CHANGELOG.md`. CI usage
+(**please use the ASCII aliases**):
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.2.4 --repo . --no-smoke --only "R,K"
+npx --yes @perrylink/dsh-plugin-doctor@0.2.3 --repo . --no-smoke --only "R,K"
 ```
 
 **38 plugin repos** already ship `.github/workflows/plugin-doctor.yml` (a read-only static gate over the committed tree → `--only "R,K"` plus the R0/K1 self-verification, pinned to `@0.1.6`).
