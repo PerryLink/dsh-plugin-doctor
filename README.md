@@ -158,10 +158,16 @@ Wearing this badge means exactly one auditable thing: **the repo runs dsh-plugin
 ```
 
 **Path B is a centralized, single-operator service and should be treated as
-such.** It depends on this project's `DOCTOR_AUDIT_TOKEN` and on
-`.github/workflows/verified.yml` running; if the token lapses, every issued
-badge renders grey `NO DATA`. That is a real single point of failure, it has
-happened, and it is the reason Path A exists and is recommended.
+such.** It needs a fine-grained PAT with cross-repository read access, stored as
+the `DOCTOR_AUDIT_TOKEN` repository secret. The workflow-scoped `GITHUB_TOKEN`
+**cannot** substitute for it: it carries no cross-repository read permission, so
+GitHub treats it as an anonymous caller limited to 60 requests/hour, while a full
+audit of the declared repos needs 200+. Without the PAT, every badge renders grey
+`NO DATA` — the failure looks like a broken badge program rather than a missing
+secret. This has happened (once as `401`, then as `403 rate limit exceeded`), and
+it is the reason Path A exists and is recommended. `scripts/verify.mjs` now stops
+at the first such response, exits `3`, and writes a registry whose reasons name
+the real cause instead of emitting the same rate-limit line for every repo.
 - The registry `data/verified.json` is the single source of truth for Path B, refreshed by `.github/workflows/verified.yml` daily and on every relevant push. A refresh only reads the GitHub API: it parses each repo's HEAD `plugin-doctor.yml` gate configuration (which must pin `@perrylink/dsh-plugin-doctor@<version>`, use a working `--only` argument, and self-verify that R0/K1 actually ran), then checks the conclusion of that HEAD's `plugin-doctor` workflow run. **This repo's CI never clones, installs or executes any third-party code.**
 - Badge appearance: the visual language follows the two newer badges in the ecosystem (`dsh.directory`'s monospace-uppercase + letter-spacing + mark + gradient, and `awesome-dsh-plugin`'s seal block) — **a silver/platinum metallic left segment, a shield tick mark, and ink-blue monospace uppercase**, with the right segment a **solid GitHub-convention status colour** (green/orange/red/grey) carrying a monospace uppercase status word, and the status additionally expressed by a **path-drawn icon** (✓ / ! / ✕ / –) so it stays readable with colour-vision deficiency. 5px corner radius + 1px stroke; **the stroke is required** — without it the silver left segment disappears against a white README background.
 - Four states (value text uses the shields / GitHub Actions conventional words): `passing` (green: the HEAD run succeeded) / `warning` (orange: HEAD has not run yet, a run is still queued, or a gate precondition is missing) / `failing` (red: the HEAD run failed, or the gate configuration does not hold — including a "fake gate" whose `--only` argument is doubly mis-encoded) / `no data` (grey: the API query failed). The badge is **dynamic**: once it stops passing it turns red. The precise R+K scope lives in this section and in the registry's `meaning` field, not in the badge text (the badge links back here).

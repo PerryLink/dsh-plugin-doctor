@@ -12,7 +12,8 @@
 
 ### Fixed
 
-- **`LICENSE` credited the wrong project.** The appendix copyright line read `Copyright 2026 dsh-memento contributors` — a different PerryLink plugin, inherited when the file was copied from a sibling repository. The Apache-2.0 text itself carries no other copyright line, so the only copyright statement in the licence named a project that is not this one. It now reads `Copyright 2026 PerryLink`. *The same wrong line is present in 15 sibling repositories; this release does not fix those.*
+- **The Path B audit failed as one opaque line, 37 times.** With no usable `DOCTOR_AUDIT_TOKEN` the script fell back to the workflow-scoped `GITHUB_TOKEN`, which holds no cross-repository read permission and is therefore treated as an anonymous caller (60 requests/hour) — a full audit needs 200+. Every entry came back `no-data` with the identical `403 rate limit exceeded`, and an earlier run reported `401 Unauthorized`; both are configuration faults that read as a broken badge program. `scripts/verify.mjs` now stops at the first `401`/rate-limited `403`, exits `3`, and writes an all-grey registry whose reasons name the actual cause. The `GITHUB_TOKEN` fallback is gone: it could never have worked. `--allow-anonymous` (or `DOCTOR_ALLOW_ANONYMOUS=1`) keeps the local, partial-audit convenience but warns first.
+- **`LICENSE` credited the wrong project.** The appendix copyright line read `Copyright 2026 dsh-memento contributors` — a different PerryLink plugin, inherited when the file was copied from a sibling repository. The Apache-2.0 text itself carries no other copyright line, so the only copyright statement in the licence named a project that is not this one. It now reads `Copyright 2026 PerryLink`. The same wrong line was present in 15 sibling repositories and has been corrected there too, each a verified one-line diff.
 
 ### Changed
 

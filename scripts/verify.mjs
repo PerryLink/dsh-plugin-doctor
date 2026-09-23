@@ -27,14 +27,65 @@ const flag = (name) => {
 const onlyRepos = (flag('--only-repo') ?? '').split(',').map((s) => s.trim()).filter(Boolean)
 const limit = Number(flag('--limit') ?? 0)
 
+// Declared before the token check: the fail-fast path builds registry entries
+// too, and anything left below it would still be in its temporal dead zone.
+const MOJIBAKE = /[\uE000-\uF8FF]|闈|鎵|绱|绛|鍖|浠/
+const snapshot = new Date().toISOString().slice(0, 10)
+const doctorCommit = process.env.GITHUB_SHA ?? 'local'
+const runUrl = process.env.GITHUB_RUN_ID
+  ? `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
+  : null
+
 // Reading other repositories' Actions metadata needs a token that can see
-// them: the workflow-scoped GITHUB_TOKEN is rate-limited as an anonymous
-// caller (60/h), so DOCTOR_AUDIT_TOKEN (a read-capable PAT stored as a repo
-// secret) is preferred when present. A stray BOM would make fetch throw, so
-// strip it defensively.
-const token = (process.env.DOCTOR_AUDIT_TOKEN || process.env.GITHUB_TOKEN || process.env.GH_TOKEN || '')
-  .replace(/^\uFEFF/, '')
-  .trim()
+// them. Two distinct failures produce an all-grey registry, and they used to be
+// reported as one opaque "repo lookup failed":
+//
+//   401 -> DOCTOR_AUDIT_TOKEN is set but invalid/expired.
+//   403 rate limit exceeded -> no usable DOCTOR_AUDIT_TOKEN at all, and the
+//          fallback GITHUB_TOKEN is an *installation* token whose API
+//          permissions do not include other repositories, so it is treated as
+//          an anonymous caller and gets 60 requests/hour. Auditing 37 repos
+//          needs well over 200, so the run always dies partway.
+//
+// Falling back to GITHUB_TOKEN therefore cannot work, and only converts a clear
+// configuration error into a partial, confusing one. Require the real token.
+//
+// A stray BOM would make fetch throw, so strip it defensively.
+const token = (process.env.DOCTOR_AUDIT_TOKEN ?? '').replace(/^\uFEFF/, '').trim()
+const allowAnon = argv.includes('--allow-anonymous') || process.env.DOCTOR_ALLOW_ANONYMOUS === '1'
+
+if (!token) {
+  const msg = [
+    'verify: DOCTOR_AUDIT_TOKEN is not set.',
+    '',
+    'Auditing the declared repos reads their Actions metadata through the GitHub API.',
+    'The workflow-scoped GITHUB_TOKEN cannot do this: it holds no cross-repository',
+    'read permission, so GitHub treats it as anonymous (60 requests/hour) while a',
+    'full audit needs 200+. Every entry would come back no-data with',
+    '"403 rate limit exceeded", which looks like a broken badge program rather than',
+    'a missing secret.',
+    '',
+    'Fix: create a fine-grained PAT with read access to the declared repositories',
+    'and store it as the DOCTOR_AUDIT_TOKEN repository secret.',
+    '',
+    'To run the audit locally against your own rate limit instead, pass',
+    '--allow-anonymous (or set DOCTOR_ALLOW_ANONYMOUS=1). Expect 403s partway.',
+  ].join('\n')
+
+  if (!allowAnon) {
+    console.error(msg)
+    process.exitCode = 3
+    // Emit the honest grey registry rather than leaving a stale file behind,
+    // but leave every reason naming the real cause.
+    writeFailureRegistry('DOCTOR_AUDIT_TOKEN is not set — nothing was verified')
+    process.exit(3)
+  }
+  console.warn(msg)
+  console.warn('')
+  console.warn('Continuing anonymously because --allow-anonymous was requested.')
+  console.warn('')
+}
+
 const declared = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/verified-repos.json'), 'utf8'))
 let repos = declared.repos
 if (onlyRepos.length > 0) repos = repos.filter((r) => onlyRepos.includes(r.repo))
@@ -59,7 +110,7 @@ if (repos.length === 0) {
 
 /**
  * @param {string} pathname
- * @returns {Promise<{ error?: string, data?: GitHubPayload }>}
+ * @returns {Promise<{ error?: string, status?: number, data?: GitHubPayload }>}
  */
 async function api(pathname) {
   const res = await fetch(`${API}${pathname}`, {
@@ -70,16 +121,81 @@ async function api(pathname) {
       ...(token ? { authorization: `Bearer ${token}` } : {}),
     },
   })
-  if (!res.ok) return { error: `${res.status} ${res.statusText}` }
+  if (!res.ok) {
+    // The status is carried separately so the caller can tell an exhausted rate
+    // limit (403) or a dead token (401) from a genuinely missing repository —
+    // the first two are configuration faults that just cost the whole run.
+    const remaining = res.headers.get('x-ratelimit-remaining')
+    const suffix = remaining === '0' ? ' (x-ratelimit-remaining: 0)' : ''
+    return { error: `${res.status} ${res.statusText}${suffix}`, status: res.status }
+  }
   return { data: await res.json() }
 }
 
-const MOJIBAKE = /[\uE000-\uF8FF]|闈|鎵|绱|绛|鍖|浠/
-const snapshot = new Date().toISOString().slice(0, 10)
-const doctorCommit = process.env.GITHUB_SHA ?? 'local'
-const runUrl = process.env.GITHUB_RUN_ID
-  ? `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
-  : null
+/**
+ * A configuration fault that makes every remaining lookup pointless: an
+ * exhausted quota (403) or an invalid token (401). Continuing would burn the
+ * rest of the run and bury one cause under N identical reasons.
+ * @param {{ error?: string, status?: number }} res
+ */
+const isFatalApiFault = (res) => res.status === 401 || (res.status === 403 && /rate limit/i.test(res.error ?? ''))
+
+/**
+ * Build the registry object and write it, together with one badge per entry.
+ * A single writer keeps the fail-fast path and the normal path from drifting.
+ * @param {Array<Record<string, unknown>>} entryList
+ */
+function writeRegistry(entryList) {
+  const registry = {
+    specVersion: 'v1',
+    scope: SCOPE,
+    meaning:
+      'The declared repo runs the dsh-plugin-doctor static R+K gate (16 gated checks: R0/R1/R3/R5/R6/R7/R8 + K1-K9) in its own CI and that gate is green on the current default-branch HEAD. R2/R4 read built artifacts and are gated by the repo\'s own ci.yml. '
+      + 'SCOPE: static R+K only — this is NOT a certification badge (no Scorecard, no provenance, no install/runtime smoke), and it is not a statement that the plugin is safe. '
+      + 'Verification reads the GitHub API only; no third-party code is cloned or executed.',
+    doctorVersion: JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version,
+    doctorCommit,
+    generatedAt: new Date().toISOString(),
+    entries: entryList,
+  }
+  fs.writeFileSync(path.join(ROOT, 'data', 'verified.json'), JSON.stringify(registry, null, 2) + '\n')
+
+  fs.mkdirSync(path.join(ROOT, 'badges'), { recursive: true })
+  for (const e of entryList) {
+    const repo = /** @type {{ repo: string, result: string }} */ (e).repo
+    const result = /** @type {{ repo: string, result: string }} */ (e).result
+    fs.writeFileSync(path.join(ROOT, 'badges', `${repo.replace('/', '__')}.svg`), renderBadge(result))
+  }
+}
+
+/** Write an all-grey registry whose every reason names the real cause. */
+function writeFailureRegistry(cause) {
+  const declared = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/verified-repos.json'), 'utf8'))
+  const stale = readExistingEntries()
+  writeRegistry(
+    declared.repos.map((/** @type {{repo: string, package?: string}} */ r) => ({
+      ...(stale.get(r.repo) ?? {}),
+      repo: r.repo,
+      package: r.package ?? null,
+      scope: 'R+K',
+      result: 'no-data',
+      reason: cause,
+      evidence: `${cause}; nothing was verified, so this entry carries no verdict`,
+    })),
+  )
+}
+
+/** Best-effort read of the previous registry, so a failed run keeps the last known head/sha. */
+function readExistingEntries() {
+  try {
+    const prev = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'verified.json'), 'utf8'))
+    return new Map((prev.entries ?? []).map((/** @type {{repo: string}} */ e) => [e.repo, e]))
+  } catch {
+    return new Map()
+  }
+}
+
+const firstReason = () => entries.find((e) => e.reason)?.reason ?? 'unknown'
 
 const entries = []
 for (const item of repos) {
@@ -104,6 +220,20 @@ for (const item of repos) {
 
   const repoInfo = await api(`/repos/${item.repo}`)
   if (repoInfo.error) {
+    // One exhausted quota or dead token makes every remaining lookup pointless;
+    // stop at the first one instead of burning the rest of the run and
+    // reporting the same cause 37 times.
+    if (isFatalApiFault(repoInfo)) {
+      const cause = repoInfo.status === 401
+        ? `DOCTOR_AUDIT_TOKEN was rejected (401 ${repoInfo.error}) — the PAT is invalid, expired or revoked`
+        : `GitHub API quota exhausted (${repoInfo.error}) — DOCTOR_AUDIT_TOKEN is missing or has no cross-repository read access, so this run fell back to the anonymous 60 requests/hour limit`
+      entries.push({ ...entry, reason: cause, evidence: `${cause} at ${snapshot}` })
+      console.error(`verify: ${cause}`)
+      console.error(`verify: stopped after ${entries.length} of ${repos.length} declared repos — nothing was verified.`)
+      console.error('verify: fix DOCTOR_AUDIT_TOKEN, then re-run. See the comment at its use in this file for why GITHUB_TOKEN cannot stand in.')
+      writeRegistry(entries)
+      process.exit(1)
+    }
     entry.reason = `repo lookup failed: ${repoInfo.error}`
     entry.evidence = `${entry.reason} at ${snapshot}`
     entries.push(entry)
@@ -183,24 +313,7 @@ for (const item of repos) {
 }
 
 entries.sort((a, b) => a.repo.localeCompare(b.repo))
-const registry = {
-  specVersion: 'v1',
-  scope: SCOPE,
-  meaning:
-    'The declared repo runs the dsh-plugin-doctor static R+K gate (16 gated checks: R0/R1/R3/R5/R6/R7/R8 + K1-K9) in its own CI and that gate is green on the current default-branch HEAD. R2/R4 read built artifacts and are gated by the repo\'s own ci.yml. '
-    + 'SCOPE: static R+K only — this is NOT a certification badge (no Scorecard, no provenance, no install/runtime smoke), and it is not a statement that the plugin is safe. '
-    + 'Verification reads the GitHub API only; no third-party code is cloned or executed.',
-  doctorVersion: JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version,
-  doctorCommit,
-  generatedAt: new Date().toISOString(),
-  entries,
-}
-fs.writeFileSync(path.join(ROOT, 'data', 'verified.json'), JSON.stringify(registry, null, 2) + '\n')
-
-fs.mkdirSync(path.join(ROOT, 'badges'), { recursive: true })
-for (const e of entries) {
-  fs.writeFileSync(path.join(ROOT, 'badges', `${e.repo.replace('/', '__')}.svg`), renderBadge(e.result))
-}
+writeRegistry(entries)
 
 const summary = entries.reduce((acc, e) => ((acc[e.result] = (acc[e.result] ?? 0) + 1), acc), {})
 console.log(`\nverified: ${entries.length} repos | ${Object.entries(summary).map(([k, n]) => `${k}=${n}`).join(' ')}`)
@@ -211,10 +324,10 @@ console.log('registry: data/verified.json | badges: badges/*.svg')
 // but the workflow fails loudly so it gets noticed.
 const allNoData = entries.length > 0 && entries.every((e) => e.result === 'no-data')
 if (allNoData) {
-  const first = entries.find((e) => e.reason)?.reason ?? 'unknown'
   console.error(
     `::error::every declared repo failed verification (${entries.length}/${entries.length} no-data) — ` +
-      `first reason: ${first}. Check DOCTOR_AUDIT_TOKEN (expired/revoked PAT?) and the API rate limit.`,
+      `first reason: ${firstReason()}. Fix DOCTOR_AUDIT_TOKEN; see scripts/verify.mjs for why ` +
+      `GITHUB_TOKEN cannot stand in for it.`,
   )
   process.exitCode = 1
 }
