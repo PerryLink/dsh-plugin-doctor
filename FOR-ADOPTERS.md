@@ -57,6 +57,19 @@ CI and that workflow is green on the default branch.* It is rendered by
 shields.io from your workflow status. It is **not** a statement that this project
 verified you, and it is not a certification.
 
+This exact URL form was verified working: with a real workflow path it renders
+`passing`, and with a wrong filename it renders `repo or workflow not found`
+rather than a misleading green. So if your badge is blank or says "not found",
+the cause is the path or the branch in the URL, not the badge service.
+
+If you would rather not depend on shields.io, GitHub serves its own status badge
+for the same workflow. It makes the same claim (this one is the documented GitHub
+Actions badge form, not separately verified here):
+
+```markdown
+[![dsh-doctor R+K](https://github.com/<owner>/<repo>/actions/workflows/plugin-doctor.yml/badge.svg)](https://github.com/PerryLink/dsh-plugin-doctor/blob/main/SPEC.md)
+```
+
 ### 3. Say what you conform to
 
 If you want a precise statement, this one is supported by the badge above:
