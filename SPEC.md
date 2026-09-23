@@ -409,3 +409,13 @@ full research record, with URLs, is in [`SURVEY.md`](SURVEY.md):
 - **Ecosystem side** — the certification registry spec v1, the `adp-list`
   entry schema, the `dsh-catalog` validator, the `omdsh` build-submission
   rules, and the `dsh-plugin-kit` verification gates.
+- **Upstream discussion** — the official plugin-scaffold RFC
+  ([discussion #1629](https://github.com/deepseek-ai/deepseek-harness/discussions/1629)),
+  which this specification's treatment of the scaffold and activation contract
+  follows, and this project's own proposal to the harness maintainers
+  ([discussion #1814](https://github.com/deepseek-ai/deepseek-harness/discussions/1814)).
+
+**Status relative to upstream.** This is an independent specification authored by
+PerryLink. It has been *proposed* to the harness maintainers for adoption; it has
+not been adopted, and nothing here should be described as the official check.
+See [`OUTREACH.md`](OUTREACH.md) for the current state of that proposal.
