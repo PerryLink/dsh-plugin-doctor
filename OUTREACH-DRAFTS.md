@@ -8,6 +8,61 @@ Last verified against the live threads: 2026-09-23.
 
 ---
 
+## Draft 0 — the directory question is mostly already answered
+
+**Status: research complete, three channels have live state.** Verified
+2026-09-23 by checking each repository's real files and APIs, not by assuming
+conventions.
+
+### Already listed — no action needed
+
+| Channel | Evidence |
+|---|---|
+| `awesome-dsh-plugin/awesome-dsh-plugin` (16.6k★, the canonical one) | `data/plugins/PerryLink__dsh-plugin-doctor.yml`, category `dev`, added 2026-09-20 via PR #5460 |
+| `Dominic789654/awesome-deepseek-harness` | present in **both** `README.md` and `README.zh-CN.md` |
+| `hikariming/dshfind` | live probe of its badge API returns HTTP 200 with the plugin's name (not the "not listed" fallback); topic auto-sync daily |
+| `2BingLing/dsh-market` (dsh.market) | `PerryLink/dsh-plugin-doctor` present in its `plugins.json`; `dsh-plugin` topic auto-scan |
+| `dsh-market/dsh-market` (4.4k★) | **not a submission channel** — its README says it is the app, not the catalog, and explicitly asks that plugin entries not be PR'd there. It displays the plugin because it consumes the same feed. |
+
+### Real remaining work — three channels
+
+1. **`dshworks/awesome-dsh-plugins` — best remaining action.** Open **PR #107**
+   already adds the plugin, renamed `dsh-plugin-doctor-perrylink` to work around
+   the npm name collision. It only needs a nudge. Note that ~20 other PerryLink
+   repositories sit in that repo's `data/rejected.json` with reason
+   "no dsh install path" — this one is not among them, and it *does* have an
+   install path.
+2. **`kejixiaoliang/awesome-dsh-plugins` — open PR #98 is stuck.** It already
+   covers the plugin but is `mergeable_state=dirty`, permanently conflicting with
+   a star-sync bot that recommits every ~3 hours. Also worth knowing: their file
+   already lists a *different*, unrelated `dsh-plugin-doctor`, and the maintainer
+   there appears to apply entries directly and close PRs rather than merging them.
+3. **`awesome-deepseekharness/awesome-deepseek-harness` — avoid or handle with
+   care.** PR #103 adding this plugin was **closed unmerged** on 2026-09-14. The
+   cause is author-level policy, not the plugin: `.github/curator-policy.yml`
+   puts `PerryLink` on a `watchlist` (one running PR at a time) with a
+   `self_promo` window that auto-closes from the 4th strike. One fresh PR is
+   technically permitted; submitting into a documented watchlist without
+   acknowledging it would read badly.
+
+### Dead ends — do not spend effort
+
+- `JoFe2/awesome-dsh-plugin` and `rob-x-ai/awesome-dsh-plugin` are both **forks**
+  of the canonical repository. The first has been frozen since 2026-08-21.
+- `zoahdev/dsh-subscribe` has **no PR path**: its `registry.json` is a nightly
+  mirror of the awesome-dsh-plugin feed, and it has not committed since
+  2026-08-18. (Its README badge claims 908 plugins; the file says 917.)
+
+### Could not verify
+
+Stated rather than inferred: why the `kejixiaoliang` maintainer closes PerryLink
+PRs but still lands the entries; whether `dshworks#107` will be merged; whether
+`dshfind`'s documented REST base (`/v1/plugins`, which 404s) is simply
+undocumented, the listing having been proven only through its badge endpoint.
+
+---
+
+
 ## Draft 1 — reply on RFC #1846
 
 **Target:** <https://github.com/deepseek-ai/deepseek-harness/discussions/1846>
