@@ -430,8 +430,14 @@ Specifically:
    them into a verdict without disclosing this produces false failures — this
    happened, and `THIRD-PARTY-RK-SCAN.md` records the correction.
 3. **`D3` proves boot, not correctness.** See §4.3/D3.
-4. **`R5` and `R8` encode policy.** A legitimate project with different
-   dependency or peer conventions can fail them without being defective.
+4. **`R5` and `R8` encode policy, not correctness.** A legitimate project with
+   different dependency or peer conventions can fail them without being
+   defective. `R8` in particular reports **staleness, not breakage**: a peer
+   pinned to a superseded release-candidate line is a package that works and has
+   fallen behind this family's release train. The verdict is `fail` because the
+   exit code is a frozen contract that downstream gates read, but a failure here
+   is not a claim that the package is broken — and no consumer of a result should
+   read it as one.
 5. **`R6` is advisory on npm-line hosts**, which do not enforce `engines`.
 6. **A pnpm `ignored-builds` block is an environment recipe problem**, not a
    plugin defect. It is reported as `skip` with `category: environment`.

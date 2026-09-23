@@ -1,0 +1,401 @@
+{
+    "rescannedAt":  "2026-09-23T05:46:01.5968537Z",
+    "doctorPath":  "D:\\Projects\\dsh\\plugins\\dsh-plugin-doctor\\doctor.mjs",
+    "doctorVersion":  "0.3.0",
+    "criteriaNote":  "gated = every check except R2/R4 (those read built artifacts); pass = no gated fail/error and no degraded group",
+    "candidatePool":  20,
+    "qualified":  19,
+    "skipped":  1,
+    "gatedPass":  6,
+    "gatedFail":  13,
+    "rows":  [
+                 {
+                     "repo":  "zhu1090093659/dsh-web",
+                     "stars":  7131,
+                     "qualified":  true,
+                     "pkgName":  "dsh-web",
+                     "pkgVersion":  "0.1.1",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R3",
+                                        "R7"
+                                    ],
+                     "gatedWarns":  [
+                                        "R0",
+                                        "R6"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "liustack/modlens",
+                     "stars":  3913,
+                     "qualified":  true,
+                     "pkgName":  "@liustack/modlens",
+                     "pkgVersion":  "3.26.3",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R7"
+                                    ],
+                     "gatedWarns":  [
+                                        "R6",
+                                        "K3",
+                                        "K4"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "omdsh-dev/DSH-better-sidebar",
+                     "qualified":  false,
+                     "why":  "clone-fail"
+                 },
+                 {
+                     "repo":  "dsh-market/dsh-market",
+                     "stars":  3408,
+                     "qualified":  true,
+                     "pkgName":  "dshmarket",
+                     "pkgVersion":  "1.58.0",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R8"
+                                    ],
+                     "gatedWarns":  [
+                                        "R6",
+                                        "K3",
+                                        "K5",
+                                        "K6"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "ccch1mneyyy/dsh-TUI",
+                     "stars":  2882,
+                     "qualified":  true,
+                     "pkgName":  "@deepseek-harness-tui/dsh-tui",
+                     "pkgVersion":  "0.10.2",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R3",
+                                        "R8"
+                                    ],
+                     "gatedWarns":  [
+                                        "K3",
+                                        "K4",
+                                        "K5",
+                                        "K6"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "MeteorNOX/DeepSeek-Balance-Whale-Widget",
+                     "stars":  1884,
+                     "qualified":  true,
+                     "pkgName":  "dsh-whale-widget",
+                     "pkgVersion":  "0.3.10",
+                     "exit":  0,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+
+                                    ],
+                     "gatedWarns":  [
+                                        "R6",
+                                        "K3",
+                                        "K6"
+                                    ],
+                     "gatedVerdict":  "pass",
+                     "kMode":  "lib-fallback",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "NanmiCoder/dsh-agent-teams",
+                     "stars":  1443,
+                     "qualified":  true,
+                     "pkgName":  "@nanmicoder/dsh-agent-teams",
+                     "pkgVersion":  "0.1.20",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R8"
+                                    ],
+                     "gatedWarns":  [
+                                        "K1",
+                                        "K3",
+                                        "K6"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "bowenliang123/dsh-context",
+                     "stars":  1328,
+                     "qualified":  true,
+                     "pkgName":  "dsh-context",
+                     "pkgVersion":  "0.54.4",
+                     "exit":  0,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+
+                                    ],
+                     "gatedWarns":  [
+                                        "K1",
+                                        "K3",
+                                        "K4",
+                                        "K6"
+                                    ],
+                     "gatedVerdict":  "pass",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "superdesigndev/treg",
+                     "stars":  1235,
+                     "qualified":  true,
+                     "pkgName":  "treg-dsh",
+                     "pkgVersion":  "0.21.0",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R3"
+                                    ],
+                     "gatedWarns":  [
+                                        "R6",
+                                        "K3",
+                                        "K6"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "xmanrui/dsh-im",
+                     "stars":  1215,
+                     "qualified":  true,
+                     "pkgName":  "@xmanrui/dsh-im",
+                     "pkgVersion":  "4.26.0",
+                     "exit":  0,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+
+                                    ],
+                     "gatedWarns":  [
+                                        "R6",
+                                        "K1",
+                                        "K3"
+                                    ],
+                     "gatedVerdict":  "pass",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "GanyuanRan/Aegis",
+                     "stars":  1172,
+                     "qualified":  true,
+                     "pkgName":  "aegis",
+                     "pkgVersion":  "2.10.7",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R7",
+                                        "R8"
+                                    ],
+                     "gatedWarns":  [
+                                        "R0",
+                                        "R6"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "lib-fallback",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "ysr666/dsh-vision-router",
+                     "stars":  1086,
+                     "qualified":  true,
+                     "pkgName":  "dsh-vision-router",
+                     "pkgVersion":  "2.2.1",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R3",
+                                        "R8"
+                                    ],
+                     "gatedWarns":  [
+                                        "K1"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "shaobeichen/dsh-pocket",
+                     "stars":  1002,
+                     "qualified":  true,
+                     "pkgName":  "dsh-pocket",
+                     "pkgVersion":  "2.10.6",
+                     "exit":  0,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+
+                                    ],
+                     "gatedWarns":  [
+                                        "R6"
+                                    ],
+                     "gatedVerdict":  "pass",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "Anionex/dsh-vision-toolkit",
+                     "stars":  858,
+                     "qualified":  true,
+                     "pkgName":  "@anionex/dsh-vision-toolkit",
+                     "pkgVersion":  "0.1.45",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R8"
+                                    ],
+                     "gatedWarns":  [
+                                        "K3",
+                                        "K4",
+                                        "K5",
+                                        "K6",
+                                        "K7"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "toby-bridges/api-relay-audit",
+                     "stars":  824,
+                     "qualified":  true,
+                     "pkgName":  "dsh-api-relay-audit",
+                     "pkgVersion":  "2.4.0",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R8"
+                                    ],
+                     "gatedWarns":  [
+                                        "K6"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "lib-fallback",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "vshulcz/deja-vu",
+                     "stars":  789,
+                     "qualified":  true,
+                     "pkgName":  "dsh-deja",
+                     "pkgVersion":  "0.21.0",
+                     "exit":  0,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+
+                                    ],
+                     "gatedWarns":  [
+                                        "R6",
+                                        "K1"
+                                    ],
+                     "gatedVerdict":  "pass",
+                     "kMode":  "lib-fallback",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "sandbaseai/sandbase-harness",
+                     "stars":  642,
+                     "qualified":  true,
+                     "pkgName":  "managed-agents",
+                     "pkgVersion":  "0.3.8",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R3"
+                                    ],
+                     "gatedWarns":  [
+                                        "R6",
+                                        "K1",
+                                        "K3",
+                                        "K4"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "Nagi-ovo/dsh-ads",
+                     "stars":  613,
+                     "qualified":  true,
+                     "pkgName":  "@nagi-ovo/dsh-ads",
+                     "pkgVersion":  "0.1.0",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R8"
+                                    ],
+                     "gatedWarns":  [
+                                        "R6",
+                                        "K1",
+                                        "K3",
+                                        "K6"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "adoresever/graph-memory",
+                     "stars":  604,
+                     "qualified":  true,
+                     "pkgName":  "graph-memory",
+                     "pkgVersion":  "1.6.0-beta.16",
+                     "exit":  1,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+                                        "R8"
+                                    ],
+                     "gatedWarns":  [
+                                        "R0",
+                                        "R6",
+                                        "K1",
+                                        "K3",
+                                        "K6"
+                                    ],
+                     "gatedVerdict":  "fail",
+                     "kMode":  "src",
+                     "doctorVersion":  "0.3.0"
+                 },
+                 {
+                     "repo":  "superdesigndev/superdesign-skill",
+                     "stars":  522,
+                     "qualified":  true,
+                     "pkgName":  "superdesign-dsh",
+                     "pkgVersion":  "0.6.0",
+                     "exit":  0,
+                     "gatedTotal":  16,
+                     "gatedFails":  [
+
+                                    ],
+                     "gatedWarns":  [
+                                        "R6",
+                                        "K6"
+                                    ],
+                     "gatedVerdict":  "pass",
+                     "kMode":  "lib-fallback",
+                     "doctorVersion":  "0.3.0"
+                 }
+             ]
+}

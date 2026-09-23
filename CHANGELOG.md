@@ -2,7 +2,12 @@
 
 ## [Unreleased]
 
-These two fixes and the four newly gated repositories are **not yet tagged**.
+These changes and the four newly gated repositories are **not yet tagged**.
+
+### Changed
+
+- **The third-party scan is refreshed, and the refresh is re-runnable.** `THIRD-PARTY-RK-SCAN.md` was a 2026-09-10 snapshot from 0.2.0. A published result set that keeps asserting superseded verdicts is the documentation-that-lies failure this project exists to catch, so `scripts/refresh-third-party-scan.ps1` re-clones each candidate read-only, re-applies the qualification gate, re-runs the gate, and records the verdict — never installing, building or booting third-party code. Result: **19 qualified, 6 pass, 13 fail** (was 10/10). Comparing repository by repository, the `R3`/`R7` corrections changed **no** repository's verdict; the movement is entirely `R8`, which went from 3 to 9 without a line of code changing, because the ecosystem's peer lines moved on. That is an argument for re-running this on a schedule rather than treating a snapshot as standing fact.
+- **`R8` now says what it means.** A peer pinned to a superseded release-candidate line is a package that *works* and has fallen behind this family's release train — staleness, not breakage. The verdict stays `fail` (the exit code is a frozen contract 42 downstream gates read) but the message now states the narrower meaning first, and `SPEC.md` §5.4 makes that scope limit normative. Without it, a third-party maintainer reading the output would reasonably conclude their plugin is broken.
 
 ### Fixed
 
