@@ -20,7 +20,7 @@ conventions.
 |---|---|
 | `awesome-dsh-plugin/awesome-dsh-plugin` (16.7k★, the canonical one) | `data/plugins/PerryLink__dsh-plugin-doctor.yml`, category `dev`, added 2026-09-20 via PR #5460. Its feed also reports `version 0.2.3` and `downloads 2538` |
 | `Dominic789654/awesome-deepseek-harness` | present in **both** `README.md` and `README.zh-CN.md` |
-| `hikariming/dshfind` | live badge-API probe returns `dshfind: dsh-plugin-doctor — ★ 0`, while a bogus repo returns `not listed` — the API discriminates, so this is a real hit |
+| `hikariming/dshfind` | the badge API returns `dshfind: dsh-plugin-doctor — ★ 0` for this repo while a bogus one returns `not listed`, and the plugin page carries `PerryLink/dsh-plugin-doctor` 34 times. **However**, dshfind's search surface also carries *white-sand-grand's* different plugin under the same bare name, so a name-based lookup there lands on the wrong project. Verify by owner |
 | `2BingLing/dsh-market` (dsh.market) | its 26 MB `plugins.json` contains `"id": "PerryLink/dsh-plugin-doctor"` |
 | `deepseek1024.com` | listed, `Added 2026-09-13` — **but the page wrongly says "has not published an npm package"** while npm serves 0.3.1. No `/about` or `/submit` route exists; corrected by contact only |
 | `dsh-market/dsh-market` (4.4k★) | **not a submission channel** — it is the app, not the catalog, and its README asks that plugin entries not be PR'd there |
@@ -111,6 +111,51 @@ plausible-looking permalink therefore gives wrong answers **in both directions**
 
 Verify by owner, never by name. This is the same hazard the README's "Name
 collisions" section warns about on the npm side.
+
+### The binding constraint is stars, not more catalogues
+
+A full sweep of 215 candidate catalogues reached a conclusion that should change
+what gets worked on next: **the plugin is already in 33 of them, including every
+high-star one that matters** — `awesome-dsh-plugin` (16.7k★),
+`zhu1090093659/dsh-web` (7.9k★), `AdamPlatin123/dsh-plugin-radar` (1.5k★),
+`0xsline` (1.1k★), `LivXue/dsh-plugin-shop` (877★), `Zhiyuan-Fan` (568★).
+
+The gaps that remain are few, and the two most valuable have **no documented
+submission route**: `dsh-market/dsh-market` (4.4k★ — no CONTRIBUTING or submission
+doc among 259 files) and `pax-beehive/dsh-hub-cli` (448★ — CONTRIBUTING is
+code-only). Absence of documentation is not proof a route is closed, but it is not
+something to guess at either.
+
+What actually gates further adoption is visible traction:
+
+- `bruc3van/awesome-dsh-plugin` (360★) auto-rejects self-submission PRs below
+  **`stargazers_count > 10`** — this repository has **0 stars**, so that lane is
+  closed regardless of merit. It lists the plugin only because a curator added it.
+- `Noob-stupid/dsh-plugin-gating-hub` indexes only the topic's **top 500 by stars**.
+- npm search for `dsh-plugin-doctor` surfaces **Xrainsmile's** package, not this one.
+
+**Star-building is therefore worth more right now than any additional catalogue
+PR.** That is a different kind of work from what this file has been doing, and
+better said plainly than buried under more submissions.
+
+### Two method failures worth recording, because both bit this audit
+
+1. **Code search gives false negatives.** It does not index large generated
+   registries, and catalogues rewrite those files every 15–30 minutes. It missed
+   at least eight genuine listings, confirmed by reading the files directly.
+2. **Reused extraction directories give false positives.** A sweep that extracted
+   several repositories into one reused directory let one repository's content
+   leak into the next, producing false "lists it" results — and in one case it
+   overturned a correct conclusion: `hikariming/dshfind` was reported as NOT
+   listing this plugin. **It does.** Verified directly: the badge API returns
+   `★ 0` for this repo (it returns `not listed` for an absent one, so the API
+   discriminates), and the plugin page contains `PerryLink/dsh-plugin-doctor`
+   **34 times** with **zero** occurrences of `white-sand-grand`, `zoahdev` or
+   `lin-cheng-lab`.
+
+   The lesson generalises: **a grep result is evidence about the grep, not about
+   the catalogue.** Confirm a listing by reading the catalogue's own page or feed,
+   and identify it by owner rather than by name.
 
 ### Could not verify
 
