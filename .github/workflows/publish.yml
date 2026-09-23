@@ -43,19 +43,43 @@ jobs:
         shell: bash
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           version="$(node -p "require('./package.json').version")"
-          if [ -z "$NPM_TOKEN" ]; then
-            # Exiting 0 here would make a release that published nothing look green —
-            # exactly the silent-pass class this tool exists to catch.
-            echo "::error::NPM_TOKEN secret is not set; refusing to report a release that published nothing"
-            exit 1
-          fi
           if npm view "@perrylink/dsh-plugin-doctor@${version}" version >/dev/null 2>&1; then
             echo "@perrylink/dsh-plugin-doctor@${version} is already published; skipping npm publish"
+            exit 0
+          fi
+
+          # Probe the token rather than assuming it works. A dead token makes
+          # `npm publish` return 404 (not 401), which reads as "package not
+          # found" and sends you looking in the wrong place — that cost two
+          # releases on 2026-09-23. One authenticated GET settles it.
+          if [ -n "$NPM_TOKEN" ] && NODE_AUTH_TOKEN="$NPM_TOKEN" \
+               npm whoami --registry=https://registry.npmjs.org/ >/dev/null 2>&1; then
+            echo "publishing with NPM_TOKEN"
+            NODE_AUTH_TOKEN="$NPM_TOKEN" npm publish --access public --provenance && exit 0
+            echo "::warning::token publish failed"
           else
-            npm publish --access public --provenance
+            if [ -n "$NPM_TOKEN" ]; then
+              echo "::warning::NPM_TOKEN is set but rejected by the registry (expired or revoked); trying OIDC"
+            else
+              echo "NPM_TOKEN is not set; trying OIDC Trusted Publishing"
+            fi
+          fi
+
+          # Trusted Publishing (OIDC): no long-lived secret involved, so this
+          # path cannot rot the way a token does. Requires the package to have a
+          # GitHub Actions trusted publisher configured on npmjs.com — see
+          # 发布令牌轮换清单.md §7.
+          echo "publishing via OIDC Trusted Publishing"
+          if npm publish --access public --provenance; then
+            echo "published via OIDC"
+          else
+            # Still refuse to report a release that published nothing — the guard
+            # this workflow has always had. The message names both causes so the
+            # next person does not have to rediscover them.
+            echo "::error::npm publish failed by both paths. Either refresh NPM_TOKEN, or configure a GitHub Actions trusted publisher for @perrylink/dsh-plugin-doctor on npmjs.com (see the token rotation checklist, section 7)."
+            exit 1
           fi
       # Advisory only: npm's read side can lag minutes behind a successful publish, and a hard
       # failure here skipped the GitHub Release (observed on dsh-cert-mcp v0.2.1).
