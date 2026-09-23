@@ -164,6 +164,65 @@ still `0.2.3`, and the README pins its examples to that.
 `--format check` and `SPEC.md` §1.1 — see §1.1 above for why this was the
 highest-value move available.
 
+### C2. The family's gate pin is stale, and it is hiding the fixes — OPEN
+
+Measured 2026-09-23, not inferred. The 42 family repositories pin
+`@perrylink/dsh-plugin-doctor@0.1.6` in their gates. **0.1.6 predates every
+false-positive fix made since**, so the family is still being judged by
+criteria that reject valid packages:
+
+| check | fixed in | what 0.1.6 still does |
+|---|---|---|
+| `R2`/`R4` | 0.2.4 | calls an unbuilt tree a `plugin-defect` |
+| `R3` | 0.3.0 | rejects a valid empty patch layer (the harness's own `[]` template) |
+| `R7` | 0.3.0 | rejects a zero-build plain-JavaScript package |
+| `R8` | 0.3.1 | reports staleness as if it were breakage |
+
+The proof is a real CI run, not a hypothetical: `dsh-plugin-kit`'s new gate
+**failed on master** with
+
+```
+[FAIL] R3 cordis.patch.yml 结构（启发式）
+    未找到 "- insert:" 结构
+```
+
+on a `cordis.patch.yml` that is a deliberately empty layer — which the current
+tool passes, verified locally the same day. The same run shows `R2=fail R4=fail`
+for the ordinary reason that CI does not build.
+
+**Consequence for promotion:** until the family is moved onto a current pin, its
+own repositories run an older rulebook than the one being promoted, and any newly
+gated repository will go red for reasons already fixed. Raising the pin is the
+prerequisite for further family adoption — and it is a real wave (42 repos, one
+canary first), not a one-line change, which is why it has not been done
+unilaterally.
+
+### C3. Three repositories gated but not badged — PARTLY DONE
+
+`dsh-cert-mcp`, `dsh-plugin-kit` and `dsh-wechat` were given the gate on
+2026-09-23 but never added to `data/verified-repos.json`, so they ran the criteria
+without being able to say so. The audit that found this also found the family is
+otherwise complete: **41 of 42 gated repositories mention the standard in their
+README**, and the 42nd (`dsh-personal-directive`) opens by stating it has been
+withdrawn from the DSH ecosystem, so it should not advertise anything.
+
+Current state, from the registry (`entries=40`):
+
+| repo | registry | why |
+|---|---|---|
+| `dsh-wechat` | **pass** | gate on `origin/main`; badge now renders `passing` |
+| `dsh-plugin-kit` | fail | the stale-pin problem above (`R3`) — will pass once the pin moves |
+| `dsh-cert-mcp` | fail | its gate landed on `chore/npm-metadata`, but the repository's **default branch is `main`**, and those two have diverged |
+
+`dsh-cert-mcp` needs a human decision and should not be resolved mechanically:
+`origin/main` is **not** an ancestor of `chore/npm-metadata` — that branch is
+ahead of main by substantial committed work (compat work, a checkout ruler,
+README changes, package metadata). Which branch is canonical is the author's call.
+
+Do not add badge lines to `dsh-plugin-kit` or `dsh-cert-mcp` before their gates
+pass. Their badge SVGs currently render `failing`, which is honest, but a badge
+that renders red because of a known-stale pin is worse than no badge.
+
 ### D. Reply on RFC #1846 (unblocked, owner: PerryLink)
 [#1846](https://github.com/deepseek-ai/deepseek-harness/discussions/1846) is where
 the check contract is actually being decided, and it has 11 comments. A useful
