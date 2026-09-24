@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.5] - 2026-09-24
+
+### Fixed
+
+- **`action.yml`'s `description` was 151 characters; GitHub Marketplace requires under 125.** Marketplace validates the metadata when you tick "Publish this Action to the GitHub Marketplace" on a release, and an over-long description is one of the things it rejects — so the listing could not be created as the file stood. It is now 100 characters, leaving margin, and still says what the action is: *"Static verification gate for DSH plugins - package structure and cordis contract, zero dependencies."*
+  - Only the top-level `description` is affected. `inputs[].description` and `outputs[].description` have no such limit and are unchanged.
+  - This needed a release of its own, because the Marketplace reads `action.yml` **at the tag being published**, not from the branch. Editing the file on `main` without a new tag would have left the checkbox validating the old metadata.
+
+### Notes
+
+- The other Marketplace requirements were already satisfied, and were checked rather than assumed: the repository is public; `action.yml` sits at the repository root; `author` is set; `branding` carries both an icon (`shield`) and a colour (`blue`); and the name `dsh-plugin-doctor` collides with no existing Marketplace action name, GitHub user or organisation, or Marketplace category.
+
 ## [0.4.4] - 2026-09-24
 
 > Version note: the work below was prepared as `0.4.3`, and that version was **never

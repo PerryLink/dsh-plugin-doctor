@@ -1,5 +1,5 @@
 name: dsh-plugin-doctor
-description: Static R/K verification gate for DeepSeek Harness (dsh) plugins - package structure and cordis v4 contract, zero dependencies, no install and no build.
+description: Static verification gate for DSH plugins - package structure and cordis contract, zero dependencies.
 author: PerryLink
 branding:
   icon: shield
