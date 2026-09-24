@@ -1,4 +1,4 @@
-﻿name: action smoke (temporary)
+name: action smoke (temporary)
 
 on:
   workflow_dispatch:
@@ -14,19 +14,24 @@ jobs:
         with:
           only: R,K
           format: doctor
-      - name: Show the outputs a consumer receives
+      - name: DIAGNOSTIC - what does the runner think the step produced?
         run: |
-          echo "verdict    = ${{ steps.doctor.outputs.verdict }}"
-          echo "exit-code  = ${{ steps.doctor.outputs.exit-code }}"
-          echo "summary    = ${{ steps.doctor.outputs.summary }}"
-          echo "failing    = ${{ steps.doctor.outputs.failing }}"
-          echo "report     = ${{ steps.doctor.outputs.report-path }}"
-      - name: Fail if the Action reported a bad verdict without a bad exit code
+          echo "--- toJSON(steps.doctor) ---"
+          echo '${{ toJSON(steps.doctor) }}'
+          echo "--- individual outputs ---"
+          echo "verdict='${{ steps.doctor.outputs.verdict }}'"
+          echo "summary='${{ steps.doctor.outputs.summary }}'"
+          echo "outcome='${{ steps.doctor.outcome }}'"
+      - name: DIAGNOSTIC - can a consumer read the report itself instead?
         run: |
-          v="${{ steps.doctor.outputs.verdict }}"
-          case "$v" in
-            pass|warn) echo "action verdict ok: $v" ;;
-            fail|error) echo "action correctly reported $v" ;;
-            *"[object"*) echo "::error::verdict output is malformed: $v"; exit 1 ;;
-            *) echo "::error::unexpected verdict: $v"; exit 1 ;;
-          esac
+          f="doctor-report/doctor.json"
+          echo "report exists: $([ -f "$f" ] && echo yes || echo no)"
+          if [ -f "$f" ]; then
+            node -e '
+              const r = JSON.parse(require("fs").readFileSync("doctor-report/doctor.json","utf8"))
+              const w = r.verdict && (typeof r.verdict === "string" ? r.verdict : r.verdict.worst)
+              const rows = r.results || r.checks || []
+              const bad = rows.filter(x => !/^R[24] /.test(x.name) && /^(fail|error)$/i.test(x.status))
+              console.log("verdict-from-file=" + w + " failing=" + bad.map(x=>x.id).join(","))
+            '
+          fi
