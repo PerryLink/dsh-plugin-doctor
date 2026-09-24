@@ -24,6 +24,26 @@
 ### Notes
 
 - `action.yml` and `.github/actions/` are included in the published tarball, so the Action works from the npm package as well as from a git ref. Verified with `npm pack`: 23 files.
+- **`verdict` is the *worst* status across the gated checks**, so a run with no failures reports `skip` rather than `pass` when any check was skipped. That is the tool's long-standing exit-code contract, now stated here because an Action output makes it visible to consumers who never read the exit code.
+
+> **The Action's outputs were broken in the 0.4.0 release, and 0.4.0 is what npm serves.**
+> `v0.4.1` and `v0.4.2` exist as git tags but were **never published to npm**: each was
+> cut to test the fix and each was blocked by the smoke test until the output mapping
+> was right. They are not listed as releases because they did not ship.
+>
+> The defect: a composite action's outputs must be mapped **explicitly** with
+> `value: ${{ steps.<id>.outputs.<name> }}`. Declaring the names alone is not enough —
+> the runner records `"outputs": {}` and every `steps.<id>.outputs.*` reference
+> resolves to the empty string. The action ran correctly, printed its summary and
+> wrote `GITHUB_OUTPUT` successfully; consumers still received nothing.
+>
+> It was found only by invoking the released Action from a real workflow. The local
+> harness sets `GITHUB_OUTPUT` and reads the file back, so it reported five correct
+> outputs while the runner reported none — a reminder that a test which supplies the
+> environment it is testing cannot detect a missing environment.
+>
+> **Consumers should use `@v0.4.2` or later.** `@v0.4.0` runs and gates correctly, but
+> its outputs are empty.
 
 ## [0.3.2] - 2026-09-23
 
