@@ -223,7 +223,37 @@ against its *actual default branch*. Reading and writing remotely avoids the
 local-checkout problem below entirely.
 
 `dsh-plugin-doctor` itself now carries the gate. It is the standard, and it was
-not running its own criteria.
+not running its own criteria — and when it finally did, **its own gate was the
+only one that failed.** The cause is worth recording, because it is a trap any
+tool that checks its own repository will hit:
+
+**`npm exec` resolves the command name against the current `package.json`'s `bin`
+before consulting the registry.** This repository declares
+`{"dsh-plugin-doctor": "./doctor.mjs"}`, so running the gate inside its own
+checkout made npx invoke the *local* bin — and with no `node_modules` present that
+is `sh: 1: dsh-plugin-doctor: not found`, exit 127, "doctor ran no R checks". The
+other repositories were green because none of them declare that bin.
+
+Measured on `ubuntu-latest` (npm 10.9.8, node 22), not inferred:
+
+| invocation | result |
+|---|---|
+| from inside the checkout | `exit 127`, no JSON — **this repository** |
+| from `/tmp` | `exit 0`, JSON written, `R0` present |
+| `npx --ignore-existing` | `npx: the --ignore-existing argument has been removed.` |
+| `npx --package … -- dsh-plugin-doctor` | `exit 127` — same resolution |
+
+The template now does `cd /tmp` and points `--repo` at `$GITHUB_WORKSPACE`
+absolutely, and all 43 repositories carry that template byte-identically.
+
+The published tarball was never at fault: fetched and run directly it returns
+`0.3.2` and exit 0. That is what disproved the first hypothesis — a missing
+executable bit in the tarball — which an experiment settled rather than a change
+being built on top of it.
+
+`tests/contract.mjs` freezes all three properties, including that the root
+template and the workflow copy stay byte-identical. They had already drifted once,
+and a silent drift is the failure class this project exists to catch.
 
 **Still without a gate, and why each is fine:**
 
