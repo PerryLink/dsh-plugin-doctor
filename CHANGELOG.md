@@ -1,6 +1,18 @@
 # Changelog
 
-## [0.4.3] - 2026-09-24
+## [0.4.4] - 2026-09-24
+
+> Version note: the work below was prepared as `0.4.3`, and that version was **never
+> published**. The `0.4.3` commit carried a `package.json` that did not parse, so the
+> repair and this work shipped together as `0.4.4`. The tag and the package version now
+> agree, which is what the release workflow's own guard checks.
+
+### Fixed
+
+- **`package.json` did not parse**, and the commit that broke it also shipped. Bumping the version through a PowerShell round trip (`Get-Content -Raw | Set-Content -Encoding utf8`) turned the CJK keywords into mojibake and dropped a character to a bare `?`, which is invalid JSON. The file is restored from the last good commit and edited with a UTF-8-preserving writer.
+- **Six scratch scripts were committed into the release.** `git add -A` in a repository whose tooling writes scratch files into the root swept them in with the release. Removed, and the release used an explicit path list instead.
+- **The CJK keywords had already been wrong since `7e6718f`** and were never verified. Checked by code point — `93BB 638D 6B22` rather than `63D2 4EF6` — and rebuilt from code points. Verified on the published artefact by fetching the registry document **as raw bytes**: the correct UTF-8 sequence appears three times and the double-encoded form zero times.
+  - A note on that verification, because it nearly produced a false alarm: `Invoke-RestMethod` decoded the registry response as latin-1 and made correct UTF-8 look like mojibake. **The registry was never wrong; the reader was.** Byte-level checks are the only ones that settle an encoding question.
 
 ### Added
 
