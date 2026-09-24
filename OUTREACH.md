@@ -290,6 +290,77 @@ and local `main` in that repository and in `dsh-plugin-upgrade-015` had diverged
 so those two were staged on a one-line branch cut from `origin/main` and pushed
 straight to `main` without touching the divergent local branch.
 
+### C4. The binding constraint is adoption, not promotion — measured 2026-09-24
+
+Every earlier section of this file is about getting the project *listed*. That work
+succeeded and it did not matter. Measured:
+
+| fact | value |
+|---|---|
+| catalogue placements | **33+**, including the 16,795★ and 1,103★ READMEs |
+| stars | **1** |
+| GitHub Actions adopters of the shipped `plugin-doctor.yml` | **12 — of which 11 are PerryLink's own** |
+| external dependents | **0** |
+| external citations of `SPEC.md` | **0** |
+| npm downloads | 1,535 → 761 → **242**/week, declining |
+
+The distribution mechanism is already built and documented — the template header
+says *"Copy this file to `.github/workflows/plugin-doctor.yml` in **YOUR**
+repository"* — and nobody outside the author has taken it up. **The marginal 34th
+listing is worth approximately nothing.**
+
+**The one apparent external citation is not one.** `toolclub/dsh-agent-team-gui`
+(238★) documents *"Supplemental `dsh-plugin-doctor` runs only in credential-free
+CI"*, and it is a genuine third party — an Organization whose contributors are
+`lzh19162600626-design` and dependabot, unaffiliated with PerryLink. But it pins the
+**bare** name `dsh-plugin-doctor@0.1.0` in devDependencies, and the npm registry
+shows that package belongs to **Xrainsmile** (MIT, `bin: src/cli.js`), not to this
+project. Its script invokes `dsh-plugin-doctor check … --no-isolate --report-dir`,
+which is that project's CLI. It is a correct use of a different, same-named tool.
+
+External adopters therefore number **zero**, and the name collision did not merely
+create ambiguity — it produced a citation that reads as ours and is not.
+
+**Two "recommendations" were already satisfied before they were made**, recorded
+because both were presented as open work:
+
+- **GitHub releases are not missing.** There are **15**, the earliest published
+  2026-09-07. Tags and releases reconcile exactly: 16 tags, and the single tag with
+  no release is `v0.2.4` — tagged and **never published to npm**, which is correct,
+  and is itself an instance of the distinction this project exists to enforce.
+- **npm search is not broken.** This package ranks well for its own name, and a
+  package whose bare name *is* the query string cannot be out-ranked by keyword work.
+
+#### What actually differentiates the repositories that got traction
+
+Star-arrival timelines put every high-star PerryLink plugin in **2026-08-13..19 —
+the platform's launch week** — each catching a spike on day 4–8 and a six-week
+tail. Everything created from 09-03 onward sits at 0–1★: same author, same quality
+bar, comparable catalogue coverage. `dsh-auto-review` has 198★ and entered on 08-13;
+this project entered 09-07, into a topic that by then held **16,026 repos**.
+
+Ecosystem distribution (GraphQL, bypassing the 1,000-result cap): of 16,026
+`dsh-plugin` repos, **86.3% have under 10 stars** and 47.2% have zero. A low count
+is therefore the mode rather than an anomaly — but this project is anomalously
+*invisible given its listing coverage*, and the difference is date of entry.
+
+#### The only lever that changes the underlying fact
+
+Getting independent authors to run the shipped workflow. Everything else
+re-describes the project rather than changing it. That is written as a conclusion
+rather than a task list, because the project cannot do it to itself — and pretending
+otherwise would repeat the error of counting a different project's citation as ours.
+
+Two channels are open and sanctioned, both verified in their own text: the official
+repository has a **"Show Your Plugins!"** discussion category ("Show off something
+you've made"), and its `CONTRIBUTING.md` explicitly invites ecosystem contributions
+and tells authors to tag with the `dsh-plugin` topic. Discussion **#1846** is where
+the contract argument belongs, and a substantive reply is already on the record.
+
+Hacker News is measurably closed: the DSH announcement scored 747 points, every
+subsequent DSH item scored 10, 10 and 6, and a direct "Show HN" for a DSH directory
+scored **2**.
+
 ### C3. Three repositories gated but not badged — PARTLY DONE
 
 `dsh-cert-mcp`, `dsh-plugin-kit` and `dsh-wechat` were given the gate on
