@@ -285,6 +285,19 @@ assert('R8 单臂 → exit 0（门禁不再因它变红）', singleRun.exit === 
 
 fs.rmSync(sandbox, { recursive: true, force: true })
 
+// ── 观测 11：门禁模板必须从检出之外运行 ──
+// `npm exec` 先拿命令名去比对当前 package.json 的 bin，因此在声明了同名 bin 的仓里
+// 运行会去调本地那个 bin；检出里没有 node_modules 时就是 `sh: 1: ... not found`、
+// exit 127。本仓恰好声明了 {"dsh-plugin-doctor": "./doctor.mjs"} —— 于是 42 个仓的
+// 门禁都是绿的，只有本仓自己的红。模板必须 cd /tmp，并用绝对路径回指检出。
+{
+  const tpl = fs.readFileSync(path.join(ROOT, 'plugin-doctor.yml'), 'utf8')
+  const wf = fs.readFileSync(path.join(ROOT, '.github', 'workflows', 'plugin-doctor.yml'), 'utf8')
+  assert('门禁模板先 cd /tmp 再跑 npx（否则自指 bin 解析 exit 127）', /^\s*cd \/tmp\s*$/m.test(tpl), '模板里没有 cd /tmp')
+  assert('门禁模板用 $GITHUB_WORKSPACE 绝对路径回指检出', tpl.includes('--repo "$GITHUB_WORKSPACE"'), '仍是相对 --repo .')
+  assert('仓内工作流与根模板逐字节一致', tpl === wf, 'plugin-doctor.yml 与 .github/workflows/ 下的副本已漂移')
+}
+
 let failed = 0
 for (const c of checks) {
   if (!c.ok) failed++
