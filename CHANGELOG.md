@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.4.3] - 2026-09-24
+
+### Added
+
+- **`R8` now detects open-top peer ranges** — a `>=` comparator with no upper bound. `>=0.1.0-rc.1` admits `0.5.0`, `1.0.0` and anything later, so a breaking host line is accepted by the range and the plugin loads against an API it never tested. That failure is silent, which is why it is worth naming.
+
+  `^0.1.0-rc.1` does **not** have this problem: caret is semver sugar for `>=0.1.0-rc.1 <0.2.0`, so it is bounded even though the string contains no `<`. Measured across 22 third-party DSH repositories on 2026-09-24, the caret form is the prevailing convention — so the check separates a real defect from the ecosystem's normal practice instead of flagging every range without a literal `<`.
+
+  Found by running the tool against those 22 repositories: `LuckVd/dsh-taskflow` has six open-top ranges, four of which name `0.0.1-rc.1` and were therefore **invisible to every earlier version** of this check.
+
+- **`category: policy`** joins the vocabulary in `SPEC.md` §3.3. `warn` otherwise defaulted to `plugin-defect`, which contradicted `R8`'s own first line — a message reading "this is a policy staleness, not a plugin defect" filed under `plugin-defect` is a report that disagrees with itself. `R8` now reports `policy` for both its `fail` and its `warn`, matching §5.4 note 4, which already said `R5` and `R8` encode policy rather than correctness.
+
+### Fixed
+
+- **An `R8` failure no longer swallows its notes.** `>=0.1.0-rc.1` is both stale and open-top, and the failure branch returned early — so a repository would have seen only the cosmetic staleness and kept the range that admits a breaking host line. Both now appear, under an explicit "also, unrelated to staleness" heading.
+
+### Verified
+
+- The refined `R8` was run against **61 repositories** — the 43-repository family fleet plus the 22-repository third-party sample — before release. **No repository changed status except by gaining the new warning**, and the four third-party failures that exist are the same four as before the change. `dsh-ticktick` is the only family repository that warns, which is the intended outcome of the 0.3.2 refinement.
+
 ## [0.4.0] - 2026-09-24
 
 ### Added

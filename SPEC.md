@@ -93,9 +93,14 @@ Two additional classifications are orthogonal to status:
 
 - **`critical`** — currently only `R1`. A failing critical check means the plugin
   cannot activate at all. Distinct from a normal failure.
-- **`category`** — `plugin-defect`, `not-applicable`, `environment`,
+- **`category`** — `plugin-defect`, `policy`, `not-applicable`, `environment`,
   `infrastructure`, `unsupported-host`, or `unstable`. **`environment`,
   `infrastructure`, `unsupported-host` and `unstable` are never plugin defects.**
+  **`policy`** marks a deliberate convention this specification does not share,
+  as opposed to a defect in the package (§5.4 note 4 covers `R5` and `R8`). It was
+  added because `warn` otherwise defaulted to `plugin-defect`, which contradicted
+  those checks' own wording: a message reading "this is a choice, not a defect"
+  filed under `plugin-defect` is a report that disagrees with itself.
 
 **`skip` is not a pass** (§3.2). A group whose checks all returned `skip` was not
 evaluated, and reporting it as green is the specific false-positive this
@@ -258,9 +263,13 @@ source publishes `.ts` that the host cannot import.
 #### R8 — Stale peer ranges (dual-baseline lesson)
 **Requirement.** No `@deepseek-ai/dsh*` or cordis peer range names a
 superseded prerelease line (`0.1.0-rc.*`, `0.1.1-rc.*`, `0.1.2-alpha.*`,
-`0.1.3-alpha.*`).
+`0.1.3-alpha.*`), and no such range is **open-top** (a `>=` comparator with no
+upper bound).
 **Verdicts.** `skip` (no dsh-related peer) · `fail` (a superseded line is named) ·
-`warn` (a single-arm prerelease-tuple range) · `pass`.
+`warn` (a single-arm prerelease-tuple range, and/or an open-top range) · `pass`.
+A `fail` reports the open-top notes as well when both apply — `>=0.1.0-rc.1` is
+both, and reporting only the staleness would let a repository fix the cosmetic
+problem and keep the one that admits a breaking host line.
 **Failure meaning (superseded line).** The declared range cannot admit the host
 line in use, while appearing compatible.
 **Warning meaning (single-arm range).** A range such as
@@ -271,6 +280,14 @@ host to support**, not a defect, and the check cannot tell a deliberate target f
 the historical trap offline. The historical trap is the reason the OR form exists:
 `>=0.1.2-rc.1 <0.2.0` silently rejects `0.1.5-rc.1`. Naming a superseded line
 still fails; naming a current one warns.
+**Warning meaning (open-top range).** `>=0.1.0-rc.1` has no upper bound at all and
+admits `0.5.0`, `1.0.0` and anything later, so a breaking host line is accepted by
+the range and the plugin loads against an API it never tested — a silent failure.
+`^0.1.0-rc.1` does **not** have this problem: caret is semver sugar for
+`>=0.1.0-rc.1 <0.2.0`, so it is bounded even though the string contains no `<`.
+Measured 2026-09-24 across 22 third-party DSH repositories: the caret form is the
+prevailing convention, which is why this check separates the two rather than
+treating every range without a literal `<` as open.
 
 ### 4.2 Group K — static · Cordis contract scan
 

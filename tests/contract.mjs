@@ -273,6 +273,9 @@ makeFixture(singleArmPeer, { src: true, lib: true })
 const staleRun = run(stalePeer, ['--no-smoke', '--only', 'R,K'])
 const staleR8 = (staleRun.report?.results ?? []).find((x) => x.id === 'R8')
 assert('R8 点名被取代的线 → fail', staleR8?.status === 'fail', `实际 ${staleR8?.status}`)
+assert('R8 的 fail 也归类为 policy（它的首行自述「不是插件缺陷」）',
+  staleR8?.category === 'policy',
+  `实际 category=${staleR8?.category}`)
 
 const singleRun = run(singleArmPeer, ['--no-smoke', '--only', 'R,K'])
 const singleR8 = (singleRun.report?.results ?? []).find((x) => x.id === 'R8')
@@ -282,6 +285,40 @@ assert('R8 单臂 warn 不产生 gated 失败', (() => {
   return g.every((x) => x.status !== 'fail' && x.status !== 'error')
 })(), (singleRun.report?.results ?? []).filter((x) => x.status === 'fail').map((x) => x.id).join(','))
 assert('R8 单臂 → exit 0（门禁不再因它变红）', singleRun.exit === 0, `实际 ${singleRun.exit}`)
+
+// ── 观测 12：open-top `>=` 必须告警，而 caret 不得误报 ──
+// `>=0.1.0-rc.1` 无上界，会放行 0.5.0 / 1.0.0，未来破坏性主线被静默接受。
+// `^0.1.0-rc.1` 没有这个问题：caret 是 semver 语法糖，等价于 >=0.1.0-rc.1 <0.2.0，
+// 有界，只是字符串里不含 "<"。2026-09-24 实测 22 个第三方 DSH 仓，caret 是通行写法，
+// 所以这条断言的两个方向都重要：漏报会放过真缺陷，误报会指责生态的常规写法。
+const openTopPeer = path.join(sandbox, 'open-top-peer')
+makeFixture(openTopPeer, { src: true, lib: true })
+{
+  const p = JSON.parse(fs.readFileSync(path.join(openTopPeer, 'package.json'), 'utf8'))
+  p.peerDependencies = { '@deepseek-ai/dsh-tools': '>=0.0.1-rc.1' }
+  fs.writeFileSync(path.join(openTopPeer, 'package.json'), JSON.stringify(p, null, 2) + '\n')
+}
+const caretPeer = path.join(sandbox, 'caret-peer')
+makeFixture(caretPeer, { src: true, lib: true })
+{
+  const p = JSON.parse(fs.readFileSync(path.join(caretPeer, 'package.json'), 'utf8'))
+  p.peerDependencies = { '@deepseek-ai/cordis': '^4.0.4' }
+  fs.writeFileSync(path.join(caretPeer, 'package.json'), JSON.stringify(p, null, 2) + '\n')
+}
+
+const openRun = run(openTopPeer, ['--no-smoke', '--only', 'R'])
+const openR8 = (openRun.report?.results ?? []).find((x) => x.id === 'R8')
+assert('R8 open-top >= 且无上界 → warn', openR8?.status === 'warn', `实际 ${openR8?.status}`)
+assert('R8 open-top 的说明指向 caret 或上界',
+  /open-top|无上界/.test(String(openR8?.message ?? '')),
+  `实际说明：${String(openR8?.message ?? '').slice(0, 80)}`)
+assert('R8 区间 warn 归类为 policy，而非 plugin-defect',
+  openR8?.category === 'policy',
+  `实际 category=${openR8?.category}（warn 默认是 plugin-defect，与该条自述「不是缺陷」矛盾）`)
+
+const caretRun = run(caretPeer, ['--no-smoke', '--only', 'R'])
+const caretR8 = (caretRun.report?.results ?? []).find((x) => x.id === 'R8')
+assert('R8 caret 区间有界 → 不得误报（生态通行写法）', caretR8?.status === 'pass', `实际 ${caretR8?.status}`)
 
 fs.rmSync(sandbox, { recursive: true, force: true })
 
