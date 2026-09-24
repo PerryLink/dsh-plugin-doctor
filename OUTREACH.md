@@ -262,7 +262,23 @@ and a silent drift is the failure class this project exists to catch.
 | `dsh-catalog`, `dsh-plugin-certification` | no `dsh.bundle.patch` — ineligible |
 | `dsh-kit`, `dsh-plugin-portal` | no `package.json` — not an installable package |
 | `dsh-personal-directive` | withdrawn from the DSH ecosystem |
-| `dsh-plugin-upgrade-016` | eligible, but sits on another session's active `ci/bootstrap-ops` branch |
+| `dsh-plugin-upgrade-016` | **retired — no gate is the correct end state** (see below) |
+
+**`dsh-plugin-upgrade-016` is not blocked; it is finished.** The repository is
+**archived** and its own description states the reason: *"Corridor folded into
+dsh-plugin-upgrade 2.0.0 (never published under this name): its 0.1.5-rc.2 ->
+0.1.6-alpha.2 card and E1-E5 scanner live in that package now."* Verified rather
+than taken on trust — `dsh-plugin-upgrade` is published at **2.0.2**, and its
+CHANGELOG records the fold ("folded the `0.1.5-rc.2` → `0.1.6-alpha.2` corridor in
+as `legC`") and notes that the `legC` card still called itself by the retired
+`dsh-plugin-upgrade-016` name. Adding a gate to a superseded, archived package
+would be theatre.
+
+Nothing else in the ungated set is archived. The rest are not installable plugin
+bundles at all — `dsh-catalog` is a catalogue source, `dsh-kit` a starter pack,
+`dsh-plugin-portal` a portal renderer, `dsh-plugin-certification` a spec and
+registry — and R1's requirement is `dsh.bundle.patch`, which does not apply to
+them. `dsh-personal-directive` is withdrawn from the ecosystem.
 
 **A process error worth recording, because it cost a round.** The first attempt
 landed the pin on whichever branch each repository happened to have checked out —

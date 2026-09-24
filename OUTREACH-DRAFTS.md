@@ -29,7 +29,7 @@ conventions.
 
 | Site | Reach | Mechanism | Note |
 |---|---|---|---|
-| **dsh.directory** | 4,616 plugin pages | issue form: `alexchenzl/dsh-plugin-directory/issues/new?template=plugin-submission.yml` | **the entire PerryLink org is absent here**, not just this plugin; the only `dsh-plugin-doctor` page is `zoahdev`'s |
+| **dsh.directory** | 4,616 plugin pages | issue form: `alexchenzl/dsh-plugin-directory/issues/new?template=plugin-submission.yml` | **CORRECTED — this was never a gap.** The earlier check searched the sitemap case-sensitively for `PerryLink` and got zero; the URLs are lower-case `perrylink`, and **29 packages were already accepted and live**. 44 submissions were then sent (#276–#319), of which **15 were genuinely new** and 29 were re-submissions. Full record: `OUTREACH-dsh-directory-submissions.md` |
 | **dsh.works** (dshworks registry) | 13,756 entries | PR to `dshworks/awesome-dsh-plugins` → `data/plugins.json` | **35 other PerryLink repos are already in, and this one is not** — with open PR #107 in flight. Largest reach of any gap |
 | `aust24lzy.github.io/dsh-plugin-hub` | 15,877 | own feed, auto-collected | feed is fresh (2026-09-23) and already carries 69 PerryLink rows |
 | `ukinch605.github.io/awesome-dsh-hub` | — | own feed | 101 PerryLink rows present; this plugin absent |
