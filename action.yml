@@ -1,0 +1,50 @@
+name: dsh-plugin-doctor
+description: Static R/K verification gate for DeepSeek Harness (dsh) plugins - package structure and cordis v4 contract, zero dependencies, no install and no build.
+author: PerryLink
+branding:
+  icon: shield
+  color: blue
+
+inputs:
+  report-dir:
+    description: Directory for the JSON report, relative to the workspace.
+    required: false
+    default: doctor-report
+  only:
+    description: Check groups to run, comma separated. ASCII aliases are encoding-safe - R (package structure), K (cordis contract), D (sandbox smoke), CC (ecosystem listings).
+    required: false
+    default: R,K
+  smoke:
+    description: Run the dynamic sandbox smoke test as well. Needs network and pnpm, so it is off by default.
+    required: false
+    default: "false"
+  dsh:
+    description: Host version for the smoke run. Only used when smoke is true.
+    required: false
+    default: ""
+  format:
+    description: JSON report shape - doctor (full envelope) or check (the ecosystem three-value contract, PASS/WARN/FAIL with exit 0/1/2).
+    required: false
+    default: doctor
+
+outputs:
+  verdict:
+    description: Overall verdict as reported by the tool.
+  exit-code:
+    description: The tool's exit code - 0 ok, 1 fail, 2 usage, 3 infrastructure, 4 unsupported host, 5 unstable, 6 degraded.
+  summary:
+    description: One-line count of the gated checks by status.
+  failing:
+    description: Comma-separated ids of the gated checks that failed. Empty when the gate passes.
+  report-path:
+    description: Absolute path to the JSON report.
+
+runs:
+  using: composite
+  steps:
+    # The Action runs in the CALLER's workspace, so the tool is addressed through
+    # GITHUB_ACTION_PATH rather than a relative path, and no install step is needed
+    # because the tool has no runtime dependencies.
+    - name: Run dsh-plugin-doctor
+      shell: bash
+      run: node "$GITHUB_ACTION_PATH/.github/actions/doctor/index.mjs"

@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.4.0] - 2026-09-24
+
+### Added
+
+- **`action.yml` — the gate is now a composite GitHub Action**, so a repository can adopt it with one step instead of copying a workflow file:
+
+  ```yaml
+  - uses: PerryLink/dsh-plugin-doctor@v0.4.0
+    with:
+      only: R,K
+  ```
+
+  Inputs: `report-dir`, `only`, `smoke`, `dsh`, `format`. Outputs: `verdict`, `exit-code`, `summary`, `failing`, `report-path`. No install step is needed — the tool has no runtime dependencies. Branding is set (`shield`, blue) for a Marketplace listing.
+
+  The entry point resolves the tool through `GITHUB_ACTION_PATH`, not a relative path, because a composite action runs in the **caller's** workspace. That is the same class of mistake as a repository declaring a `bin` of the same name: the invocation, not the tool, decides which code runs.
+
+### Fixed
+
+- **The Action's `verdict` output emitted `[object Object]`.** `report.verdict` is an object (`{worst, ok, criticalFail}`), not a string, so a consumer would have stored a literal `[object Object]` as though it were a verdict. It now emits the readable `worst` value.
+- **The summary assumed the `doctor` report shape**, so `--format check` — the ecosystem three-value contract — reported `gated=0`. Both shapes are now read: `.results` (lowercase status) and `.checks` (uppercase), normalised to one summary that names the format it read.
+
+### Notes
+
+- `action.yml` and `.github/actions/` are included in the published tarball, so the Action works from the npm package as well as from a git ref. Verified with `npm pack`: 23 files.
+
 ## [0.3.2] - 2026-09-23
 
 ### Fixed

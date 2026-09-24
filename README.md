@@ -243,16 +243,32 @@ OUTREACH.md              adoption notes: channel states, positioning, actions
 ## Status
 
 Official repository: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.
-**Current version 0.3.2**, published to npm. Releases go out through **npm Trusted
+**Current version 0.4.0**, published to npm. Releases go out through **npm Trusted
 Publishing (OIDC)** — no long-lived token — after the `NPM_TOKEN` secret expired
 and blocked the 0.2.4 and 0.3.0 attempts. See `CHANGELOG.md`. CI usage
 (**please use the ASCII aliases**):
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.3.2 --repo . --no-smoke --only "R,K"
+npx --yes @perrylink/dsh-plugin-doctor@0.4.0 --repo . --no-smoke --only "R,K"
 ```
 
-**42 plugin repos** already ship `.github/workflows/plugin-doctor.yml` (a read-only static gate over the committed tree → `--only "R,K"` plus the R0/K1 self-verification). 39 of them were moved from `@0.1.6` to a current pin on 2026-09-23, after the change was verified against all 42 repositories first; `dsh-ticktick` waits on the `R8` refinement in 0.3.2, and the rest have no gate committed yet. New adopters should pin the **newest published** version — currently 0.3.2.
+Or as a **GitHub Action** — no install step, no copied workflow file:
+
+```yaml
+- uses: PerryLink/dsh-plugin-doctor@v0.4.0
+  with:
+    only: R,K
+```
+
+**43 PerryLink repositories** ship the gate, and the whole fleet was moved onto one
+byte-identical template pinned to the current version on 2026-09-23/24, after the
+change was verified against every gated repository first. New adopters should pin
+the **newest published** version — currently 0.4.0.
+
+> **Honest status: there are no external adopters yet.** That, not catalogue
+> coverage, is what limits this project — it is already in 33+ directories
+> including every high-star one. Measurements and the reasoning are in
+> [`OUTREACH.md`](OUTREACH.md) §C4.
 
 > Every 0.2.0 change is **additive** (new fields / new options / new exit codes); the criteria for the existing 37 repos are unchanged, verified against the 37-repo baseline with **diffs = 0**.
 
