@@ -258,11 +258,19 @@ source publishes `.ts` that the host cannot import.
 #### R8 — Stale peer ranges (dual-baseline lesson)
 **Requirement.** No `@deepseek-ai/dsh*` or cordis peer range names a
 superseded prerelease line (`0.1.0-rc.*`, `0.1.1-rc.*`, `0.1.2-alpha.*`,
-`0.1.3-alpha.*`), and no such range is a **single-arm** prerelease-tuple range.
-**Verdicts.** `skip` (no dsh-related peer) · `fail` · `pass`.
-**Failure meaning (single-arm).** `>=0.1.2-rc.1 <0.2.0` without `||` admits only
-the one prerelease it names and **rejects** `0.1.5-rc.1` — the plugin appears
-compatible while being uninstallable on the current host line.
+`0.1.3-alpha.*`).
+**Verdicts.** `skip` (no dsh-related peer) · `fail` (a superseded line is named) ·
+`warn` (a single-arm prerelease-tuple range) · `pass`.
+**Failure meaning (superseded line).** The declared range cannot admit the host
+line in use, while appearing compatible.
+**Warning meaning (single-arm range).** A range such as
+`>=0.1.7-alpha.1 <0.2.0` without `||` admits only the one prerelease it names, so
+it excludes whatever line is currently `latest`. That is a real consequence — the
+plugin will not install against the stable host — but it is a **choice about which
+host to support**, not a defect, and the check cannot tell a deliberate target from
+the historical trap offline. The historical trap is the reason the OR form exists:
+`>=0.1.2-rc.1 <0.2.0` silently rejects `0.1.5-rc.1`. Naming a superseded line
+still fails; naming a current one warns.
 
 ### 4.2 Group K — static · Cordis contract scan
 

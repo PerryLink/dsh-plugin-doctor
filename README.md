@@ -243,17 +243,16 @@ OUTREACH.md              adoption notes: channel states, positioning, actions
 ## Status
 
 Official repository: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.
-**Current version 0.3.1**, published to npm. Releases go out through **npm Trusted
+**Current version 0.3.2**, published to npm. Releases go out through **npm Trusted
 Publishing (OIDC)** — no long-lived token — after the `NPM_TOKEN` secret expired
 and blocked the 0.2.4 and 0.3.0 attempts. See `CHANGELOG.md`. CI usage
 (**please use the ASCII aliases**):
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.3.1 --repo . --no-smoke --only "R,K"
+npx --yes @perrylink/dsh-plugin-doctor@0.3.2 --repo . --no-smoke --only "R,K"
 ```
 
-**42 plugin repos** already ship `.github/workflows/plugin-doctor.yml` (a read-only static gate over the committed tree → `--only "R,K"` plus the R0/K1 self-verification, pinned to `@0.1.6`).
-The gate pin deliberately stays on 0.1.6: 0.2.0 changed the R/K criteria and output shape **not at all** (`tests/contract.mjs` freezes that as an assertion), so raising the pin is a separate wave rather than a precondition of this release. New adopters should pin the **newest published** version — currently 0.3.1.
+**42 plugin repos** already ship `.github/workflows/plugin-doctor.yml` (a read-only static gate over the committed tree → `--only "R,K"` plus the R0/K1 self-verification). 39 of them were moved from `@0.1.6` to a current pin on 2026-09-23, after the change was verified against all 42 repositories first; `dsh-ticktick` waits on the `R8` refinement in 0.3.2, and the rest have no gate committed yet. New adopters should pin the **newest published** version — currently 0.3.2.
 
 > Every 0.2.0 change is **additive** (new fields / new options / new exit codes); the criteria for the existing 37 repos are unchanged, verified against the 37-repo baseline with **diffs = 0**.
 

@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.2] - 2026-09-23
+
+### Fixed
+
+- **`R8` turned a deliberate host choice into a red CI run.** The check flagged any single-arm prerelease-tuple range, on the correct reasoning that `>=0.1.2-rc.1 <0.2.0` without `||` silently rejects `0.1.5-rc.1`. But it could not distinguish that trap from a range naming a *current* line, and the second case is a choice about which host to support rather than a defect. The consequence was measured, not theorised: `dsh-ticktick`, whose peers are `>=0.1.7-alpha.1 <0.2.0`, **passed R8 on 0.1.6 and failed it on 0.3.1** — over a rule added after its ranges were written — so raising the family pin would have turned its gate red.
+  - A range naming a **superseded** line (`0.1.0-rc.*`, `0.1.1-rc.*`, `0.1.2-alpha.*`, `0.1.3-alpha.*`) still **fails**. That is the trap the OR form exists to fix.
+  - A **single-arm** range now reports `warn`, naming the real consequence — it excludes whatever line is `latest`, so the plugin will not install against the stable host — without condemning the package. `warn` does not fail a gate, so `dsh-ticktick` exits 0 again.
+  - `SPEC.md` §4.1/R8 records the distinction, and `tests/contract.mjs` pins both directions: a superseded line must still fail, and a current-line arm must warn without producing a gated failure.
+
 ## [0.3.1] - 2026-09-23
 
 Published via **npm Trusted Publishing (OIDC)** — no token involved. The

@@ -249,6 +249,40 @@ const tsRun = run(tsSrcMainNoBuild, ['--no-smoke', '--only', 'R,K'])
 const tsR7 = (tsRun.report?.results ?? []).find((x) => x.id === 'R7')
 assert('TS 包 main→src/ 且无构建 → R7 fail', tsR7?.status === 'fail', `实际 ${tsR7?.status}`)
 
+// ── 观测 10：R8 区分「点名了被取代的线」（fail）与「单臂指向当前线」（warn）──
+// 旧实现把两者都判 fail，于是一条在范围写就之后才加入的规则，把 dsh-ticktick
+// 的门禁从 0.1.6 的 PASS 变成 0.3.1 的 FAIL —— 而那是「选择支持哪条宿主线」，
+// 不是缺陷。被取代的线仍然 fail，因为那才是 OR 形式要修的静默陷阱。
+const stalePeer = path.join(sandbox, 'stale-peer')
+makeFixture(stalePeer, { src: true, lib: true })
+{
+  const p = JSON.parse(fs.readFileSync(path.join(stalePeer, 'package.json'), 'utf8'))
+  // 0.1.2-alpha.* is on the superseded list; 0.1.5-alpha.1 is not, which is why
+  // this fixture must name an actually-superseded line to exercise the fail path.
+  p.peerDependencies = { '@deepseek-ai/dsh-tools': '>=0.1.2-alpha.3 <0.2.0' }
+  fs.writeFileSync(path.join(stalePeer, 'package.json'), JSON.stringify(p, null, 2) + '\n')
+}
+const singleArmPeer = path.join(sandbox, 'single-arm-peer')
+makeFixture(singleArmPeer, { src: true, lib: true })
+{
+  const p = JSON.parse(fs.readFileSync(path.join(singleArmPeer, 'package.json'), 'utf8'))
+  p.peerDependencies = { '@deepseek-ai/dsh-tools': '>=0.1.7-alpha.1 <0.2.0' }
+  fs.writeFileSync(path.join(singleArmPeer, 'package.json'), JSON.stringify(p, null, 2) + '\n')
+}
+
+const staleRun = run(stalePeer, ['--no-smoke', '--only', 'R,K'])
+const staleR8 = (staleRun.report?.results ?? []).find((x) => x.id === 'R8')
+assert('R8 点名被取代的线 → fail', staleR8?.status === 'fail', `实际 ${staleR8?.status}`)
+
+const singleRun = run(singleArmPeer, ['--no-smoke', '--only', 'R,K'])
+const singleR8 = (singleRun.report?.results ?? []).find((x) => x.id === 'R8')
+assert('R8 单臂指向当前线 → warn（不判缺陷）', singleR8?.status === 'warn', `实际 ${singleR8?.status}`)
+assert('R8 单臂 warn 不产生 gated 失败', (() => {
+  const g = (singleRun.report?.results ?? []).filter((x) => !/^R[24] /.test(x.name))
+  return g.every((x) => x.status !== 'fail' && x.status !== 'error')
+})(), (singleRun.report?.results ?? []).filter((x) => x.status === 'fail').map((x) => x.id).join(','))
+assert('R8 单臂 → exit 0（门禁不再因它变红）', singleRun.exit === 0, `实际 ${singleRun.exit}`)
+
 fs.rmSync(sandbox, { recursive: true, force: true })
 
 let failed = 0
