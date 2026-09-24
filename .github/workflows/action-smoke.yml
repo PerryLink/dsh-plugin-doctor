@@ -1,0 +1,32 @@
+name: action smoke (temporary)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  use-the-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use the released Action exactly as a consumer would
+        id: doctor
+        uses: PerryLink/dsh-plugin-doctor@v0.4.0
+        with:
+          only: R,K
+          format: doctor
+      - name: Show the outputs a consumer receives
+        run: |
+          echo "verdict    = ${{ steps.doctor.outputs.verdict }}"
+          echo "exit-code  = ${{ steps.doctor.outputs.exit-code }}"
+          echo "summary    = ${{ steps.doctor.outputs.summary }}"
+          echo "failing    = ${{ steps.doctor.outputs.failing }}"
+          echo "report     = ${{ steps.doctor.outputs.report-path }}"
+      - name: Fail if the Action reported a bad verdict without a bad exit code
+        run: |
+          v="${{ steps.doctor.outputs.verdict }}"
+          case "$v" in
+            pass|warn) echo "action verdict ok: $v" ;;
+            fail|error) echo "action correctly reported $v" ;;
+            *"[object"*) echo "::error::verdict output is malformed: $v"; exit 1 ;;
+            *) echo "::error::unexpected verdict: $v"; exit 1 ;;
+          esac
