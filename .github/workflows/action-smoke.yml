@@ -1,4 +1,4 @@
-name: action smoke (temporary)
+﻿name: action smoke (temporary)
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Use the released Action exactly as a consumer would
         id: doctor
-        uses: PerryLink/dsh-plugin-doctor@v0.4.0
+        uses: PerryLink/dsh-plugin-doctor@v0.4.1
         with:
           only: R,K
           format: doctor
