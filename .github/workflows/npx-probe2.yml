@@ -12,27 +12,34 @@ jobs:
         with:
           node-version: 22
 
-      - name: A. inside this checkout (the failing case)
+      - name: 1. baseline - the current gate form (expected to fail here)
         run: |
           set +e
-          echo "== npm $(npm --version), node $(node --version), pwd $(pwd) =="
-          echo "--- full stderr, unfiltered ---"
-          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; rc=$?
-          echo "exit=$rc"
-          printf '%s\n' "$out"
-          echo "--- end ---"
+          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; echo "exit=$? :: $(printf '%s' "$out" | head -1)"
 
-      - name: B. same command in an empty directory (the working case)
+      - name: 2. candidate fix - npx --ignore-existing
         run: |
           set +e
-          mkdir -p /tmp/empty && cd /tmp/empty
-          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; rc=$?
+          out="$(npx --yes --ignore-existing @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; echo "exit=$? :: $(printf '%s' "$out" | head -1)"
+
+      - name: 3. candidate fix - bare command with --package
+        run: |
+          set +e
+          out="$(npx --yes --package @perrylink/dsh-plugin-doctor@0.3.2 -- dsh-plugin-doctor --version 2>&1)"; echo "exit=$? :: $(printf '%s' "$out" | head -1)"
+
+      - name: 4. does the fix still work in a normal plugin repo (no matching bin)?
+        run: |
+          set +e
+          out="$(npx --yes --ignore-existing @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; echo "empty-dir exit=$? :: $(printf '%s' "$out" | head -1)"
+          mkdir -p /tmp/plain && cd /tmp/plain
+          printf '{"name":"plain","version":"1.0.0"}' > package.json
+          out="$(npx --yes --ignore-existing @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; echo "other-pkg exit=$? :: $(printf '%s' "$out" | head -1)"
+
+      - name: 5. the full gate command under the fix, from this checkout
+        run: |
+          set +e
+          out="$(npx --yes --ignore-existing @perrylink/dsh-plugin-doctor@0.3.2 --repo . --no-smoke --only "R,K" --json /tmp/doctor.json 2>&1)"; rc=$?
           echo "exit=$rc"
           printf '%s\n' "$out" | head -6
-
-      - name: C. inside the checkout again, but with the bin name as the command
-        run: |
-          set +e
-          out="$(npx --yes --package @perrylink/dsh-plugin-doctor@0.3.2 -- dsh-plugin-doctor --version 2>&1)"; rc=$?
-          echo "exit=$rc"
-          printf '%s\n' "$out" | head -10
+          echo "json written: $([ -f /tmp/doctor.json ] && echo yes || echo no)"
+          echo "R0 present: $(printf '%s' "$out" | grep -c 'R0 ' || true)"
