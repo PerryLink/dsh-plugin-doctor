@@ -12,34 +12,26 @@ jobs:
         with:
           node-version: 22
 
-      - name: 1. baseline - the current gate form (expected to fail here)
+      - name: A. current form, from the checkout (fails)
         run: |
           set +e
-          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; echo "exit=$? :: $(printf '%s' "$out" | head -1)"
+          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.3.2 --repo . --no-smoke --only "R,K" --json /tmp/a.json 2>&1)"
+          echo "exit=$? :: json=$([ -f /tmp/a.json ] && echo yes || echo no) :: R0=$(printf '%s' "$out" | grep -c 'R0 ' || true)"
 
-      - name: 2. candidate fix - npx --ignore-existing
+      - name: B. run npx from /tmp, point --repo back at the checkout (absolute)
         run: |
           set +e
-          out="$(npx --yes --ignore-existing @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; echo "exit=$? :: $(printf '%s' "$out" | head -1)"
+          cd /tmp
+          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.3.2 --repo "$GITHUB_WORKSPACE" --no-smoke --only "R,K" --json /tmp/b.json 2>&1)"
+          echo "exit=$? :: json=$([ -f /tmp/b.json ] && echo yes || echo no) :: R0=$(printf '%s' "$out" | grep -c 'R0 ' || true)"
+          printf '%s\n' "$out" | head -4
 
-      - name: 3. candidate fix - bare command with --package
+      - name: C. same, but invoking doctor.mjs directly by path (no bin resolution at all)
         run: |
           set +e
-          out="$(npx --yes --package @perrylink/dsh-plugin-doctor@0.3.2 -- dsh-plugin-doctor --version 2>&1)"; echo "exit=$? :: $(printf '%s' "$out" | head -1)"
-
-      - name: 4. does the fix still work in a normal plugin repo (no matching bin)?
-        run: |
-          set +e
-          out="$(npx --yes --ignore-existing @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; echo "empty-dir exit=$? :: $(printf '%s' "$out" | head -1)"
-          mkdir -p /tmp/plain && cd /tmp/plain
-          printf '{"name":"plain","version":"1.0.0"}' > package.json
-          out="$(npx --yes --ignore-existing @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; echo "other-pkg exit=$? :: $(printf '%s' "$out" | head -1)"
-
-      - name: 5. the full gate command under the fix, from this checkout
-        run: |
-          set +e
-          out="$(npx --yes --ignore-existing @perrylink/dsh-plugin-doctor@0.3.2 --repo . --no-smoke --only "R,K" --json /tmp/doctor.json 2>&1)"; rc=$?
-          echo "exit=$rc"
-          printf '%s\n' "$out" | head -6
-          echo "json written: $([ -f /tmp/doctor.json ] && echo yes || echo no)"
-          echo "R0 present: $(printf '%s' "$out" | grep -c 'R0 ' || true)"
+          cd /tmp
+          npm install --no-save --silent @perrylink/dsh-plugin-doctor@0.3.2 >/dev/null 2>&1
+          cli="/tmp/node_modules/@perrylink/dsh-plugin-doctor/doctor.mjs"
+          echo "cli present: $([ -f "$cli" ] && echo yes || echo no)"
+          out="$(node "$cli" --repo "$GITHUB_WORKSPACE" --no-smoke --only "R,K" --json /tmp/c.json 2>&1)"
+          echo "exit=$? :: json=$([ -f /tmp/c.json ] && echo yes || echo no) :: R0=$(printf '%s' "$out" | grep -c 'R0 ' || true)"
