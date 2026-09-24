@@ -17,6 +17,13 @@ Todo critério remonta a três trilhas de pesquisa de primeira mão datadas de 2
 código-fonte do deepseek-harness, os contratos de código do cordiverse/cordis, e um inventário de todo
 canal de distribuição no workspace (texto completo em `SURVEY.md`).
 
+
+<!-- star-cta -->
+## ⭐ 如果它帮到了你
+
+Este plugin faz parte da [família de plugins DSH](https://github.com/PerryLink) (mais de 40, todos Apache-2.0). Se for útil, **deixe uma estrela**: não desbloqueia nada, mas ajuda a próxima pessoa a encontrá-lo.
+
+*English:* part of a 40+ plugin family for DeepSeek Harness. If it is useful, **a star helps the next person find it** — nothing is gated behind it.
 ## Instalação (bundle do DSH)
 
 `dsh-plugin-doctor` declara `dsh.bundle.patch` → `cordis.patch.yml` no package.json, então ele também pode ser instalado como um bundle do DeepSeek Harness:

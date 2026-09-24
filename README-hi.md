@@ -17,6 +17,13 @@ dsh plugins के लिए "integrity + runtime health" का ऑल-इन-�
 docs और सोर्स, cordiverse/cordis के सोर्स अनुबंध, और कार्यक्षेत्र के हर वितरण
 चैनल की सूची (पूरा पाठ `SURVEY.md` में)।
 
+
+<!-- star-cta -->
+## ⭐ 如果它帮到了你
+
+यह प्लगइन [DSH प्लगइन परिवार](https://github.com/PerryLink) का हिस्सा है (40+ प्लगइन, सभी Apache-2.0)। अगर यह उपयोगी लगे, तो **एक स्टार दें** — इससे कोई सुविधा अनलॉक नहीं होती, पर अगला व्यक्ति इसे खोज में आसानी से पा लेता है।
+
+*English:* part of a 40+ plugin family for DeepSeek Harness. If it is useful, **a star helps the next person find it** — nothing is gated behind it.
 ## इंस्टॉलेशन (DSH bundle)
 
 `dsh-plugin-doctor` package.json में `dsh.bundle.patch` → `cordis.patch.yml` घोषित करता है, इसलिए इसे DeepSeek Harness bundle के रूप में भी इंस्टॉल किया जा सकता है:
