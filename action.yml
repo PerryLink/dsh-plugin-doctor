@@ -28,16 +28,25 @@ inputs:
     default: doctor
 
 outputs:
+  # A composite action's outputs must be mapped explicitly from an inner step. Without
+  # `value`, the runner records `outputs: {}` and every consumer reference resolves to
+  # an empty string — which is how this shipped broken in 0.4.0: the action ran, wrote
+  # GITHUB_OUTPUT correctly, and still handed consumers nothing.
   verdict:
-    description: Overall verdict as reported by the tool.
+    description: Worst verdict across the gated checks - pass, warn, skip, fail or error.
+    value: ${{ steps.doctor.outputs.verdict }}
   exit-code:
     description: The tool's exit code - 0 ok, 1 fail, 2 usage, 3 infrastructure, 4 unsupported host, 5 unstable, 6 degraded.
+    value: ${{ steps.doctor.outputs.exit-code }}
   summary:
-    description: One-line count of the gated checks by status.
+    description: One-line count of the gated checks by status, naming the report format that was read.
+    value: ${{ steps.doctor.outputs.summary }}
   failing:
     description: Comma-separated ids of the gated checks that failed. Empty when the gate passes.
+    value: ${{ steps.doctor.outputs.failing }}
   report-path:
     description: Absolute path to the JSON report.
+    value: ${{ steps.doctor.outputs.report-path }}
 
 runs:
   using: composite
@@ -46,5 +55,6 @@ runs:
     # GITHUB_ACTION_PATH rather than a relative path, and no install step is needed
     # because the tool has no runtime dependencies.
     - name: Run dsh-plugin-doctor
+      id: doctor
       shell: bash
       run: node "$GITHUB_ACTION_PATH/.github/actions/doctor/index.mjs"

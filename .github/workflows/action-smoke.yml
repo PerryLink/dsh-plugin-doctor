@@ -10,28 +10,26 @@ jobs:
       - uses: actions/checkout@v4
       - name: Use the released Action exactly as a consumer would
         id: doctor
-        uses: PerryLink/dsh-plugin-doctor@v0.4.1
+        uses: PerryLink/dsh-plugin-doctor@v0.4.2
         with:
           only: R,K
           format: doctor
-      - name: DIAGNOSTIC - what does the runner think the step produced?
+      - name: every output must be non-empty
         run: |
-          echo "--- toJSON(steps.doctor) ---"
-          echo '${{ toJSON(steps.doctor) }}'
-          echo "--- individual outputs ---"
-          echo "verdict='${{ steps.doctor.outputs.verdict }}'"
-          echo "summary='${{ steps.doctor.outputs.summary }}'"
-          echo "outcome='${{ steps.doctor.outcome }}'"
-      - name: DIAGNOSTIC - can a consumer read the report itself instead?
-        run: |
-          f="doctor-report/doctor.json"
-          echo "report exists: $([ -f "$f" ] && echo yes || echo no)"
-          if [ -f "$f" ]; then
-            node -e '
-              const r = JSON.parse(require("fs").readFileSync("doctor-report/doctor.json","utf8"))
-              const w = r.verdict && (typeof r.verdict === "string" ? r.verdict : r.verdict.worst)
-              const rows = r.results || r.checks || []
-              const bad = rows.filter(x => !/^R[24] /.test(x.name) && /^(fail|error)$/i.test(x.status))
-              console.log("verdict-from-file=" + w + " failing=" + bad.map(x=>x.id).join(","))
-            '
-          fi
+          fail=0
+          for pair in "verdict:${{ steps.doctor.outputs.verdict }}" \
+                      "exit-code:${{ steps.doctor.outputs.exit-code }}" \
+                      "summary:${{ steps.doctor.outputs.summary }}" \
+                      "report-path:${{ steps.doctor.outputs.report-path }}"; do
+            name="${pair%%:*}"; val="${pair#*:}"
+            echo "$name = '$val'"
+            if [ -z "$val" ]; then echo "::error::output '$name' is empty"; fail=1; fi
+          done
+          echo "failing = '${{ steps.doctor.outputs.failing }}'  (empty is correct when the gate passes)"
+          v="${{ steps.doctor.outputs.verdict }}"
+          case "$v" in
+            pass|warn|skip|fail|error) echo "verdict is a recognised value: $v" ;;
+            *"[object"*) echo "::error::verdict is malformed: $v"; fail=1 ;;
+            *) echo "::error::unrecognised verdict: '$v'"; fail=1 ;;
+          esac
+          exit $fail
