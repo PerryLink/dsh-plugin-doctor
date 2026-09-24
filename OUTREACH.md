@@ -27,7 +27,7 @@ project's.
 | Community demand for an official market + standards | open, high-traffic | — | [#1115](https://github.com/deepseek-ai/deepseek-harness/discussions/1115) |
 | Community proposal: repository-layout standard | open | — | [#2269](https://github.com/deepseek-ai/deepseek-harness/discussions/2269) |
 | Third-party write-up of **this** project | **none — corrected 2026-09-23** | — | see the correction below |
-| npm distribution | published, 13 versions | PerryLink | `@perrylink/dsh-plugin-doctor` |
+| npm distribution | published, 15 versions | PerryLink | `@perrylink/dsh-plugin-doctor` |
 | Public third-party result set | published | PerryLink | [`THIRD-PARTY-RK-SCAN.md`](THIRD-PARTY-RK-SCAN.md) |
 
 > **Correction: the one "known" blog post is about a different project.** An
@@ -199,32 +199,50 @@ uses (`--no-smoke --only "R,K"`). **41 passed clean**; the one that did not is
 
 | state | count |
 |---|---|
-| on `0.3.1` | **37** |
-| still on `0.1.6` | 3 |
-| no gate on the remote default branch | 9 |
+| on `0.3.2` | **43** |
+| still on an older pin | 0 |
+| no gate committed | 6 |
 
-The 9 without a gate are the repositories that never had one committed — the ones
-with no `dsh.bundle.patch` (`dsh-catalog`, `dsh-kit`, `dsh-plugin-certification`,
-`dsh-plugin-portal`), the withdrawn `dsh-personal-directive`, this repository
-itself, and the four where the gate file has only ever existed untracked in a
-working tree: `dsh-cert-mcp`, `dsh-plugin-upgrade-016`, `dsh-skill-pack-security`.
+Two things had to happen in sequence, and the order is the point.
 
-**`dsh-ticktick` was deliberately left on 0.1.6.** It passes R8 on 0.1.6 and fails
-it on 0.3.1, because 0.2.0 added the single-arm prerelease-range rule and its
-permanent peers are single-arm (`>=0.1.7-alpha.1 <0.2.0`). Moving its pin would
-have turned its CI red over a rule added after those ranges were written. That is
-a criterion decision, not a mechanical one, so it waits for a human:
+**First, `0.3.1` was not safe to roll out.** Running it against all 42 gated
+repositories showed `dsh-ticktick` **passes R8 on 0.1.6 and fails it on 0.3.1** —
+0.2.0 added the single-arm prerelease-range rule, and its permanent peers are
+`>=0.1.7-alpha.1 <0.2.0`, a single-arm range naming a *current* line. That is a
+deliberate choice about which host to support, not the historical trap the rule
+exists to catch (an arm naming a *superseded* line, which silently rejects a newer
+one). Rather than turn a correct repository's CI red, the rule was refined in
+**0.3.2**: a superseded line still **fails**; a single-arm range now **warns**,
+naming the real consequence (it excludes whatever line is `latest`, so the plugin
+will not install against the stable host) and does not fail a gate. `SPEC.md`
+§4.1/R8 and `tests/contract.mjs` pin both directions.
 
-- the rule exists to stop a false green — a single-arm tuple range admits only the
-  prerelease it names, so `>=0.1.2-rc.1 <0.2.0` silently rejects `0.1.5-rc.1`;
-- but a range targeting a *current* line (`0.1.7-alpha.1`) is not that trap, and
-  failing it reports a deliberate target as a defect.
+**Second, the rollout was verified before it was applied, not after** — then the
+fleet was pinned by writing each repository's workflow file through the GitHub API
+against its *actual default branch*. Reading and writing remotely avoids the
+local-checkout problem below entirely.
 
-`dsh-local-ai` and `dsh-plugin-upgrade-015` have the change staged on a branch cut
-from `origin/main` — `ci/doctor-pin-0.3.1-main`, a one-line diff — because their
-local `main` has diverged from the remote and the pin could not be landed without
-either force-pushing or carrying another session's commits along. Merge those
-branches to finish.
+`dsh-plugin-doctor` itself now carries the gate. It is the standard, and it was
+not running its own criteria.
+
+**Still without a gate, and why each is fine:**
+
+| repository | why not |
+|---|---|
+| `dsh-catalog`, `dsh-plugin-certification` | no `dsh.bundle.patch` — ineligible |
+| `dsh-kit`, `dsh-plugin-portal` | no `package.json` — not an installable package |
+| `dsh-personal-directive` | withdrawn from the DSH ecosystem |
+| `dsh-plugin-upgrade-016` | eligible, but sits on another session's active `ci/bootstrap-ops` branch |
+
+**A process error worth recording, because it cost a round.** The first attempt
+landed the pin on whichever branch each repository happened to have checked out —
+not necessarily its default branch. That left three repositories un-pinned on
+`origin/main` while the script reported success, and created a stray branch in
+`dsh-claude-move` from the wrong base (deleted unpushed). A
+`.git/packed-refs.lock` in `dsh-local-ai` indicated another session active there,
+and local `main` in that repository and in `dsh-plugin-upgrade-015` had diverged,
+so those two were staged on a one-line branch cut from `origin/main` and pushed
+straight to `main` without touching the divergent local branch.
 
 ### C3. Three repositories gated but not badged — PARTLY DONE
 
