@@ -12,28 +12,27 @@ jobs:
         with:
           node-version: 22
 
-      - name: A. the gate's exact invocation, from this checkout
+      - name: A. inside this checkout (the failing case)
         run: |
-          echo "== pwd: $(pwd) =="
-          echo "== does the checkout carry a package.json with a bin? =="
-          node -p "JSON.stringify(require('./package.json').bin)"
-          echo "== any node_modules already here? =="
-          ls -la node_modules 2>&1 | head -3 || true
-          echo
+          set +e
+          echo "== npm $(npm --version), node $(node --version), pwd $(pwd) =="
+          echo "--- full stderr, unfiltered ---"
           out="$(npx --yes @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; rc=$?
           echo "exit=$rc"
-          printf '%s\n' "$out" | head -8
+          printf '%s\n' "$out"
+          echo "--- end ---"
 
-      - name: B. same invocation with the gate's flags
+      - name: B. same command in an empty directory (the working case)
         run: |
-          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.3.2 --repo . --no-smoke --only "R,K" --json /tmp/doctor.json 2>&1)"; rc=$?
+          set +e
+          mkdir -p /tmp/empty && cd /tmp/empty
+          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.3.2 --version 2>&1)"; rc=$?
           echo "exit=$rc"
-          printf '%s\n' "$out" | head -14
-          echo "json: $([ -f /tmp/doctor.json ] && echo yes || echo no)"
+          printf '%s\n' "$out" | head -6
 
-      - name: C. what npm actually resolved
+      - name: C. inside the checkout again, but with the bin name as the command
         run: |
-          npm exec --yes --package=@perrylink/dsh-plugin-doctor@0.3.2 -- dsh-plugin-doctor --version 2>&1 | head -5 || true
-          echo "--- _npx cache dirs ---"
-          ls -la ~/.npm/_npx 2>/dev/null | head -5 || true
-          find ~/.npm/_npx -name 'dsh-plugin-doctor' -maxdepth 4 2>/dev/null | head -5 || true
+          set +e
+          out="$(npx --yes --package @perrylink/dsh-plugin-doctor@0.3.2 -- dsh-plugin-doctor --version 2>&1)"; rc=$?
+          echo "exit=$rc"
+          printf '%s\n' "$out" | head -10
