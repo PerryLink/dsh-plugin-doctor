@@ -83,6 +83,7 @@ const summary = `format=${format} gated=${gated.length} pass=${counts.pass ?? 0}
 console.log(`dsh-plugin-doctor: ${summary}`)
 
 const out = process.env.GITHUB_OUTPUT
+console.log(`dsh-plugin-doctor: GITHUB_OUTPUT=${out ?? '(unset)'}`)
 if (out) {
   // report.verdict is an object ({worst, ok, criticalFail}) in the doctor shape;
   // emitting it directly yields "[object Object]", which a consumer would happily
@@ -91,12 +92,15 @@ if (out) {
     ? report.verdict
     : (report?.verdict?.worst ?? (failing.length ? 'fail' : 'pass'))
   appendFileSync(out, [
+    `verdict=${verdict}`,
     `exit-code=${run.status ?? 1}`,
     `report-path=${reportPath}`,
     `summary=${summary}`,
     `failing=${failing.map((r) => r.id ?? r.name).join(',')}`,
-    `verdict=${verdict}`,
   ].join('\n') + '\n')
+  console.log(`dsh-plugin-doctor: wrote 5 outputs to ${out}`)
+} else {
+  console.error('::warning::GITHUB_OUTPUT is unset, so verdict/exit-code/summary/failing/report-path cannot be exported')
 }
 
 if (failing.length) {
