@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.6] - 2026-10-04
+
+### Changed
+
+- Host pins move to `0.2.1-alpha.1`; re-verified against that host line.
+
 ## [0.4.5] - 2026-09-24
 
 ### Fixed
