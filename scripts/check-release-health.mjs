@@ -111,8 +111,15 @@ function publishingWorkflows(repoDir) {
     out.push({
       file: f,
       oidc: /id-token:\s*write/.test(text),
+      // Only LIVE configuration counts. A note about `NPM_TOKEN` inside a comment is not a
+      // defect, and warning on one is how a check becomes noise people learn to ignore.
       registryUrl: /^\s*registry-url:/m.test(text),
-      readsToken: /secrets\.NPM_TOKEN/.test(text),
+      readsToken: /^\s*[^#\s].*secrets\.NPM_TOKEN/m.test(text),
+      // A workflow that loads a bearer token but explicitly retries without it is a
+      // deliberate token-then-OIDC design, not the 404 trap: dsh-plugin-doctor does exactly
+      // that (`unset NODE_AUTH_TOKEN` then retry) and republishes via OIDC when the token is
+      // stale. Detect the documented retry instead of inferring a defect from the token alone.
+      retriesWithoutToken: /unset\s+NODE_AUTH_TOKEN/.test(text),
       tag: /tags:\s*\['?v/.test(text),
     })
   }
@@ -215,8 +222,17 @@ async function checkRepo(repoDir) {
   if (!pub.length) notes.push('no npm-publish workflow found (this repo may not publish)')
   for (const w of pub) {
     if (!w.oidc) notes.push(w.file + ': no id-token: write (trusted publishing unavailable)')
-    if (w.readsToken) notes.push(w.file + ': reads secrets.NPM_TOKEN - a configured bearer token outranks the OIDC exchange')
-    if (w.registryUrl) notes.push(w.file + ': sets registry-url (writes an _authToken line that can short-circuit OIDC)')
+    // Only the genuine trap: a bearer token with no documented path that retries without it.
+    // Worded as a heuristic, not a verdict — the registry probe below is the verdict.
+    if (w.readsToken && !w.retriesWithoutToken) {
+      notes.push(w.file + ': feeds secrets.NPM_TOKEN with no "unset NODE_AUTH_TOKEN" retry - a stale ' +
+        'token outranks the OIDC exchange and the registry answers 404 on PUT')
+    } else if (w.readsToken && w.retriesWithoutToken) {
+      notes.push(w.file + ': token-then-OIDC retry detected (fine; OIDC is the fallback)')
+    }
+    if (w.registryUrl && !w.retriesWithoutToken) {
+      notes.push(w.file + ': sets registry-url (writes an _authToken line that can short-circuit OIDC)')
+    }
   }
 
   // 2-4) registry probes

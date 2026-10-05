@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.6.3] - 2026-10-05
+
+### Changed
+
+- **The release-health auth notes are now evidence-based instead of inferred from a token mention.**
+  The first version warned whenever a publish workflow referenced `secrets.NPM_TOKEN` or set
+  `registry-url`, which flagged `dsh-plugin-doctor` own publish workflow — a deliberate
+  token-then-OIDC design that already retries via `unset NODE_AUTH_TOKEN` and republishes through
+  trusted publishing whenever the token is stale. A note that cries wolf on a correct workflow is
+  worse than no note. The check now reads only LIVE configuration (a match inside a comment is not
+  a defect), recognises the documented retry, and downgrades that case to an explicit "fine" note.
+  The warning that remains is the genuine trap — a bearer token with no retry path — and it still
+  fires on `dsh-team-rooms`, which is a real finding rather than a false positive.
+
+### Notes
+
+- The registry probe, not the note, remains the verdict: a workflow can look wrong and publish
+  correctly, or look right and fail. This pass only explains what the probe found.
 ## [0.6.2] - 2026-10-05
 
 ### Fixed
