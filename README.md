@@ -1,5 +1,7 @@
 # dsh-plugin-doctor
 
+> Release stamp: `0.4.6` (2026-10-04).
+
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://img.shields.io/npm/v/%40perrylink%2Fdsh-plugin-doctor)](https://www.npmjs.com/package/@perrylink/dsh-plugin-doctor)
 [![npm downloads](https://img.shields.io/npm/dm/%40perrylink%2Fdsh-plugin-doctor)](https://www.npmjs.com/package/@perrylink/dsh-plugin-doctor)
@@ -251,19 +253,19 @@ OUTREACH.md              adoption notes: channel states, positioning, actions
 ## Status
 
 Official repository: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.
-**Current version 0.4.0**, published to npm. Releases go out through **npm Trusted
+**Current version 0.4.6**, published to npm. Releases go out through **npm Trusted
 Publishing (OIDC)** — no long-lived token — after the `NPM_TOKEN` secret expired
 and blocked the 0.2.4 and 0.3.0 attempts. See `CHANGELOG.md`. CI usage
 (**please use the ASCII aliases**):
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.4.0 --repo . --no-smoke --only "R,K"
+npx --yes @perrylink/dsh-plugin-doctor@0.4.6 --repo . --no-smoke --only "R,K"
 ```
 
 Or as a **GitHub Action** — no install step, no copied workflow file:
 
 ```yaml
-- uses: PerryLink/dsh-plugin-doctor@v0.4.0
+- uses: PerryLink/dsh-plugin-doctor@v0.4.6
   with:
     only: R,K
 ```
@@ -271,7 +273,7 @@ Or as a **GitHub Action** — no install step, no copied workflow file:
 **43 PerryLink repositories** ship the gate, and the whole fleet was moved onto one
 byte-identical template pinned to the current version on 2026-09-23/24, after the
 change was verified against every gated repository first. New adopters should pin
-the **newest published** version — currently 0.4.0.
+the **newest published** version — currently 0.4.6.
 
 > **Honest status: there are no external adopters yet.** That, not catalogue
 > coverage, is what limits this project — it is already in 33+ directories
