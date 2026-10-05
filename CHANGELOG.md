@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.6.2] - 2026-10-05
+
+### Fixed
+
+- **CC5 reported a false failure for the no-seam case, and its explanatory note could never fire.**
+  The note tested the output for `no source files found under src`, but `dsh-plugin-kit`'s
+  `verify-seam` phrases that situation as `src seam role "definition" marker ... not found in
+  source` — so the note was dead code from the day it was written, and `doctor --repo .` failed
+  its own CC5 gate. The root cause was upstream: the kit gate failed any repository with no role
+  marker, which is the normal shape of a pure detector that registers nothing for others to
+  consume. `dsh-plugin-kit` 0.1.16 scopes the gate to plugins that carry a seam, so the
+  no-seam case is now PASS + WARN upstream and CC5 passes honestly.
+
+### Changed
+
+- The CC5 note now covers only the genuinely unjudgeable case — a repository with neither `src/`
+  nor root-level source files — and says so explicitly, instead of offering an exemption for a
+  structural exception. An incomplete seam is a failure with no exemption path.
+
+### Result
+
+- `node doctor.mjs --repo . --no-smoke` now exits `0` on this repository: `pass=23 skip=5`
+  (previously `pass=22 skip=5 fail=1`). The remaining skips are optional-channel checks
+  (certification registry, adp-list, omdsh Workshop) and are the intended end state.
+- Re-verified after the fix: `node lib/verify/cli.js all .` passes on this repo, on
+  `dsh-plugin-kit` itself (full trio), and on `dsh-mask` (has `src/`).
 ## [0.6.1] - 2026-10-05
 
 ### Added
