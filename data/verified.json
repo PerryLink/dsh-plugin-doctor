@@ -2,16 +2,16 @@
   "specVersion": "v1",
   "scope": "static R+K (the repo's own plugin-doctor CI gate)",
   "meaning": "The declared repo runs the dsh-plugin-doctor static R+K gate (16 gated checks: R0/R1/R3/R5/R6/R7/R8 + K1-K9) in its own CI and that gate is green on the current default-branch HEAD. R2/R4 read built artifacts and are gated by the repo's own ci.yml. SCOPE: static R+K only — this is NOT a certification badge (no Scorecard, no provenance, no install/runtime smoke), and it is not a statement that the plugin is safe. Verification reads the GitHub API only; no third-party code is cloned or executed.",
-  "doctorVersion": "0.4.5",
-  "doctorCommit": "3d6283a1386396acde6662d87425ef53e8221eba",
-  "generatedAt": "2026-10-04T11:17:12.267Z",
+  "doctorVersion": "0.4.6",
+  "doctorCommit": "local",
+  "generatedAt": "2026-10-05T05:36:05.329Z",
   "entries": [
     {
       "repo": "PerryLink/dsh-auto-review",
       "package": "dsh-auto-review",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "362a5666373d21616d7f6bc73c82aa74ef159bff",
       "gate": "ascii-alias + self-check",
@@ -22,14 +22,14 @@
       "runCreatedAt": "2026-09-24T18:59:36Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@362a566637; run https://github.com/PerryLink/dsh-auto-review/actions/runs/36045067903 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-autotier",
       "package": "dsh-autotier",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "570488f4f72821eb8661977f722bf443bfc0d2a0",
       "gate": "ascii-alias + self-check",
@@ -40,14 +40,14 @@
       "runCreatedAt": "2026-09-24T18:59:39Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@570488f4f7; run https://github.com/PerryLink/dsh-autotier/actions/runs/36045073793 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-background-agents",
       "package": "dsh-background-agents",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "db31045570e957ca98bf12d209bb8336ae928376",
       "gate": "ascii-alias + self-check",
@@ -58,14 +58,14 @@
       "runCreatedAt": "2026-09-24T18:59:42Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@db31045570; run https://github.com/PerryLink/dsh-background-agents/actions/runs/36045078459 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-budget",
       "package": "dsh-budget",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "47271e85917f2afcdb99ec0155db5c11038f2b75",
       "gate": "ascii-alias + self-check",
@@ -76,14 +76,14 @@
       "runCreatedAt": "2026-09-24T18:59:45Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@47271e8591; run https://github.com/PerryLink/dsh-budget/actions/runs/36045084591 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-cert-mcp",
       "package": "dsh-cert-mcp",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "2b2c74965e6c1221a75c0e86ab4305572b776525",
       "gate": "ascii-alias + self-check",
@@ -94,14 +94,14 @@
       "runCreatedAt": "2026-09-24T11:43:19Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@2b2c74965e; run https://github.com/PerryLink/dsh-cert-mcp/actions/runs/35994668716 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-checkpoint-rewind",
       "package": "dsh-checkpoint-rewind",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "fb7ff47d7dd6bf824d321c9ebd8b6bc180d37666",
       "gate": "ascii-alias + self-check",
@@ -112,14 +112,14 @@
       "runCreatedAt": "2026-09-24T18:59:49Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@fb7ff47d7d; run https://github.com/PerryLink/dsh-checkpoint-rewind/actions/runs/36045090628 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-claude-move",
       "package": "dsh-claude-move",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "master",
       "headSha": "096110f7bd8f212f99c1c987f926da219fc830d5",
       "gate": "ascii-alias + self-check",
@@ -130,14 +130,14 @@
       "runCreatedAt": "2026-09-24T18:59:52Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on master@096110f7bd; run https://github.com/PerryLink/dsh-claude-move/actions/runs/36045096260 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-click",
       "package": "dsh-click",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "6e1294278d872925eba53b2c1040f21f889fcabd",
       "gate": "ascii-alias + self-check",
@@ -148,14 +148,14 @@
       "runCreatedAt": "2026-09-24T18:59:55Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@6e1294278d; run https://github.com/PerryLink/dsh-click/actions/runs/36045101718 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-composer-history",
       "package": "dsh-composer-history",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "47235934ace6777aae7ac8e1a8c256b2a1f1ff93",
       "gate": "ascii-alias + self-check",
@@ -166,14 +166,14 @@
       "runCreatedAt": "2026-09-24T18:59:59Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@47235934ac; run https://github.com/PerryLink/dsh-composer-history/actions/runs/36045106772 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-data-quality",
       "package": "dsh-data-quality",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "7313d7d36d4a381ec2ab39f06e4cebf9c8c1da0b",
       "gate": "ascii-alias + self-check",
@@ -184,14 +184,14 @@
       "runCreatedAt": "2026-09-24T19:00:03Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@7313d7d36d; run https://github.com/PerryLink/dsh-data-quality/actions/runs/36045115430 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-defend",
       "package": "dsh-defend",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "85473a6b67c8a5c8f410a247b89723934fb71863",
       "gate": "ascii-alias + self-check",
@@ -202,14 +202,14 @@
       "runCreatedAt": "2026-09-24T19:00:07Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@85473a6b67; run https://github.com/PerryLink/dsh-defend/actions/runs/36045125651 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-doublecheck",
       "package": "dsh-doublecheck",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "88d38096d833616b8f86b1029ac7ef4d89a5b491",
       "gate": "ascii-alias + self-check",
@@ -220,14 +220,14 @@
       "runCreatedAt": "2026-09-24T19:00:12Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@88d38096d8; run https://github.com/PerryLink/dsh-doublecheck/actions/runs/36045134627 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-draw",
       "package": "dsh-draw",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "5426e855f18e627b8fc5b5e4ded940b720e1e469",
       "gate": "ascii-alias + self-check",
@@ -238,14 +238,14 @@
       "runCreatedAt": "2026-09-24T19:00:18Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@5426e855f1; run https://github.com/PerryLink/dsh-draw/actions/runs/36045146039 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-fast",
       "package": "dsh-fast",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "28cf626e9602587bdc9254cada120c1ac33a2bf9",
       "gate": "ascii-alias + self-check",
@@ -256,14 +256,14 @@
       "runCreatedAt": "2026-09-24T19:00:23Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@28cf626e96; run https://github.com/PerryLink/dsh-fast/actions/runs/36045156460 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-fund-research",
       "package": "dsh-fund-research",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "485377dd4f9e83f7c00935e45be0b44a24790067",
       "gate": "ascii-alias + self-check",
@@ -274,14 +274,14 @@
       "runCreatedAt": "2026-09-24T19:00:27Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@485377dd4f; run https://github.com/PerryLink/dsh-fund-research/actions/runs/36045164672 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-github",
       "package": "@perrylink/dsh-github",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "2111b20c7c8faa707f2f2f80acbf4a8b0ecbbd64",
       "gate": "ascii-alias + self-check",
@@ -292,14 +292,14 @@
       "runCreatedAt": "2026-09-24T19:00:30Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@2111b20c7c; run https://github.com/PerryLink/dsh-github/actions/runs/36045171941 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-industry-research",
       "package": "dsh-industry-research",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "67dd169489c8cd0e08155f76732c88bee3eaffed",
       "gate": "ascii-alias + self-check",
@@ -310,14 +310,14 @@
       "runCreatedAt": "2026-09-24T19:00:34Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@67dd169489; run https://github.com/PerryLink/dsh-industry-research/actions/runs/36045180015 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-library",
       "package": "dsh-library",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "d38b0931d321f4988d772446deb81b881500690e",
       "gate": "ascii-alias + self-check",
@@ -328,14 +328,14 @@
       "runCreatedAt": "2026-09-24T19:00:37Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@d38b0931d3; run https://github.com/PerryLink/dsh-library/actions/runs/36045187032 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-local-ai",
       "package": "dsh-local-ai",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "0adf332f0b7d7ceee71d8aaf3c7fb0004d032212",
       "gate": "ascii-alias + self-check",
@@ -346,14 +346,14 @@
       "runCreatedAt": "2026-09-24T13:40:30Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@0adf332f0b; run https://github.com/PerryLink/dsh-local-ai/actions/runs/36007280842 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-lsp-actions",
       "package": "dsh-lsp-actions",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "e14c13b82257bfe9fd32c93e5ee7146490834705",
       "gate": "ascii-alias + self-check",
@@ -364,14 +364,14 @@
       "runCreatedAt": "2026-09-24T19:00:41Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@e14c13b822; run https://github.com/PerryLink/dsh-lsp-actions/actions/runs/36045194528 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-mask",
       "package": "dsh-mask",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "7b22b8b8d1bd158fbd292cc3bdc1fc40391f49b5",
       "gate": "ascii-alias + self-check",
@@ -382,14 +382,14 @@
       "runCreatedAt": "2026-09-24T19:00:44Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@7b22b8b8d1; run https://github.com/PerryLink/dsh-mask/actions/runs/36045201412 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-mcp-panel",
       "package": "dsh-mcp-panel",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "0ed9474d2c1cc4547a796587bd1de0859547c840",
       "gate": "ascii-alias + self-check",
@@ -400,14 +400,14 @@
       "runCreatedAt": "2026-09-24T19:00:47Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@0ed9474d2c; run https://github.com/PerryLink/dsh-mcp-panel/actions/runs/36045206782 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-memento",
       "package": "dsh-memento",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "35f5c5e7266a4c205b3eaba0fe014b1530af5983",
       "gate": "ascii-alias + self-check",
@@ -418,14 +418,14 @@
       "runCreatedAt": "2026-09-24T19:00:50Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@35f5c5e726; run https://github.com/PerryLink/dsh-memento/actions/runs/36045214043 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-observe",
       "package": "dsh-observe",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "888e27b4b60a096328e66ea15bca164387bcd93f",
       "gate": "ascii-alias + self-check",
@@ -436,14 +436,14 @@
       "runCreatedAt": "2026-09-24T19:00:54Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@888e27b4b6; run https://github.com/PerryLink/dsh-observe/actions/runs/36045221371 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-output-styles",
       "package": "dsh-output-styles",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "bd8da90b14775bd658d1e996ff72275624bb672a",
       "gate": "ascii-alias + self-check",
@@ -454,14 +454,14 @@
       "runCreatedAt": "2026-09-24T19:00:58Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@bd8da90b14; run https://github.com/PerryLink/dsh-output-styles/actions/runs/36045229500 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-permission-rules",
       "package": "dsh-permission-rules",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "8918ee850e7e25e5004d86d1b9dfea05927f8cdc",
       "gate": "ascii-alias + self-check",
@@ -472,14 +472,14 @@
       "runCreatedAt": "2026-09-25T01:54:42Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@8918ee850e; run https://github.com/PerryLink/dsh-permission-rules/actions/runs/36084043117 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-plugin-guide",
       "package": "dsh-plugin-guide",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "d9545002c038b78345d6b632deaf823484906e56",
       "gate": "ascii-alias + self-check",
@@ -490,14 +490,14 @@
       "runCreatedAt": "2026-09-24T19:01:09Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@d9545002c0; run https://github.com/PerryLink/dsh-plugin-guide/actions/runs/36045250656 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-plugin-kit",
       "package": "@perrylink/dsh-plugin-kit",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "master",
       "headSha": "65307216f973572dba485efe96ddca0d36e5d84b",
       "gate": "ascii-alias + self-check",
@@ -508,14 +508,14 @@
       "runCreatedAt": "2026-09-24T19:01:12Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on master@65307216f9; run https://github.com/PerryLink/dsh-plugin-kit/actions/runs/36045257306 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-plugin-upgrade-015",
       "package": "dsh-plugin-upgrade-015",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "feae0265445cb9e668e10cc2ad565d4659867e58",
       "gate": "ascii-alias + self-check",
@@ -526,14 +526,14 @@
       "runCreatedAt": "2026-09-24T11:46:25Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@feae026544; run https://github.com/PerryLink/dsh-plugin-upgrade-015/actions/runs/35994980127 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-reach",
       "package": "dsh-reach",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "420788252ccbc3343ae93b4dddb0620829de7d32",
       "gate": "ascii-alias + self-check",
@@ -544,14 +544,14 @@
       "runCreatedAt": "2026-09-25T01:48:34Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@420788252c; run https://github.com/PerryLink/dsh-reach/actions/runs/36083609917 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-research-report",
       "package": "dsh-research-report",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "6431b8d6ec3feb710544f09c803d1a1f0bee1971",
       "gate": "ascii-alias + self-check",
@@ -562,14 +562,14 @@
       "runCreatedAt": "2026-09-24T19:01:24Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@6431b8d6ec; run https://github.com/PerryLink/dsh-research-report/actions/runs/36045279956 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-score",
       "package": "dsh-score",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "db956e46125ccf64158edaf4afd9d8955bbf466e",
       "gate": "ascii-alias + self-check",
@@ -580,14 +580,14 @@
       "runCreatedAt": "2026-09-24T18:47:27Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@db956e4612; run https://github.com/PerryLink/dsh-score/actions/runs/36043686582 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-session-pin",
       "package": "dsh-session-pin",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "a5229257a990ed554863941702bbf3aaf229e3ff",
       "gate": "ascii-alias + self-check",
@@ -598,14 +598,14 @@
       "runCreatedAt": "2026-09-24T19:01:41Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@a5229257a9; run https://github.com/PerryLink/dsh-session-pin/actions/runs/36045311959 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-session-sync",
       "package": "dsh-session-sync",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "f1c3c3e3c083c2046dca0139b3735d750cf29c2f",
       "gate": "ascii-alias + self-check",
@@ -616,14 +616,14 @@
       "runCreatedAt": "2026-09-24T19:01:45Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@f1c3c3e3c0; run https://github.com/PerryLink/dsh-session-sync/actions/runs/36045317944 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-talk",
       "package": "dsh-talk",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "28edbd1c640d71715edb055ce12055d4435a3d4a",
       "gate": "ascii-alias + self-check",
@@ -634,14 +634,14 @@
       "runCreatedAt": "2026-09-24T19:01:48Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@28edbd1c64; run https://github.com/PerryLink/dsh-talk/actions/runs/36045324861 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-team-rooms",
       "package": "dsh-team-rooms",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "63445fe35dd02e9966e441a9acced07f5ca9e23f",
       "gate": "ascii-alias + self-check",
@@ -652,14 +652,14 @@
       "runCreatedAt": "2026-09-24T19:01:51Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@63445fe35d; run https://github.com/PerryLink/dsh-team-rooms/actions/runs/36045331073 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-test-drive",
       "package": "dsh-test-drive",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "9b76bc916698fea9d85d38c3e93063d74f428fc3",
       "gate": "ascii-alias + self-check",
@@ -670,14 +670,14 @@
       "runCreatedAt": "2026-09-24T19:01:55Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@9b76bc9166; run https://github.com/PerryLink/dsh-test-drive/actions/runs/36045339384 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-ticktick",
       "package": "@perrylink/dsh-ticktick",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "ad5686107218086791d77b7a99d9a58677794748",
       "gate": "ascii-alias + self-check",
@@ -688,14 +688,14 @@
       "runCreatedAt": "2026-09-24T19:01:59Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@ad56861072; run https://github.com/PerryLink/dsh-ticktick/actions/runs/36045345372 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-translate",
       "package": "dsh-translate",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "697f320051343fc6d34e51ea0717eaec202c6c67",
       "gate": "ascii-alias + self-check",
@@ -706,14 +706,14 @@
       "runCreatedAt": "2026-09-24T19:02:02Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@697f320051; run https://github.com/PerryLink/dsh-translate/actions/runs/36045351463 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     },
     {
       "repo": "PerryLink/dsh-wechat",
       "package": "dsh-wechat",
       "scope": "R+K",
-      "result": "pass",
-      "reason": "gate green on HEAD",
+      "result": "no-data",
+      "reason": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified",
       "defaultBranch": "main",
       "headSha": "95c8c9a415d4a92af9afac43e6691b2f77686fa6",
       "gate": "ascii-alias + self-check",
@@ -724,7 +724,7 @@
       "runCreatedAt": "2026-09-24T11:47:58Z",
       "snapshot": "2026-10-04",
       "runUrl": "https://github.com/PerryLink/dsh-plugin-doctor/actions/runs/37198154964",
-      "evidence": "pass — gate green on HEAD; gate=ascii-alias + self-check doctorPinned=0.4.4 guard=true on main@95c8c9a415; run https://github.com/PerryLink/dsh-wechat/actions/runs/35995135781 (success); checked 2026-10-04"
+      "evidence": "DOCTOR_AUDIT_TOKEN is not set — nothing was verified; nothing was verified, so this entry carries no verdict"
     }
   ]
 }

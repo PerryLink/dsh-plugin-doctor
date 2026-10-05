@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.5.0] - 2026-10-05
+
+### Added
+
+- **Group K gains a cross-plugin interference tier, K10–K13.** The first nine K checks answer *"is this plugin correct on its own?"*; these four answer *"does it interfere with other plugins, or can another plugin silently eat it?"*. They stay inside the existing `K` group, so `--only K` and every downstream `plugin-doctor.yml` keep their meaning; the checkset string moves to `R0-R8+K1-K14+D0-D3,D9+CC1-CC5/3`.
+  - **K10 — waterfall listeners must delegate `next()`.** A listener registered on a `waterfall` event that never calls `next()` silently swallows every downstream listener on that chain, including the built-in behaviour. `agent/pre-step` alone has 15 official consumers, so the blast radius is ecosystem-wide. The check deliberately only condemns *inline* listener bodies whose whole file never mentions `next`: a listener passed by reference (`ctx.on('approval/request', bridge.onApproval)`) delegates elsewhere and is not judged. That restraint is measured, not assumed — the first draft flagged `dsh-reach`, whose listeners do delegate, and the tightened rule reports zero warnings across a 20-plugin sample while still firing on a planted defect.
+  - **K11 — tool names that shadow built-in or reserved names.** Two same-named registrations in one layer throw, and the explicit `tools.data.delete(def.name)` + re-register idiom instead *rewrites* the tool the model sees. That two-step idiom is how a widely installed third-party plugin redefines the built-in `get_goal` / `create_goal` / `update_goal`, so the check looks for both the collision and the idiom.
+  - **K12 — a provided service key equal to a host seam.** Cordis permits exactly one provider per service key per isolate scope, so a second provider cannot take effect; replacing a host seam requires the original row to be explicitly disabled rather than run alongside.
+  - **K13 — a patch that overrides a built-in row's `config`.** An id-targeted patch replaces the target row's **whole** `config` object instead of deep-merging, so two bundles overriding the same built-in row silently erase each other and the winner is decided only by `dsh.profile.bundles` order. An override row also asserts `name`, and a mismatch skips the whole patch.
+  - All four return `skip` when no source files were discovered, preserving the whole-group degradation contract that the `bare → exit 6` selftest guards.
+  - Reference data (the 17 `waterfall` events, 65 built-in tool names, host-owned patch row ids) is extracted from upstream machine-readable sources at baseline DSH `0.2.0-rc.2` — the `@mode` column of `docs/event-producer-consumer.md`, the `### \`name\`` sections of `docs/tool-catalog.md`, and the top-level ids of `packages/bundle/base/cordis.patch.yml`.
+
+- **Group K gains a cross-repo tier, K14 — "injection-point name collision across sibling repos".** K10–K13 judge one repository in isolation and so cannot see the collisions that cost the most in practice: a Cordis service key admits exactly one provider per isolate scope, and a second registration of the same tool name in one layer throws. K14 walks the family workspace given by `--workspace`, keeps every sibling `dsh-*` repo that really is a DSH plugin (a `dsh` manifest field, or a `@deepseek-ai/dsh*` peer), extracts each side's owned names — service keys from `super(ctx, …)` / `ctx.provide(…)`, tool names from `defineTool({ name })`, command names from `ctx.commands.register({ name })`, and patch `insert` row ids — and reports the intersections.
+  - **Guard-aware exemptions, so a deliberate design is not reported as a defect.** A plugin that keeps a *runtime* first-provider-wins stand-down guard still contains the contested name in its source, so a source-only comparison cannot tell it apart from a genuine collision. The author declares intent rather than the tool guessing:
+    ```json
+    "dsh-plugin-doctor": {
+      "crossPlugin": { "exempt": [
+        { "kind": "service", "name": "roomHub", "peer": "dsh-team-rooms", "guard": "0.9.14" }
+      ] }
+    }
+    ```
+    `guard` records the version in which the stand-down landed, so an exemption cannot silently outlive the code that justified it. A zero-dependency `dsh-plugin-doctor.yml` sidecar accepts the same list. `dsh-background-agents` uses it for its room half (nine names against `dsh-team-rooms`).
+  - **Never a silent pass.** With no source files, or a workspace holding fewer than two plugin repos, K14 returns `skip` — consistent with the whole-group degradation contract (`degradedGroups` requires the entire K group to be unrunnable), which the `bare → exit 6` selftest guards. CI is unaffected: the shipped workflow passes no `--workspace`, so K14 degrades to `skip` there and can never fail a downstream build.
+  - `tests/selftest.mjs` now covers all three K14 paths: a genuine sibling collision warns, the same collision declared as an exemption passes, and a workspace without a second plugin repo skips.
+- `tests/contract.mjs`'s gated-count assertion moves 16 → 21 to account for the five new checks (K10–K14).
+
+### Changed
+
+- The shipped workflow template pins `@perrylink/dsh-plugin-doctor@0.5.0`, in both `plugin-doctor.yml` and its `.github/workflows/` copy — which a contract test requires to stay byte-identical.
+
 ## [0.4.6] - 2026-10-04
 
 ### Changed

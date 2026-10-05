@@ -259,7 +259,7 @@ and blocked the 0.2.4 and 0.3.0 attempts. See `CHANGELOG.md`. CI usage
 (**please use the ASCII aliases**):
 
 ```powershell
-npx --yes @perrylink/dsh-plugin-doctor@0.4.6 --repo . --no-smoke --only "R,K"
+npx --yes @perrylink/dsh-plugin-doctor@0.5.0 --repo . --no-smoke --only "R,K"
 ```
 
 Or as a **GitHub Action** — no install step, no copied workflow file:

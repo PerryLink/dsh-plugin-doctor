@@ -1,14 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="178" height="20" role="img" aria-label="dsh-doctor: passing">
-  <title>dsh-doctor: passing</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="178" height="20" role="img" aria-label="dsh-doctor: no data">
+  <title>dsh-doctor: no data</title>
   <defs>
-    <linearGradient id="pL-pass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#eef2f7"/><stop offset="1" stop-color="#c9d4e2"/></linearGradient>
-    <linearGradient id="pV-pass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#047857"/><stop offset="1" stop-color="#065f46"/></linearGradient>
+    <linearGradient id="pL-nodata" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#eef2f7"/><stop offset="1" stop-color="#c9d4e2"/></linearGradient>
+    <linearGradient id="pV-nodata" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b7280"/><stop offset="1" stop-color="#4b5563"/></linearGradient>
   </defs>
-  <clipPath id="pC-pass"><rect width="178" height="20" rx="5" fill="#fff"/></clipPath>
-  <g clip-path="url(#pC-pass)">
-    <rect width="102" height="20" fill="url(#pL-pass)"/>
+  <clipPath id="pC-nodata"><rect width="178" height="20" rx="5" fill="#fff"/></clipPath>
+  <g clip-path="url(#pC-nodata)">
+    <rect width="102" height="20" fill="url(#pL-nodata)"/>
     <rect width="102" height="1" fill="#ffffff" opacity="0.7"/>
-    <rect x="102" width="76" height="20" fill="url(#pV-pass)"/>
+    <rect x="102" width="76" height="20" fill="url(#pV-nodata)"/>
     <rect x="102" width="76" height="1" fill="#ffffff" opacity="0.22"/>
   </g>
   <rect x="0.5" y="0.5" width="177" height="19" rx="5" fill="none" stroke="#8fa0b5" stroke-opacity="0.85"/>
@@ -17,6 +17,6 @@
   <path d="M2.9 5.4 l1.5 1.6 l2.7 -3.1" fill="none" stroke="#1f3a5f" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
   <text x="20" y="14" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="10.5" font-weight="600" letter-spacing="0.9" fill="#0b1f3a">DSH DOCTOR</text>
-  <path d="M110 8.8 l1.53 1.62 l2.7 -3.15" fill="none" stroke="#ffffff" stroke-width="1.4400000000000002" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="146.5" y="14" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="10.5" font-weight="600" letter-spacing="0.9" fill="#ffffff">PASSING</text>
+  <path d="M110 10.15 h3.7800000000000002" stroke="#ffffff" stroke-width="1.53" stroke-linecap="round"/>
+  <text x="146.5" y="14" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="10.5" font-weight="600" letter-spacing="0.9" fill="#ffffff">NO DATA</text>
 </svg>
