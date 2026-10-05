@@ -1,0 +1,72 @@
+# Weekly release-health gate.
+#
+# Why this exists: the 2026-10-05 family release produced five distinct failure shapes, and
+# only ONE of them turned the workflow red. Everything else was green.
+#   * 36 packages published successfully while their CHANGELOG carried "- undefined" as the
+#     release date (the stamper interpolated a field the plan never set).
+#   * dsh-local-ai@0.2.16 and dsh-permission-rules@0.7.12 PUBLISHED and still ended red
+#     (E409 after a tag re-push; a GitHub-Release step with no tag ref).
+#   * dsh-plugin-kit failed with ENEEDAUTH because npm's trusted-publisher binding named the
+#     workflow file that USED to perform the OIDC exchange, not the one that does now.
+#   * @perrylink/dsh-skill-pack-security-provider never reached npm at all: its pre-publish
+#     verify gate failed, so the publish job was `skipped`.
+#   * Nine repos mirror the version in src/version.ts and one in a VERSION file; a bump that
+#     misses a carrier ships a package that disagrees with its own source.
+#
+# `scripts/check-release-health.mjs` covers all five:
+#   --roster  verifies the PUBLISHED artifacts for every declared family member (registry,
+#             provenance workflow file, and that the tarball still carries src/). The roster
+#             is the same authoritative list the monthly K14 gate uses, so "which packages"
+#             has exactly one source and a new member is picked up automatically.
+#   --repo .  verifies THIS checkout's version carriers against its own package.json.
+#             Offline, and the pass that catches the carrier-drift class.
+#
+# Per-repo CI should use `--no-registry` only: a downstream repository must never go red
+# because the registry is slow. This workflow is the one place that probes the registry,
+# because "what users actually install" is the thing being verified.
+name: release health
+
+on:
+  schedule:
+    # Weekly, so a carrier drift or a provenance regression is caught long before the next
+    # release. 12:41 UTC keeps it off the hour, where GitHub's scheduler is congested, and
+    # apart from the monthly K14 job (12:23 on the 1st).
+    - cron: '41 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  roster:
+    name: published artifacts (registry + provenance)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      # No install and no build, deliberately: the script needs nothing but node's fetch.
+      - name: Check every declared family member's published artifact
+        run: node scripts/check-release-health.mjs --roster data/verified-repos.json --json release-health.json
+      - name: Upload the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-health-report
+          path: release-health.json
+          if-no-files-found: warn
+          retention-days: 90
+
+  lockstep:
+    name: this checkout's version carriers
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Every carrier agrees with package.json
+        run: node scripts/check-release-health.mjs --repo . --no-registry

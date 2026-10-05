@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.1] - 2026-10-05
+
+### Added
+
+- **A weekly release-health gate, `scripts/check-release-health.mjs` + `.github/workflows/release-health.yml`.** The 2026-10-05 family release produced five distinct failure shapes and only one of them turned a workflow red: 36 packages published green while their CHANGELOG carried `- undefined` as the release date; `dsh-local-ai@0.2.16` and `dsh-permission-rules@0.7.12` published successfully and still ended red (E409 after a tag re-push, and a GitHub-Release step with no tag ref); `dsh-plugin-kit` failed `ENEEDAUTH` because npm's trusted-publisher binding named the workflow file that *used* to perform the OIDC exchange; `@perrylink/dsh-skill-pack-security-provider` never reached npm at all because its pre-publish `verify` gate failed and the publish job was `skipped`; and nine repos mirror the version in `src/version.ts` (one in a `VERSION` file) behind tests that fail on drift. The new check answers the four questions that cover all five shapes — LOCKSTEP (does every carrier agree with `package.json`), PUBLISHED, PROVENANCE (which workflow file published it, read from the version's own attestation bundle), and FILES (does the published tarball still carry `src/`, `lib/` or `dist/`) — and exits non-zero on any of them, so a silent drift cannot sit unnoticed until the next release.
+- **A `--roster` mode** that verifies the published artifact of every declared family member without checking any of them out: `data/verified-repos.json` is the same authoritative roster the monthly K14 gate uses, so "which packages" has exactly one source and a new member is picked up automatically. It reads provenance directly (the SLSA predicate names the repository and workflow path), which is what makes a stale trusted-publisher binding detectable from outside npm.
+
+### Notes
+
+- `--no-registry` runs only the LOCKSTEP pass. That is the mode per-repo CI should use: a downstream repository must never go red because the registry is slow. This repository's own workflow is the one place that probes the registry, because "what users actually install" is the thing being verified.
+- Two carrier shapes are asserted FAMILY-WIDE and therefore fail the check: `src/version.ts`'s exported `VERSION`, and a `VERSION` file. `SKILL.md` frontmatter is deliberately only a NOTE — most skills carry their own independent version (`0.1.0` in `dsh-fund-research` and `dsh-industry-research`, whose suites do not assert it), while `dsh-skill-pack-security` asserts all sixteen of its own. Reporting skill versions as failures would have produced two false positives on the first run.
+- Tarball layouts differ across the family: `src/` for most, `lib/` for built bundles, and `dist/` for `dsh-plugin-guide` and `dsh-wechat`. All three are accepted; asserting only `src`/`lib` was a false positive on those two.
 ## [0.6.0] - 2026-10-05
 
 ### Added

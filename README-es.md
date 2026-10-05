@@ -206,6 +206,31 @@ data/rk-scans.json       machine-readable form of that scan
 SURVEY.md                the full-channel detection methodology plus every criterion's source
 ```
 
+## Salud de la publicación
+
+```sh
+# one repository, offline (the mode a downstream repo should use in its own CI)
+node scripts/check-release-health.mjs --repo . --no-registry
+
+# the whole declared family, from the registry, without checking any of it out
+node scripts/check-release-health.mjs --roster data/verified-repos.json
+```
+
+Exit codes: `0` healthy, `1` at least one problem, `2` usage error. `--json <path>` writes the
+machine-readable report, `--quiet` prints only failures. `.github/workflows/release-health.yml`
+runs both modes weekly and uploads the report.
+
+| Pass | Question | Needs network |
+|---|---|---|
+| LOCKSTEP | does every version carrier in the repo agree with `package.json`? | no |
+| PUBLISHED | is the local version the one on the registry? | yes |
+| PROVENANCE | which workflow file published it, and is that a current publish file? | yes |
+| FILES | does the published tarball still carry `src/`, `lib/` or `dist/`? | yes |
+
+Only two carrier shapes fail the check, because only two are asserted family-wide:
+`src/version.ts`'s exported `VERSION`, and a `VERSION` file where one exists. A `SKILL.md`
+version difference is reported as a note — most skills version independently.
+
 ## Estado
 
 Repositorio oficial: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.

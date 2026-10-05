@@ -207,6 +207,39 @@ the real cause instead of emitting the same rate-limit line for every repo.
 - **Ecosystem side**: the dsh-plugin-certification spec v1, adp-list `entries.mjs`/`check-submission.mjs`,
   dsh-catalog `validate.mjs`/`deploy.yml` live smoke, omdsh build-submission, dsh-plugin-kit `verify/*`.
 
+## Release health
+
+A green release workflow does not prove a correct release. On 2026-10-05 the family shipped
+37 packages and the failures that mattered were invisible in the job colour: 36 CHANGELOGs
+carried the literal date `undefined`, two packages published successfully and still ended red,
+one failed `ENEEDAUTH` because npm's trusted-publisher binding named a workflow file that no
+longer performs the OIDC exchange, and one never reached npm at all because its pre-publish
+`verify` gate failed first and the publish job was `skipped`.
+
+`scripts/check-release-health.mjs` checks the four things that cover all of those:
+
+| Pass | Question | Needs network |
+|---|---|---|
+| LOCKSTEP | does every version carrier in the repo agree with `package.json`? | no |
+| PUBLISHED | is the local version the one on the registry? | yes |
+| PROVENANCE | which workflow file published it, and is that a current publish file? | yes |
+| FILES | does the published tarball still carry `src/`, `lib/` or `dist/`? | yes |
+
+```sh
+# one repository, offline (the mode a downstream repo should use in its own CI)
+node scripts/check-release-health.mjs --repo . --no-registry
+
+# the whole declared family, from the registry, without checking any of it out
+node scripts/check-release-health.mjs --roster data/verified-repos.json
+```
+
+Exit codes: `0` healthy, `1` at least one problem, `2` usage error. `--json <path>` writes the
+machine-readable report, `--quiet` prints only failures. The weekly
+`.github/workflows/release-health.yml` runs both modes and uploads the report.
+
+Only two carrier shapes fail the check, because only two are asserted family-wide:
+`src/version.ts`'s exported `VERSION`, and a `VERSION` file where one exists. A `SKILL.md`
+version difference is reported as a note — most skills version independently.
 ## Known limits (stated honestly)
 
 - The K group is a **heuristic static scan**: K1/K3/K4 miss complex wrappers and can also raise false alarms — every warn-level finding needs a human look and never condemns a plugin automatically.
@@ -234,6 +267,8 @@ tests/compat.mjs         25 tests for `--format check`: the two views must agree
                          and a `skip` must never be rendered as a `PASS`
 scripts/verify.mjs       verified registry and badge refresh (reads the GitHub API to audit each repo's gate)
 scripts/badge.mjs        verified SVG rendering
+scripts/check-cross-repo.mjs     monthly K14 cross-repo gate (stages the family from published tarballs)
+scripts/check-release-health.mjs weekly release health (version carriers, registry, provenance, tarball)
 data/verified-repos.json verified declaring repos
 data/verified.json       verified registry (CI-generated)
 badges/                  verified badges (CI-generated)

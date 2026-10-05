@@ -21,6 +21,31 @@ docs और सोर्स, cordiverse/cordis के सोर्स अनु�
 
 
 <!-- star-cta -->
+## रिलीज़ स्वास्थ्य
+
+```sh
+# one repository, offline (the mode a downstream repo should use in its own CI)
+node scripts/check-release-health.mjs --repo . --no-registry
+
+# the whole declared family, from the registry, without checking any of it out
+node scripts/check-release-health.mjs --roster data/verified-repos.json
+```
+
+Exit codes: `0` healthy, `1` at least one problem, `2` usage error. `--json <path>` writes the
+machine-readable report, `--quiet` prints only failures. `.github/workflows/release-health.yml`
+runs both modes weekly and uploads the report.
+
+| Pass | Question | Needs network |
+|---|---|---|
+| LOCKSTEP | does every version carrier in the repo agree with `package.json`? | no |
+| PUBLISHED | is the local version the one on the registry? | yes |
+| PROVENANCE | which workflow file published it, and is that a current publish file? | yes |
+| FILES | does the published tarball still carry `src/`, `lib/` or `dist/`? | yes |
+
+Only two carrier shapes fail the check, because only two are asserted family-wide:
+`src/version.ts`'s exported `VERSION`, and a `VERSION` file where one exists. A `SKILL.md`
+version difference is reported as a note — most skills version independently.
+
 ## ⭐ 如果它帮到了你
 
 यह प्लगइन [DSH प्लगइन परिवार](https://github.com/PerryLink) का हिस्सा है (40+ प्लगइन, सभी Apache-2.0)। अगर यह उपयोगी लगे, तो **एक स्टार दें** — इससे कोई सुविधा अनलॉक नहीं होती, पर अगला व्यक्ति इसे खोज में आसानी से पा लेता है।
