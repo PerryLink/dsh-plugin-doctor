@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.6.0] - 2026-10-05
+
+### Added
+
+- **A monthly cross-repo (K14) gate, `scripts/check-cross-repo.mjs` + `.github/workflows/cross-repo.yml`.** K14 compares this plugin's injection points (service keys, tool names, command names, patch `insert` ids) against its sibling repositories inside a family workspace, and it is the only check that can catch "two plugins register the same service key" before it reaches a user's profile. In a per-repo CI there are no siblings, so K14 degrades to `skip` **on purpose** — a downstream repository must never go red for a check it structurally cannot run. The cost of that decision was that nobody ran K14 unless a human did it by hand; this closes that gap for this repository without asking any other repo to check out 40 siblings. Instead of cloning the family it materialises a throwaway workspace from the **published tarballs**: `data/verified-repos.json` is the authoritative roster (so a new member is picked up automatically and "who is in the family" keeps exactly one source), and a published tarball ships the only two inputs K14 reads — `package.json`, including the `dshPluginDoctor.crossPlugin` exemption declaration, and `src/`. That means the gate tests what users actually install rather than a collection of working trees. Extraction is done with `node:zlib` rather than the `tar` binary, because this host's Git ships GNU tar which shadows System32 bsdtar and does not accept `--one-top-level`. The job fails on `fail`, on an unexempted `warn`, and on `skip`/`missing`: a stage that silently failed to build must never read as "no collisions found".
+
+### Fixed
+
+- **K1 no longer reports a locally-declared `ctx` object as an undeclared service access.** K1 flags `ctx.<name>` reads that no `inject` covers. It already skipped files whose `ctx` is a *type* parameter; it now also skips files that declare their own `ctx` variable (`const ctx = { … }`), which is an ordinary local context bag rather than a cordis `Context`. Measured on this repository's own `doctor.mjs`, whose `const ctx = { sandboxRoots, coverage, … }` made K1 report `ctx.sandboxRoots` and `ctx.coverage` as missing from `inject` — a pure false positive that appeared in this repository's own gate on every run. The check still fires on a genuine violation (verified with a probe repository that reads `ctx.someUndeclaredService`), so the change narrows the check rather than silencing it.
+
 ## [0.5.0] - 2026-10-05
 
 ### Added
