@@ -20,6 +20,8 @@ y el código fuente de deepseek-harness, los contratos de código de cordiverse/
 de distribución del espacio de trabajo (texto completo en `SURVEY.md`).
 
 
+**📖 Base de conocimiento del ecosistema** — datos medidos, no marketing: [guía de desarrollo · datos de selección · criterios de mantenimiento](https://perrylink.github.io/dsh-plugin-guide/).
+
 <!-- star-cta -->
 ## ⭐ 如果它帮到了你
 

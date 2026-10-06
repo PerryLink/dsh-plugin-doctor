@@ -19,6 +19,8 @@ Every criterion traces back to three first-hand research tracks dated 2026-09-07
 docs and source, the cordiverse/cordis source contracts, and an inventory of every distribution
 channel in the workspace (full text in `SURVEY.md`).
 
+**📖 Ecosystem knowledge base** — measured data, not marketing: [plugin development guide · plugin-selection data · maintenance criteria](https://perrylink.github.io/dsh-plugin-guide/).
+
 <!-- star-cta -->
 ## ⭐ 如果它帮到了你
 
