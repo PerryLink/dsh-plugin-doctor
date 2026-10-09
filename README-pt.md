@@ -28,6 +28,18 @@ canal de distribuição no workspace (texto completo em `SURVEY.md`).
 Este plugin faz parte da [família de plugins DSH](https://github.com/PerryLink) (mais de 40, todos Apache-2.0). Se for útil, **deixe uma estrela**: não desbloqueia nada, mas ajuda a próxima pessoa a encontrá-lo.
 
 *English:* part of a 40+ plugin family for DeepSeek Harness. If it is useful, **a star helps the next person find it** — nothing is gated behind it.
+## What is dsh-plugin-doctor?
+
+Um verificador tudo-em-um de "integridade + saúde em tempo de execução" para plugins dsh. Zero dependências (usa apenas o que o Node ≥22 traz) e uma execução cobre quatro camadas de uma vez:
+
+![Demonstração de terminal do dsh-plugin-doctor: dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.png)
+
+## Comparison
+
+![Gráfico comparativo medido do dsh-plugin-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-evidence.png)
+
+60 candidates → 20 qualifying plugins · scan dated 2026-09-10 (data/rk-scans.json)
+
 ## Compatibilidade
 
 | Aspeto | Estado |
@@ -37,11 +49,15 @@ Este plugin faz parte da [família de plugins DSH](https://github.com/PerryLink)
 
 ## Instalação (bundle do DSH)
 
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
+```
+
 `dsh-plugin-doctor` declara `dsh.bundle.patch` → `cordis.patch.yml` no package.json, então ele também pode ser instalado como um bundle do DeepSeek Harness:
 
 ```powershell
 # canal git (main mais recente)
-dsh plugin --profile web add "github:PerryLink/dsh-plugin-doctor#main"
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
 
 # canal npm (versão publicada; use sempre o nome completo com escopo -- o nome puro dsh-plugin-doctor é outro projeto)
 dsh plugin --profile web add @perrylink/dsh-plugin-doctor

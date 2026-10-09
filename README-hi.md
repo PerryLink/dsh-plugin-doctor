@@ -23,6 +23,12 @@ docs और सोर्स, cordiverse/cordis के सोर्स अनु�
 **📖 इकोसिस्टम नॉलेज बेस** — मापे गए आँकड़े, मार्केटिंग नहीं: [डेवलपमेंट गाइड · चयन डेटा · रखरखाव मानदंड](https://perrylink.github.io/dsh-plugin-guide/)।
 
 <!-- star-cta -->
+## What is dsh-plugin-doctor?
+
+dsh plugins के लिए "integrity + runtime health" का ऑल-इन-वन चेकर। शून्य निर्भरताएँ (यह सिर्फ़ वही इस्तेमाल करता है जो Node ≥22 के साथ आता है), और एक ही रन में चारों परतें एक साथ:
+
+![dsh-plugin-doctor का टर्मिनल डेमो: dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.png)
+
 ## रिलीज़ स्वास्थ्य
 
 ```sh
@@ -48,12 +54,22 @@ Only two carrier shapes fail the check, because only two are asserted family-wid
 `src/version.ts`'s exported `VERSION`, and a `VERSION` file where one exists. A `SKILL.md`
 version difference is reported as a note — most skills version independently.
 
+## Comparison
+
+![dsh-plugin-doctor का मापा गया तुलना चार्ट](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-evidence.png)
+
+60 candidates → 20 qualifying plugins · scan dated 2026-09-10 (data/rk-scans.json)
+
 ## ⭐ 如果它帮到了你
 
 यह प्लगइन [DSH प्लगइन परिवार](https://github.com/PerryLink) का हिस्सा है (40+ प्लगइन, सभी Apache-2.0)। अगर यह उपयोगी लगे, तो **एक स्टार दें** — इससे कोई सुविधा अनलॉक नहीं होती, पर अगला व्यक्ति इसे खोज में आसानी से पा लेता है।
 
 *English:* part of a 40+ plugin family for DeepSeek Harness. If it is useful, **a star helps the next person find it** — nothing is gated behind it.
 ## संगतता
+
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
+```
 
 | पहलू | स्थिति |
 |---|---|
@@ -66,7 +82,7 @@ version difference is reported as a note — most skills version independently.
 
 ```powershell
 # git चैनल (नवीनतम main)
-dsh plugin --profile web add "github:PerryLink/dsh-plugin-doctor#main"
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
 
 # npm चैनल (रिलीज़ किया गया संस्करण; हमेशा scoped पूरा नाम इस्तेमाल करें -- बिना scope वाला नाम dsh-plugin-doctor एक अलग प्रोजेक्ट है)
 dsh plugin --profile web add @perrylink/dsh-plugin-doctor

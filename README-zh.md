@@ -26,6 +26,18 @@ dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22
 这个插件是 [DSH 插件家族](https://github.com/PerryLink)的一员（40+ 个，全部 Apache-2.0）。如果你在用，**给个 star** —— 它不会解锁任何功能，但会让下一个人在搜索里更容易找到它。
 
 *English:* part of a 40+ plugin family for DeepSeek Harness. If it is useful, **a star helps the next person find it** — nothing is gated behind it.
+## What is dsh-plugin-doctor?
+
+dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22 自带能力），一次运行同时覆盖
+
+![dsh-plugin-doctor 终端演示：dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.png)
+
+## Comparison
+
+![dsh-plugin-doctor 的实测对比柱状图](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-evidence.png)
+
+60 candidates → 20 qualifying plugins · scan dated 2026-09-10 (data/rk-scans.json)
+
 ## 兼容性
 
 | 方面 | 状态 |
@@ -35,11 +47,15 @@ dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22
 
 ## 安装（DSH bundle）
 
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
+```
+
 `dsh-plugin-doctor` 在 package.json 中声明 `dsh.bundle.patch` → `cordis.patch.yml`，因此也可以作为 DeepSeek Harness bundle 安装：
 
 ```powershell
 # git 渠道（最新 main）
-dsh plugin --profile web add "github:PerryLink/dsh-plugin-doctor#main"
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
 
 # npm 渠道（正式发布版；务必使用 scoped 全名——裸名 dsh-plugin-doctor 是另一个项目）
 dsh plugin --profile web add @perrylink/dsh-plugin-doctor
