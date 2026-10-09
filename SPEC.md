@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Spec version** | `v1` (checkset `R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1`) |
+| **Spec version** | `v1` (checkset `R0-R8+K1-K14+D0-D3,D9+CC1-CC5/3`) |
 | **Author / Editor** | **PerryLink** — <https://github.com/PerryLink> |
 | **Canonical source** | <https://github.com/PerryLink/dsh-plugin-doctor> |
 | **Reference implementation** | `@perrylink/dsh-plugin-doctor` (see `package.json`) |
@@ -41,7 +41,7 @@ than left as an emergent convention, so that a result can be cited as
   version is not falsifiable and should not be treated as evidence.
 - **The canonical gate.** The set of checks a project gates its CI on is its own
   choice and must be stated by that project. The reference project's own gate is
-  `R0, R1, R3, R5, R6, R7, R8, K1–K9` (16 checks), deliberately excluding `R2`
+  `R0, R1, R3, R5, R6, R7, R8, K1–K14` (21 checks), deliberately excluding `R2`
   and `R4`, which read **built** artifacts. A project that gates a different set
   has not thereby conformed to the same claim.
 
@@ -113,7 +113,7 @@ specification exists to prevent.
 | Group | ID | Checks | Requires |
 |---|---|---|---|
 | Static · package structure | `R` | R0–R8 | the committed tree |
-| Static · Cordis contract scan | `K` | K1–K9 | the committed tree |
+| Static · Cordis contract scan | `K` | K1–K14 | the committed tree |
 | Dynamic · sandbox smoke | `D` | D0–D3, D9 | network, `npm`, `pnpm` |
 | Ecosystem · directory listings | `CC` | CC1–CC5 | a workspace holding the listed directories |
 
@@ -135,7 +135,7 @@ once turned the CI gates of 35 repositories green while checking nothing.*
 
 ### 3.3 Verdicts do not depend on colour or language
 
-Check IDs are ASCII and **frozen**: `R0`–`R8`, `K1`–`K9`, `D0`–`D3`, `D9`,
+Check IDs are ASCII and **frozen**: `R0`–`R8`, `K1`–`K14`, `D0`–`D3`, `D9`,
 `CC1`–`CC5`. A check's human-readable label may be translated; its ID may not
 change meaning. Implementations must expose the ID independently of any
 translated display string.
@@ -357,6 +357,89 @@ literal. A plain object exported as `Config` **does not work**.
 resets it to `undefined` (registry special case), destroying the diagnostic
 name.
 **Verdicts.** `skip` · `warn` · `pass`.
+
+### 4.2b Group K continued — cross-plugin interference (K10–K14)
+
+K1–K9 answer *"is this plugin correct on its own?"*. K10–K14 answer *"does this
+plugin interfere with other plugins, or can another plugin silently eat it?"*.
+All four are `warn`-level heuristics in the same `K` group (no new group, so
+`--only K` and every downstream `plugin-doctor.yml` keep their meaning), and all
+four are grounded in observed defect classes rather than style preference.
+
+Reference data for K10/K11/K13 is extracted from upstream machine-readable
+sources — the `@mode` column of `docs/event-producer-consumer.md`, the
+`### \`name\`` sections of `docs/tool-catalog.md`, and the top-level ids of
+`packages/bundle/base/cordis.patch.yml` — at baseline DSH `0.2.0-rc.2`. Regenerate
+per `THIRD-PARTY-RK-SCAN.md` rather than hand-editing the tables.
+
+#### K10 — waterfall listeners must delegate `next()`
+**Requirement.** A listener registered with `ctx.on(<waterfall event>, …)` must
+reference `next`. DSH's standing rule: a listener that only observes or annotates
+**must** call `next()`; returning without it is an intentional veto.
+**Verdicts.** `skip` · `warn` · `pass`.
+**Failure meaning.** A logging listener that forgets `next()` silently swallows
+**every** downstream listener on that chain — including the built-in behaviour.
+`agent/pre-step` is the most contended chain in the ecosystem (15 official
+consumers), so the blast radius is large. Heuristic: a listener that names `next`
+only outside the scanned window is a false negative, never a false positive, so
+`warn` is the right ceiling.
+
+#### K11 — tool names shadowing built-in/reserved names
+**Requirement.** A registered tool name must not collide with a host built-in
+tool name or the reserved PTC name `run_code`, and the plugin must not use the
+explicit `tools.data.delete(def.name)` + re-register shadowing idiom.
+**Verdicts.** `skip` · `warn` · `pass`.
+**Failure meaning.** Two registrations of one name in the same layer throw; the
+explicit two-step idiom instead **rewrites** the built-in tool the model sees,
+which is how a widely installed third-party plugin redefines the built-in
+`get_goal` / `create_goal` / `update_goal`.
+
+#### K12 — provided service key equals a host seam
+**Requirement.** A key passed to `super(ctx, '<name>')` or `ctx.provide('<name>')`
+must not equal a host seam name.
+**Verdicts.** `skip` · `warn` · `pass`.
+**Failure meaning.** Cordis permits exactly one provider per service key per
+isolate scope, so a second provider cannot take effect; a host seam replaced this
+way requires the original provider row to be explicitly disabled, never run
+alongside.
+
+#### K13 — patch overrides a built-in row's `config`
+**Requirement.** A `cordis.patch.yml` must not carry a top-level (non-`insert`)
+row whose `id` is a host-owned row.
+**Verdicts.** `skip` · `warn` · `pass`.
+**Failure meaning.** An id-targeted patch replaces the target row's **whole**
+`config` object — it does not deep-merge. Two bundles overriding the same built-in
+row therefore silently erase each other, and the winner is decided purely by
+`dsh.profile.bundles` order. (An override row also asserts `name`; a mismatch
+skips the whole patch.)
+
+#### K14 — cross-repo injection-point collision
+**Requirement.** No name this repository owns may also be owned by a sibling
+plugin repository in the same family workspace. Owned names are: service keys from
+`super(ctx, '<name>')` / `ctx.provide('<name>')`; tool names from
+`defineTool({ name })`; command names from `ctx.commands.register({ name })`; and
+`insert` row ids in `cordis.patch.yml`. Siblings are direct children of
+`--workspace` whose name starts with `dsh-` **and** whose manifest carries a `dsh`
+field or a `@deepseek-ai/dsh*` peer.
+**Verdicts.** `skip` · `warn` · `pass`.
+**Failure meaning.** A service key admits exactly one provider per isolate scope,
+so the second provider cannot take effect; a second registration of one tool name
+in a layer throws. Either way one half silently loses.
+**Guard-aware exemption (normative).** A repository may keep a *runtime*
+first-provider-wins stand-down guard on purpose. Because such a guard leaves the
+contested name in the source, K14 cannot distinguish it from a genuine collision,
+so the author declares intent instead of the tool guessing. A declaration is a
+list of `{kind, name, peer?, guard?}` entries under
+`dsh-plugin-doctor.crossPlugin.exempt` in `package.json`, or the same list in a
+`dsh-plugin-doctor.yml` sidecar. `kind` is one of `service` / `tool` / `command` /
+`patch insert id`; `peer` restricts the exemption to one counterpart package;
+`guard` records the version in which the stand-down landed so the exemption cannot
+silently outlive the code that justified it. An exempted collision is a `pass`.
+**Degradation.** Returns `skip` when no source files were discovered (the
+whole-group contract of §3.2), and when the workspace exposes fewer than two
+plugin repositories. It never passes silently on an unreadable workspace, and the
+shipped CI workflow passes no `--workspace`, so the check degrades to `skip`
+there rather than failing a build.
 
 ### 4.3 Group D — dynamic · sandbox smoke
 

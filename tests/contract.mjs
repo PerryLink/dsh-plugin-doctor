@@ -131,11 +131,12 @@ const results = base.report?.results ?? []
 assert('stdout 含 "R0 "', base.stdout.includes('R0 '))
 assert('stdout 含 "K1 "', base.stdout.includes('K1 '))
 
-// ── 观测 3：.results 是扁平数组，gated=16、buildDep=2 ──────────────────────
+// ── 观测 3：.results 是扁平数组，gated=21、buildDep=2 ──────────────────────
+// gated 从 16 升到 21：K 组新增交叉干扰项 K10–K13 与跨仓项 K14（共 5 项）。
 assert('.results 是数组', Array.isArray(base.report?.results))
 const gated = results.filter((x) => !/^R[24] /.test(x.name))
 const buildDep = results.filter((x) => /^R[24] /.test(x.name))
-assert('gated 计数 = 16', gated.length === 16, `实际 ${gated.length}`)
+assert('gated 计数 = 21', gated.length === 21, `实际 ${gated.length}`)
 assert('R2/R4 前缀被排除（buildDep=2）', buildDep.length === 2, `实际 ${buildDep.length}`)
 
 // ── 观测 4：gated 条目 status ∈ {pass,warn,skip}，干净 fixture 无 fail/error ─

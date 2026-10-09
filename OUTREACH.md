@@ -262,17 +262,20 @@ and a silent drift is the failure class this project exists to catch.
 | `dsh-catalog`, `dsh-plugin-certification` | no `dsh.bundle.patch` — ineligible |
 | `dsh-kit`, `dsh-plugin-portal` | no `package.json` — not an installable package |
 | `dsh-personal-directive` | withdrawn from the DSH ecosystem |
+| `dsh-plugin-upgrade-015` | **retired 2026-10-05 — no gate is the correct end state** (owner ruling; see below) |
 | `dsh-plugin-upgrade-016` | **retired — no gate is the correct end state** (see below) |
 
-**`dsh-plugin-upgrade-016` is not blocked; it is finished.** The repository is
-**archived** and its own description states the reason: *"Corridor folded into
-dsh-plugin-upgrade 2.0.0 (never published under this name): its 0.1.5-rc.2 ->
-0.1.6-alpha.2 card and E1-E5 scanner live in that package now."* Verified rather
-than taken on trust — `dsh-plugin-upgrade` is published at **2.0.2**, and its
-CHANGELOG records the fold ("folded the `0.1.5-rc.2` → `0.1.6-alpha.2` corridor in
-as `legC`") and notes that the `legC` card still called itself by the retired
-`dsh-plugin-upgrade-016` name. Adding a gate to a superseded, archived package
-would be theatre.
+**`dsh-plugin-upgrade-015` and `-016` are not blocked; they are finished — retired by
+owner ruling on 2026-10-05, to receive no further fixes, releases or security updates.**
+Every plugin upgrade continues in `dsh-plugin-upgrade`, which routes a repository by the
+version that repository declares for itself; the two version-locked siblings are therefore
+redundant by construction. `-016`'s repository is **archived** and its own description
+states the reason: *"Corridor folded into dsh-plugin-upgrade 2.0.0 (never published under
+this name): its 0.1.5-rc.2 -> 0.1.6-alpha.2 card and E1-E5 scanner live in that package
+now."* Verified rather than taken on trust — `dsh-plugin-upgrade` is published at
+**2.0.5**, and its CHANGELOG records the fold ("folded the `0.1.5-rc.2` → `0.1.6-alpha.2`
+corridor in as `legC`") and notes that the `legC` card still called itself by the retired
+`dsh-plugin-upgrade-016` name. Adding a gate to a retired package would be theatre.
 
 Nothing else in the ungated set is archived. The rest are not installable plugin
 bundles at all — `dsh-catalog` is a catalogue source, `dsh-kit` a starter pack,
