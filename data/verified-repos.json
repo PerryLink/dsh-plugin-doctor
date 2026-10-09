@@ -161,6 +161,10 @@
     {
       "repo": "PerryLink/dsh-wechat",
       "package": "dsh-wechat"
+    },
+    {
+      "repo": "taltara/prae-harness",
+      "package": "prae-gate"
     }
   ]
 }
