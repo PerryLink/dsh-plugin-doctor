@@ -108,11 +108,79 @@ if (repos.length === 0) {
  * }} GitHubPayload
  */
 
+// How many times one request is attempted before the caller is told it failed,
+// and the base for the (small, increasing) pause between those attempts.
+const RETRY_ATTEMPTS = 3
+const RETRY_BASE_DELAY_MS = 400
+
+/** @param {number} ms */
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 /**
- * @param {string} pathname
- * @returns {Promise<{ error?: string, status?: number, data?: GitHubPayload }>}
+ * Faults that mean "the network hiccuped", not "the answer is no". Every call
+ * in this file is a GET, so repeating one costs nothing but time.
  */
-async function api(pathname) {
+const TRANSIENT_NET_CODES = [
+  'UND_ERR_SOCKET',
+  'UND_ERR_CONNECT_TIMEOUT',
+  'ECONNRESET',
+  'ETIMEDOUT',
+  'EAI_AGAIN',
+  'EPIPE',
+]
+
+/**
+ * Flatten an error's `cause` / `errors` chain into one searchable string.
+ *
+ * undici reports a socket fault as a bare `TypeError: fetch failed` and keeps
+ * the real code one level down, so `err.message` alone never contains
+ * `UND_ERR_SOCKET` — the nested cause has to be walked to see it at all.
+ *
+ * @param {unknown} err
+ * @returns {string}
+ */
+function networkErrorText(err) {
+  const parts = []
+  const seen = new Set()
+  /** @param {unknown} e */
+  const walk = (e) => {
+    if (!e || typeof e !== 'object' || seen.has(e)) return
+    seen.add(e)
+    const node = /** @type {{ code?: unknown, message?: unknown, cause?: unknown, errors?: unknown }} */ (e)
+    if (typeof node.code === 'string') parts.push(node.code)
+    if (typeof node.message === 'string') parts.push(node.message)
+    if (node.cause) walk(node.cause)
+    if (Array.isArray(node.errors)) for (const sub of node.errors) walk(sub)
+  }
+  walk(err)
+  return [...new Set(parts)].join(' | ')
+}
+
+/** Short, log-safe description of a throw, for the per-repo failure reason. */
+const describeError = (err) => (networkErrorText(err) || String(err)).slice(0, 200)
+
+/**
+ * Is this throw worth another attempt? Only network-level faults qualify:
+ * a socket closed mid-body, a connect timeout, a reset, a DNS blip.
+ *
+ * @param {unknown} err
+ * @returns {boolean}
+ */
+function isTransientNetworkError(err) {
+  const text = networkErrorText(err)
+  for (const code of TRANSIENT_NET_CODES) if (text.includes(code)) return true
+  // Anything undici could not even turn into a response — including faults it
+  // gives no `code` for — surfaces as this exact wrapper message.
+  return /fetch failed/i.test(text)
+}
+
+/**
+ * One request, no retries.
+ *
+ * @param {string} pathname
+ * @returns {Promise<{ error?: string, status?: number, data?: GitHubPayload, retryable?: boolean }>}
+ */
+async function fetchOnce(pathname) {
   const res = await fetch(`${API}${pathname}`, {
     headers: {
       accept: 'application/vnd.github+json',
@@ -127,9 +195,67 @@ async function api(pathname) {
     // the first two are configuration faults that just cost the whole run.
     const remaining = res.headers.get('x-ratelimit-remaining')
     const suffix = remaining === '0' ? ' (x-ratelimit-remaining: 0)' : ''
-    return { error: `${res.status} ${res.statusText}${suffix}`, status: res.status }
+    // Release the body so a retried attempt does not pin the socket open.
+    try {
+      await res.body?.cancel()
+    } catch {
+      // Body already gone or already consumed — nothing to release.
+    }
+    return {
+      error: `${res.status} ${res.statusText}${suffix}`,
+      status: res.status,
+      // 5xx and 429 are the server saying "not now"; every other 4xx is a real
+      // answer (404 missing repository, 401 dead token, 403 exhausted quota)
+      // and repeating it would only burn the remaining quota.
+      retryable: res.status === 429 || res.status >= 500,
+    }
   }
   return { data: await res.json() }
+}
+
+/**
+ * GET a GitHub REST path, retrying transient faults only.
+ *
+ * 2026-10-07: `verified badges` went red on a socket closed mid-body —
+ * `TypeError: fetch failed`, `code: 'UND_ERR_SOCKET'`, `bytesRead: 425637`,
+ * thrown from the `fetch` below. With no retry anywhere, one blip part-way
+ * through a 40-repo sweep aborted the whole run, and the next scheduled run
+ * passed with no code change: a flake, not data. A transient fault now gets up
+ * to RETRY_ATTEMPTS attempts, spaced by a small increasing pause.
+ *
+ * The result shape is deliberately unchanged. A fault that survives every
+ * attempt comes back as `{ error }` instead of an exception, so the sweep can
+ * record it against the one repository it belongs to and carry on.
+ *
+ * @param {string} pathname
+ * @returns {Promise<{ error?: string, status?: number, data?: GitHubPayload }>}
+ */
+async function api(pathname) {
+  let lastFailure = null
+
+  for (let attempt = 1; attempt <= RETRY_ATTEMPTS; attempt += 1) {
+    if (attempt > 1) await sleep(RETRY_BASE_DELAY_MS * (attempt - 1))
+
+    let outcome
+    try {
+      outcome = await fetchOnce(pathname)
+    } catch (err) {
+      // A non-transient throw is a real bug and must still surface; the
+      // per-repo guard in the sweep decides what to do with it.
+      if (!isTransientNetworkError(err)) throw err
+      lastFailure = { error: `network error (${describeError(err)})` }
+      continue
+    }
+
+    const { retryable, ...value } = outcome
+    if (!retryable) return value
+    lastFailure = value
+  }
+
+  return {
+    ...(lastFailure ?? {}),
+    error: `transient failure after ${RETRY_ATTEMPTS} attempts: ${lastFailure?.error ?? 'unknown'}`,
+  }
 }
 
 /**
@@ -218,98 +344,118 @@ for (const item of repos) {
     evidence: '',
   }
 
-  const repoInfo = await api(`/repos/${item.repo}`)
-  if (repoInfo.error) {
-    // One exhausted quota or dead token makes every remaining lookup pointless;
-    // stop at the first one instead of burning the rest of the run and
-    // reporting the same cause 37 times.
-    if (isFatalApiFault(repoInfo)) {
-      const cause = repoInfo.status === 401
-        ? `DOCTOR_AUDIT_TOKEN was rejected (401 ${repoInfo.error}) — the PAT is invalid, expired or revoked`
-        : `GitHub API quota exhausted (${repoInfo.error}) — DOCTOR_AUDIT_TOKEN is missing or has no cross-repository read access, so this run fell back to the anonymous 60 requests/hour limit`
-      entries.push({ ...entry, reason: cause, evidence: `${cause} at ${snapshot}` })
-      console.error(`verify: ${cause}`)
-      console.error(`verify: stopped after ${entries.length} of ${repos.length} declared repos — nothing was verified.`)
-      console.error('verify: fix DOCTOR_AUDIT_TOKEN, then re-run. See the comment at its use in this file for why GITHUB_TOKEN cannot stand in.')
-      writeRegistry(entries)
-      process.exit(1)
+  // One repository is one independent unit of work. `api()` already hands back
+  // transient faults as `{ error }` instead of throwing, so the branches below
+  // cover the expected cases; this guard is the backstop for anything else that
+  // escapes — including a transient fault that outlived every attempt. Either
+  // way it is charged to THIS repository and the sweep carries on: losing the
+  // other 39 entries to one bad socket is the bug this exists to prevent.
+  //
+  // The result stays 'no-data' (grey) rather than 'fail', matching every other
+  // lookup-failure path here: "cannot verify" is not the same claim as "the
+  // gate is broken", and a healthy repository never reaches this branch.
+  try {
+    const repoInfo = await api(`/repos/${item.repo}`)
+    if (repoInfo.error) {
+      // One exhausted quota or dead token makes every remaining lookup pointless;
+      // stop at the first one instead of burning the rest of the run and
+      // reporting the same cause 37 times.
+      if (isFatalApiFault(repoInfo)) {
+        const cause = repoInfo.status === 401
+          ? `DOCTOR_AUDIT_TOKEN was rejected (401 ${repoInfo.error}) — the PAT is invalid, expired or revoked`
+          : `GitHub API quota exhausted (${repoInfo.error}) — DOCTOR_AUDIT_TOKEN is missing or has no cross-repository read access, so this run fell back to the anonymous 60 requests/hour limit`
+        entries.push({ ...entry, reason: cause, evidence: `${cause} at ${snapshot}` })
+        console.error(`verify: ${cause}`)
+        console.error(`verify: stopped after ${entries.length} of ${repos.length} declared repos — nothing was verified.`)
+        console.error('verify: fix DOCTOR_AUDIT_TOKEN, then re-run. See the comment at its use in this file for why GITHUB_TOKEN cannot stand in.')
+        writeRegistry(entries)
+        process.exit(1)
+      }
+      entry.reason = `repo lookup failed: ${repoInfo.error}`
+      entry.evidence = `${entry.reason} at ${snapshot}`
+      entries.push(entry)
+      console.log(`NODATA ${item.repo.padEnd(32)} ${entry.reason}`)
+      continue
     }
-    entry.reason = `repo lookup failed: ${repoInfo.error}`
-    entry.evidence = `${entry.reason} at ${snapshot}`
-    entries.push(entry)
-    console.log(`NODATA ${item.repo.padEnd(32)} ${entry.reason}`)
-    continue
-  }
-  const branch = repoInfo.data.default_branch
-  entry.defaultBranch = branch
+    const branch = repoInfo.data.default_branch
+    entry.defaultBranch = branch
 
-  const head = await api(`/repos/${item.repo}/commits/${branch}`)
-  if (head.error) {
-    entry.reason = `head lookup failed: ${head.error}`
-    entry.evidence = `${entry.reason} at ${snapshot}`
-    entries.push(entry)
-    console.log(`NODATA ${item.repo.padEnd(32)} ${entry.reason}`)
-    continue
-  }
-  entry.headSha = head.data.sha
+    const head = await api(`/repos/${item.repo}/commits/${branch}`)
+    if (head.error) {
+      entry.reason = `head lookup failed: ${head.error}`
+      entry.evidence = `${entry.reason} at ${snapshot}`
+      entries.push(entry)
+      console.log(`NODATA ${item.repo.padEnd(32)} ${entry.reason}`)
+      continue
+    }
+    entry.headSha = head.data.sha
 
-  // Gate configuration at HEAD: pinned doctor version + a valid --only form.
-  const file = await api(`/repos/${item.repo}/contents/${WORKFLOW_PATH}?ref=${entry.headSha}`)
-  let gateProblems = []
-  if (file.error) {
-    gateProblems.push(`workflow file missing (${file.error})`)
-  } else {
-    const text = Buffer.from(file.data.content ?? '', 'base64').toString('utf8')
-    const pin = text.match(/@perrylink\/dsh-plugin-doctor@([\d.]+)/)
-    if (!pin) gateProblems.push('no pinned @perrylink/dsh-plugin-doctor version')
-    else entry.doctorPinned = pin[1]
-    entry.guard = /grep -q 'R0 '/.test(text)
-    const chinese = text.includes('静态·包结构')
-    const aliasForm = /--only\s+"?R,K"?/.test(text)
-    const escapedForm = /DOCTOR_ONLY/.test(text)
-    if (MOJIBAKE.test(text)) gateProblems.push('gate args are double-encoded mojibake')
-    else if (!aliasForm && !escapedForm && !chinese) gateProblems.push('no recognized --only gate args')
-    const form = aliasForm ? 'ascii-alias' : escapedForm ? 'ascii-escaped' : 'chinese-names'
-    entry.gate = entry.guard ? `${form} + self-check` : form
-  }
-
-  if (gateProblems.length > 0) {
-    entry.result = 'fail'
-    entry.reason = `gate-not-real: ${gateProblems.join('; ')}`
-  } else {
-    const runs = await api(`/repos/${item.repo}/actions/workflows/${path.basename(WORKFLOW_PATH)}/runs?branch=${branch}&per_page=20`)
-    if (runs.error) {
-      entry.reason = `runs lookup failed: ${runs.error}`
+    // Gate configuration at HEAD: pinned doctor version + a valid --only form.
+    const file = await api(`/repos/${item.repo}/contents/${WORKFLOW_PATH}?ref=${entry.headSha}`)
+    let gateProblems = []
+    if (file.error) {
+      gateProblems.push(`workflow file missing (${file.error})`)
     } else {
-      const hit = (runs.data.workflow_runs ?? []).find((r) => r.head_sha === entry.headSha)
-      if (!hit) {
-        entry.result = 'warn'
-        entry.reason = 'no plugin-doctor run on the current HEAD yet'
+      const text = Buffer.from(file.data.content ?? '', 'base64').toString('utf8')
+      const pin = text.match(/@perrylink\/dsh-plugin-doctor@([\d.]+)/)
+      if (!pin) gateProblems.push('no pinned @perrylink/dsh-plugin-doctor version')
+      else entry.doctorPinned = pin[1]
+      entry.guard = /grep -q 'R0 '/.test(text)
+      const chinese = text.includes('静态·包结构')
+      const aliasForm = /--only\s+"?R,K"?/.test(text)
+      const escapedForm = /DOCTOR_ONLY/.test(text)
+      if (MOJIBAKE.test(text)) gateProblems.push('gate args are double-encoded mojibake')
+      else if (!aliasForm && !escapedForm && !chinese) gateProblems.push('no recognized --only gate args')
+      const form = aliasForm ? 'ascii-alias' : escapedForm ? 'ascii-escaped' : 'chinese-names'
+      entry.gate = entry.guard ? `${form} + self-check` : form
+    }
+
+    if (gateProblems.length > 0) {
+      entry.result = 'fail'
+      entry.reason = `gate-not-real: ${gateProblems.join('; ')}`
+    } else {
+      const runs = await api(`/repos/${item.repo}/actions/workflows/${path.basename(WORKFLOW_PATH)}/runs?branch=${branch}&per_page=20`)
+      if (runs.error) {
+        entry.reason = `runs lookup failed: ${runs.error}`
       } else {
-        entry.runId = hit.id
-        entry.runConclusion = hit.conclusion
-        entry.runCreatedAt = hit.created_at
-        if (hit.status !== 'completed') {
+        const hit = (runs.data.workflow_runs ?? []).find((r) => r.head_sha === entry.headSha)
+        if (!hit) {
           entry.result = 'warn'
-          entry.reason = `run on HEAD is ${hit.status}`
-        } else if (hit.conclusion === 'success') {
-          entry.result = 'pass'
-          entry.reason = 'gate green on HEAD'
+          entry.reason = 'no plugin-doctor run on the current HEAD yet'
         } else {
-          entry.result = 'fail'
-          entry.reason = `run on HEAD concluded ${hit.conclusion}`
+          entry.runId = hit.id
+          entry.runConclusion = hit.conclusion
+          entry.runCreatedAt = hit.created_at
+          if (hit.status !== 'completed') {
+            entry.result = 'warn'
+            entry.reason = `run on HEAD is ${hit.status}`
+          } else if (hit.conclusion === 'success') {
+            entry.result = 'pass'
+            entry.reason = 'gate green on HEAD'
+          } else {
+            entry.result = 'fail'
+            entry.reason = `run on HEAD concluded ${hit.conclusion}`
+          }
         }
       }
     }
-  }
 
-  entry.evidence =
-    `${entry.result} — ${entry.reason}; gate=${entry.gate ?? 'invalid'} doctorPinned=${entry.doctorPinned ?? '?'}` +
-    ` guard=${entry.guard} on ${entry.defaultBranch}@${(entry.headSha ?? '').slice(0, 10)}` +
-    (entry.runId ? `; run https://github.com/${item.repo}/actions/runs/${entry.runId} (${entry.runConclusion})` : '') +
-    `; checked ${snapshot}`
-  entries.push(entry)
-  console.log(`${entry.result.toUpperCase().padEnd(6)} ${item.repo.padEnd(32)} ${entry.reason}`)
+    entry.evidence =
+      `${entry.result} — ${entry.reason}; gate=${entry.gate ?? 'invalid'} doctorPinned=${entry.doctorPinned ?? '?'}` +
+      ` guard=${entry.guard} on ${entry.defaultBranch}@${(entry.headSha ?? '').slice(0, 10)}` +
+      (entry.runId ? `; run https://github.com/${item.repo}/actions/runs/${entry.runId} (${entry.runConclusion})` : '') +
+      `; checked ${snapshot}`
+    entries.push(entry)
+    console.log(`${entry.result.toUpperCase().padEnd(6)} ${item.repo.padEnd(32)} ${entry.reason}`)
+  } catch (err) {
+    const reason = `unexpected error: ${describeError(err)}`
+    entry.result = 'no-data'
+    entry.reason = reason
+    entry.evidence = `${reason} at ${snapshot}`
+    if (entries[entries.length - 1] !== entry) entries.push(entry)
+    console.log(`NODATA ${item.repo.padEnd(32)} ${reason}`)
+    console.error(`verify: ${item.repo}: ${reason} — continuing with the remaining repos`)
+  }
 }
 
 entries.sort((a, b) => a.repo.localeCompare(b.repo))
