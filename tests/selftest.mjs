@@ -49,6 +49,23 @@ makeFixture(good)
 makeFixture(broken, { broken: true })
 makeFixture(bare, { bare: true })
 
+// ── K14 跨仓夹具：一个家族工作区，两个兄弟仓注册同一个服务键 ──────────────
+// discoverSiblings 只认直接子目录、名字以 dsh- 开头、且声明了 dsh 字段或 DSH peer 的仓。
+const family = path.join(sandbox, 'family')
+const sibA = path.join(family, 'dsh-selftest-alpha')
+const sibB = path.join(family, 'dsh-selftest-beta')
+for (const [dir, extra] of [[sibA, {}], [sibB, {}]]) {
+  fs.mkdirSync(path.join(dir, 'src'), { recursive: true })
+  fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
+    name: path.basename(dir), version: '1.0.0', type: 'module', ...extra,
+    dsh: { manifestVersion: 1 },
+  }) + '\n')
+}
+// Both provide the SAME service key → a genuine cross-repo collision.
+const SHARED = "import { Service } from '@deepseek-ai/cordis'\nclass Hub extends Service { constructor(ctx) { super(ctx, 'selftestSharedHub') } }\nexport const name = 'x'\nexport function apply(ctx) { ctx.plugin(Hub) }\n"
+fs.writeFileSync(path.join(sibA, 'src', 'index.js'), SHARED)
+fs.writeFileSync(path.join(sibB, 'src', 'index.js'), SHARED)
+
 function run(repo, only, extra = []) {
   const json = path.join(sandbox, `out-${Math.random().toString(36).slice(2)}.json`)
   const r = spawnSync(
@@ -105,6 +122,44 @@ for (const c of usageCases) {
   const ok = r.status === 2
   if (!ok) failed++
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${c.label}  exit=${r.status}(期望 2)`)
+}
+
+// ── K14 跨仓注入点重名：命中 / 豁免 / 降级 三条路径 ──────────────────
+{
+  // K14 reads the K-group verdict from the JSON report, so probe with --json -.
+  const probeK14 = (repo) => {
+    const r = spawnSync(process.execPath, [path.join(ROOT, 'doctor.mjs'), '--repo', repo, '--workspace', family, '--no-smoke', '--only', 'K', '--json', '-'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 })
+    try {
+      const k14 = JSON.parse(r.stdout).results.find((x) => /^K14 /.test(x.name))
+      return { exit: r.status, status: k14?.status, message: String(k14?.message ?? '') }
+    } catch { return { exit: r.status, status: null, message: '' } }
+  }
+
+  // (a) genuine collision between two siblings → warn
+  const collide = probeK14(sibA)
+  const okCollide = collide.status === 'warn' && collide.message.includes('selftestSharedHub')
+  if (!okCollide) failed++
+  console.log(`${okCollide ? 'PASS' : 'FAIL'}  K14 兄弟仓同服务键 → warn  status=${collide.status}`)
+
+  // (b) the same collision declared in package.json → exempted → pass
+  const pkgPath = path.join(sibA, 'package.json')
+  const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'))
+  pkg['dsh-plugin-doctor'] = { crossPlugin: { exempt: [{ kind: 'service', name: 'selftestSharedHub', peer: 'dsh-selftest-beta', guard: '1.0.0' }] } }
+  fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
+  const exempt = probeK14(sibA)
+  const okExempt = exempt.status === 'pass'
+  if (!okExempt) failed++
+  console.log(`${okExempt ? 'PASS' : 'FAIL'}  K14 声明豁免后 → pass  status=${exempt.status}`)
+
+  // (c) a workspace with no second plugin repo → skip, never a silent pass
+  const lonely = fs.mkdtempSync(path.join(sandbox, 'lonely-'))
+  const r = spawnSync(process.execPath, [path.join(ROOT, 'doctor.mjs'), '--repo', sibA, '--workspace', lonely, '--no-smoke', '--only', 'K', '--json', '-'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 })
+  let lonelyStatus = null
+  try { lonelyStatus = JSON.parse(r.stdout).results.find((x) => /^K14 /.test(x.name))?.status } catch { /* leave null */ }
+  const okLonely = lonelyStatus === 'skip'
+  if (!okLonely) failed++
+  console.log(`${okLonely ? 'PASS' : 'FAIL'}  K14 工作区无第二个插件仓 → skip  status=${lonelyStatus}`)
+  fs.rmSync(lonely, { recursive: true, force: true })
 }
 
 // ── --json - ：JSON 写 stdout，不落名为 "-" 的文件 ─────────────────────

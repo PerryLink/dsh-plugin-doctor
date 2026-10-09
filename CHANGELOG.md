@@ -1,5 +1,107 @@
 # Changelog
 
+## [0.6.3] - 2026-10-05
+
+### Changed
+
+- **The release-health auth notes are now evidence-based instead of inferred from a token mention.**
+  The first version warned whenever a publish workflow referenced `secrets.NPM_TOKEN` or set
+  `registry-url`, which flagged `dsh-plugin-doctor` own publish workflow — a deliberate
+  token-then-OIDC design that already retries via `unset NODE_AUTH_TOKEN` and republishes through
+  trusted publishing whenever the token is stale. A note that cries wolf on a correct workflow is
+  worse than no note. The check now reads only LIVE configuration (a match inside a comment is not
+  a defect), recognises the documented retry, and downgrades that case to an explicit "fine" note.
+  The warning that remains is the genuine trap — a bearer token with no retry path — and it still
+  fires on `dsh-team-rooms`, which is a real finding rather than a false positive.
+
+### Notes
+
+- The registry probe, not the note, remains the verdict: a workflow can look wrong and publish
+  correctly, or look right and fail. This pass only explains what the probe found.
+## [0.6.2] - 2026-10-05
+
+### Fixed
+
+- **CC5 reported a false failure for the no-seam case, and its explanatory note could never fire.**
+  The note tested the output for `no source files found under src`, but `dsh-plugin-kit`'s
+  `verify-seam` phrases that situation as `src seam role "definition" marker ... not found in
+  source` — so the note was dead code from the day it was written, and `doctor --repo .` failed
+  its own CC5 gate. The root cause was upstream: the kit gate failed any repository with no role
+  marker, which is the normal shape of a pure detector that registers nothing for others to
+  consume. `dsh-plugin-kit` 0.1.16 scopes the gate to plugins that carry a seam, so the
+  no-seam case is now PASS + WARN upstream and CC5 passes honestly.
+
+### Changed
+
+- The CC5 note now covers only the genuinely unjudgeable case — a repository with neither `src/`
+  nor root-level source files — and says so explicitly, instead of offering an exemption for a
+  structural exception. An incomplete seam is a failure with no exemption path.
+
+### Result
+
+- `node doctor.mjs --repo . --no-smoke` now exits `0` on this repository: `pass=23 skip=5`
+  (previously `pass=22 skip=5 fail=1`). The remaining skips are optional-channel checks
+  (certification registry, adp-list, omdsh Workshop) and are the intended end state.
+- Re-verified after the fix: `node lib/verify/cli.js all .` passes on this repo, on
+  `dsh-plugin-kit` itself (full trio), and on `dsh-mask` (has `src/`).
+## [0.6.1] - 2026-10-05
+
+### Added
+
+- **A weekly release-health gate, `scripts/check-release-health.mjs` + `.github/workflows/release-health.yml`.** The 2026-10-05 family release produced five distinct failure shapes and only one of them turned a workflow red: 36 packages published green while their CHANGELOG carried `- undefined` as the release date; `dsh-local-ai@0.2.16` and `dsh-permission-rules@0.7.12` published successfully and still ended red (E409 after a tag re-push, and a GitHub-Release step with no tag ref); `dsh-plugin-kit` failed `ENEEDAUTH` because npm's trusted-publisher binding named the workflow file that *used* to perform the OIDC exchange; `@perrylink/dsh-skill-pack-security-provider` never reached npm at all because its pre-publish `verify` gate failed and the publish job was `skipped`; and nine repos mirror the version in `src/version.ts` (one in a `VERSION` file) behind tests that fail on drift. The new check answers the four questions that cover all five shapes — LOCKSTEP (does every carrier agree with `package.json`), PUBLISHED, PROVENANCE (which workflow file published it, read from the version's own attestation bundle), and FILES (does the published tarball still carry `src/`, `lib/` or `dist/`) — and exits non-zero on any of them, so a silent drift cannot sit unnoticed until the next release.
+- **A `--roster` mode** that verifies the published artifact of every declared family member without checking any of them out: `data/verified-repos.json` is the same authoritative roster the monthly K14 gate uses, so "which packages" has exactly one source and a new member is picked up automatically. It reads provenance directly (the SLSA predicate names the repository and workflow path), which is what makes a stale trusted-publisher binding detectable from outside npm.
+
+### Notes
+
+- `--no-registry` runs only the LOCKSTEP pass. That is the mode per-repo CI should use: a downstream repository must never go red because the registry is slow. This repository's own workflow is the one place that probes the registry, because "what users actually install" is the thing being verified.
+- Two carrier shapes are asserted FAMILY-WIDE and therefore fail the check: `src/version.ts`'s exported `VERSION`, and a `VERSION` file. `SKILL.md` frontmatter is deliberately only a NOTE — most skills carry their own independent version (`0.1.0` in `dsh-fund-research` and `dsh-industry-research`, whose suites do not assert it), while `dsh-skill-pack-security` asserts all sixteen of its own. Reporting skill versions as failures would have produced two false positives on the first run.
+- Tarball layouts differ across the family: `src/` for most, `lib/` for built bundles, and `dist/` for `dsh-plugin-guide` and `dsh-wechat`. All three are accepted; asserting only `src`/`lib` was a false positive on those two.
+## [0.6.0] - 2026-10-05
+
+### Added
+
+- **A monthly cross-repo (K14) gate, `scripts/check-cross-repo.mjs` + `.github/workflows/cross-repo.yml`.** K14 compares this plugin's injection points (service keys, tool names, command names, patch `insert` ids) against its sibling repositories inside a family workspace, and it is the only check that can catch "two plugins register the same service key" before it reaches a user's profile. In a per-repo CI there are no siblings, so K14 degrades to `skip` **on purpose** — a downstream repository must never go red for a check it structurally cannot run. The cost of that decision was that nobody ran K14 unless a human did it by hand; this closes that gap for this repository without asking any other repo to check out 40 siblings. Instead of cloning the family it materialises a throwaway workspace from the **published tarballs**: `data/verified-repos.json` is the authoritative roster (so a new member is picked up automatically and "who is in the family" keeps exactly one source), and a published tarball ships the only two inputs K14 reads — `package.json`, including the `dshPluginDoctor.crossPlugin` exemption declaration, and `src/`. That means the gate tests what users actually install rather than a collection of working trees. Extraction is done with `node:zlib` rather than the `tar` binary, because this host's Git ships GNU tar which shadows System32 bsdtar and does not accept `--one-top-level`. The job fails on `fail`, on an unexempted `warn`, and on `skip`/`missing`: a stage that silently failed to build must never read as "no collisions found".
+
+### Fixed
+
+- **K1 no longer reports a locally-declared `ctx` object as an undeclared service access.** K1 flags `ctx.<name>` reads that no `inject` covers. It already skipped files whose `ctx` is a *type* parameter; it now also skips files that declare their own `ctx` variable (`const ctx = { … }`), which is an ordinary local context bag rather than a cordis `Context`. Measured on this repository's own `doctor.mjs`, whose `const ctx = { sandboxRoots, coverage, … }` made K1 report `ctx.sandboxRoots` and `ctx.coverage` as missing from `inject` — a pure false positive that appeared in this repository's own gate on every run. The check still fires on a genuine violation (verified with a probe repository that reads `ctx.someUndeclaredService`), so the change narrows the check rather than silencing it.
+
+## [0.5.0] - 2026-10-05
+
+### Added
+
+- **Group K gains a cross-plugin interference tier, K10–K13.** The first nine K checks answer *"is this plugin correct on its own?"*; these four answer *"does it interfere with other plugins, or can another plugin silently eat it?"*. They stay inside the existing `K` group, so `--only K` and every downstream `plugin-doctor.yml` keep their meaning; the checkset string moves to `R0-R8+K1-K14+D0-D3,D9+CC1-CC5/3`.
+  - **K10 — waterfall listeners must delegate `next()`.** A listener registered on a `waterfall` event that never calls `next()` silently swallows every downstream listener on that chain, including the built-in behaviour. `agent/pre-step` alone has 15 official consumers, so the blast radius is ecosystem-wide. The check deliberately only condemns *inline* listener bodies whose whole file never mentions `next`: a listener passed by reference (`ctx.on('approval/request', bridge.onApproval)`) delegates elsewhere and is not judged. That restraint is measured, not assumed — the first draft flagged `dsh-reach`, whose listeners do delegate, and the tightened rule reports zero warnings across a 20-plugin sample while still firing on a planted defect.
+  - **K11 — tool names that shadow built-in or reserved names.** Two same-named registrations in one layer throw, and the explicit `tools.data.delete(def.name)` + re-register idiom instead *rewrites* the tool the model sees. That two-step idiom is how a widely installed third-party plugin redefines the built-in `get_goal` / `create_goal` / `update_goal`, so the check looks for both the collision and the idiom.
+  - **K12 — a provided service key equal to a host seam.** Cordis permits exactly one provider per service key per isolate scope, so a second provider cannot take effect; replacing a host seam requires the original row to be explicitly disabled rather than run alongside.
+  - **K13 — a patch that overrides a built-in row's `config`.** An id-targeted patch replaces the target row's **whole** `config` object instead of deep-merging, so two bundles overriding the same built-in row silently erase each other and the winner is decided only by `dsh.profile.bundles` order. An override row also asserts `name`, and a mismatch skips the whole patch.
+  - All four return `skip` when no source files were discovered, preserving the whole-group degradation contract that the `bare → exit 6` selftest guards.
+  - Reference data (the 17 `waterfall` events, 65 built-in tool names, host-owned patch row ids) is extracted from upstream machine-readable sources at baseline DSH `0.2.0-rc.2` — the `@mode` column of `docs/event-producer-consumer.md`, the `### \`name\`` sections of `docs/tool-catalog.md`, and the top-level ids of `packages/bundle/base/cordis.patch.yml`.
+
+- **Group K gains a cross-repo tier, K14 — "injection-point name collision across sibling repos".** K10–K13 judge one repository in isolation and so cannot see the collisions that cost the most in practice: a Cordis service key admits exactly one provider per isolate scope, and a second registration of the same tool name in one layer throws. K14 walks the family workspace given by `--workspace`, keeps every sibling `dsh-*` repo that really is a DSH plugin (a `dsh` manifest field, or a `@deepseek-ai/dsh*` peer), extracts each side's owned names — service keys from `super(ctx, …)` / `ctx.provide(…)`, tool names from `defineTool({ name })`, command names from `ctx.commands.register({ name })`, and patch `insert` row ids — and reports the intersections.
+  - **Guard-aware exemptions, so a deliberate design is not reported as a defect.** A plugin that keeps a *runtime* first-provider-wins stand-down guard still contains the contested name in its source, so a source-only comparison cannot tell it apart from a genuine collision. The author declares intent rather than the tool guessing:
+    ```json
+    "dsh-plugin-doctor": {
+      "crossPlugin": { "exempt": [
+        { "kind": "service", "name": "roomHub", "peer": "dsh-team-rooms", "guard": "0.9.14" }
+      ] }
+    }
+    ```
+    `guard` records the version in which the stand-down landed, so an exemption cannot silently outlive the code that justified it. A zero-dependency `dsh-plugin-doctor.yml` sidecar accepts the same list. `dsh-background-agents` uses it for its room half (nine names against `dsh-team-rooms`).
+  - **Never a silent pass.** With no source files, or a workspace holding fewer than two plugin repos, K14 returns `skip` — consistent with the whole-group degradation contract (`degradedGroups` requires the entire K group to be unrunnable), which the `bare → exit 6` selftest guards. CI is unaffected: the shipped workflow passes no `--workspace`, so K14 degrades to `skip` there and can never fail a downstream build.
+  - `tests/selftest.mjs` now covers all three K14 paths: a genuine sibling collision warns, the same collision declared as an exemption passes, and a workspace without a second plugin repo skips.
+- `tests/contract.mjs`'s gated-count assertion moves 16 → 21 to account for the five new checks (K10–K14).
+
+### Changed
+
+- The shipped workflow template pins `@perrylink/dsh-plugin-doctor@0.5.0`, in both `plugin-doctor.yml` and its `.github/workflows/` copy — which a contract test requires to stay byte-identical.
+
+## [0.4.6] - 2026-10-04
+
+### Changed
+
+- Host pins move to `0.2.1-alpha.1`; re-verified against that host line.
+
 ## [0.4.5] - 2026-09-24
 
 ### Fixed

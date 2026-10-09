@@ -1,0 +1,61 @@
+# Monthly cross-repo (K14) injection-point gate.
+#
+# Why this exists and why it is NOT wired into the per-repo gate:
+#   K14 compares this plugin's injection points — service keys, tool names, command
+#   names, patch `insert` ids — against its SIBLING repos inside a family workspace
+#   (`--workspace`). It is the only check that can catch "two plugins register the same
+#   service key" before it reaches a user's profile. In a per-repo CI there are no
+#   siblings, so K14 degrades to `skip` ON PURPOSE: a downstream repository must never
+#   go red for a check it structurally cannot run.
+#
+#   The cost of that decision is that nobody runs K14 unless a human does it by hand.
+#   This workflow closes that gap for THIS repository, without asking any other repo to
+#   check out 40 siblings.
+#
+# How it works (scripts/check-cross-repo.mjs): instead of cloning the family, it
+# materialises a throwaway workspace from the PUBLISHED tarballs.
+#   * `data/verified-repos.json` is the authoritative roster, so "who is in the family"
+#     has exactly one source and a new member is picked up automatically.
+#   * A published tarball ships `package.json` (with the `dshPluginDoctor.crossPlugin`
+#     exemption declaration) and `src/` — the only two inputs K14 reads. Verified against
+#     `dsh-background-agents@0.10.2`: all 9 exemption entries survive publication.
+#   * That means the gate tests what users actually install, not the working trees.
+#
+# Exits non-zero on FAIL and on an unexempted WARN, and also on `skip`/`missing` — a
+# stage that silently failed to build must never read as "no collisions found".
+name: cross-repo (K14)
+
+on:
+  schedule:
+    # Monthly, so a new collision introduced by any family release is caught without
+    # paying for 40 sibling checkouts on every push. 12:23 UTC keeps it off the hour,
+    # where GitHub's scheduler is most congested.
+    - cron: '23 12 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  k14:
+    name: K14 cross-repo injection points
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      # No install and no build, deliberately (same reasoning as plugin-doctor.yml):
+      # this repository's checks run against the committed tree and the script needs
+      # nothing but node + npm, which the runner already has.
+      - name: Stage the family from published tarballs and run K14
+        run: node scripts/check-cross-repo.mjs
+      - name: Upload the K14 report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k14-report
+          path: k14-report.json
+          if-no-files-found: warn
+          retention-days: 90

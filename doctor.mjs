@@ -17,7 +17,10 @@ import { toContract, contractExitCode } from './lib/compat.mjs'
 
 const VERSION = JSON.parse(readFileSync(path.join(import.meta.dirname, 'package.json'), 'utf8')).version
 const SCHEMA_VERSION = '2'
-const CHECKSET = 'R0-R8+K1-K9+D0-D3,D9+CC1-CC5/1'
+// K10–K13 = 交叉干扰组（waterfall 委托 / 工具名遮蔽 / 服务键双提供 / 覆写内置行）。
+// 它们是 warn 级启发式，与 K1–K9 同属 K 组，因此不新增分组、不改 --only 语义；
+// 下游仓的 plugin-doctor.yml 吃分组名而不是 checkset 串，兼容。
+const CHECKSET = 'R0-R8+K1-K14+D0-D3,D9+CC1-CC5/3'
 const QUARANTINE_PREFIX = 'doctor-quarantine-'
 
 const USAGE = `dsh-plugin-doctor ${VERSION} —— dsh 插件完整性 + 运行流畅一体检测器

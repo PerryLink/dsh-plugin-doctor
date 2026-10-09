@@ -5,3 +5,6 @@ reports/
 # This repository uses npm (`npm pack` in CI), not pnpm. A stray pnpm lockfile
 # appears here whenever someone runs `pnpm install`.
 pnpm-lock.yaml
+
+# Written by scripts/check-cross-repo.mjs (monthly K14 gate).
+k14-report.json
