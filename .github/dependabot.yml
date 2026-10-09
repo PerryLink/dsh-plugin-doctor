@@ -4,6 +4,20 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # This repository ships the gate workflow as a byte-identical mirrored
+      # pair: `plugin-doctor.yml` (repo root, the copy downstream repos paste
+      # into their own tree) and `.github/workflows/plugin-doctor.yml` (this
+      # repository's own gate). `tests/contract.mjs` asserts the two are equal
+      # byte-for-byte.
+      #
+      # Dependabot only ever sees `.github/workflows/`, so a bump here edits ONE
+      # copy and leaves the other behind — the pair drifts and the gate that
+      # guards every family repository goes red (this is exactly what happened
+      # to PR #8 and PR #9). These two actions must therefore be bumped by hand
+      # in a single commit that updates BOTH files together.
+      - dependency-name: actions/checkout
+      - dependency-name: actions/setup-node
   - package-ecosystem: npm
     directory: /
     schedule:
