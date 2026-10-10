@@ -13,14 +13,16 @@ import { tmpdir } from 'node:os'
 import { Doctor, render, verdict, summarizeGroups, degradedGroups } from './lib/framework.mjs'
 import { addChecks as addPackageChecks } from './lib/checks-package.mjs'
 import { addChecks as addCordisChecks } from './lib/checks-cordis.mjs'
+import { addChecks as addRuntimeChecks } from './lib/checks-runtime.mjs'
 import { addSmokeChecks } from './lib/checks-smoke.mjs'
 import { addChecks as addCollectionChecks } from './lib/checks-collections.mjs'
 import { quarantineSandbox, redact } from './lib/util.mjs'
+import { locateDshInstall } from './lib/host-surface.mjs'
 
 export const name = '@perrylink/dsh-plugin-doctor'
 
-/** 静态 R/K/CC 组（默认）+ 可选 D 组冒烟，返回脱敏后的结构化报告。 */
-async function runDoctor(repoPath, { smoke = false } = {}) {
+/** 静态 R/K 组（默认）+ X 宿主契约组 + 可选 D 组冒烟，返回脱敏后的结构化报告。 */
+async function runDoctor(repoPath, { smoke = false, host = true } = {}) {
   const abs = path.resolve(repoPath)
   const pkgPath = path.join(abs, 'package.json')
   if (!existsSync(pkgPath)) return { ok: false, error: `未找到 ${pkgPath}` }
@@ -34,6 +36,13 @@ async function runDoctor(repoPath, { smoke = false } = {}) {
   const runRoot = mkdtempSync(path.join(tmpdir(), 'doctor-run-'))
   const logDir = path.join(runRoot, 'logs')
   mkdirSync(logDir, { recursive: true })
+  // 宿主版本实测，绝不硬编码：旧实现把 0.1.2-rc.1 写死在这里，
+  // 而那个版本早于 peer 执法起点（dsh-v0.1.7-rc.1），冒烟与判定都失去鉴别力。
+  const dshInstall = locateDshInstall(null)
+  let dshInstallVersion = null
+  if (dshInstall) {
+    try { dshInstallVersion = JSON.parse(readFileSync(path.join(dshInstall, 'package.json'), 'utf8')).version ?? null } catch { dshInstallVersion = null }
+  }
   const ctx = {
     repoPath: abs,
     pkg,
@@ -41,13 +50,17 @@ async function runDoctor(repoPath, { smoke = false } = {}) {
     logDir,
     workspaceRoot: path.resolve(import.meta.dirname, '..'),
     sandboxRoots: [runRoot],
+    dshInstall,
+    dshInstallVersion,
+    hostVersions: [],
   }
 
   const doctor = new Doctor()
   addPackageChecks(doctor, ctx)
   addCordisChecks(doctor, ctx)
+  if (host) addRuntimeChecks(doctor, ctx)
   addCollectionChecks(doctor, ctx)
-  if (smoke) addSmokeChecks(doctor, ctx, { dshVersion: '0.1.2-rc.1' })
+  if (smoke) addSmokeChecks(doctor, ctx, { dshVersion: dshInstallVersion })
 
   const started = Date.now()
   const results = await doctor.run(ctx)
@@ -64,6 +77,7 @@ async function runDoctor(repoPath, { smoke = false } = {}) {
     report: render(results),
     durationMs: Date.now() - started,
     quarantine: quarantineSandbox({ root: runRoot }),
+    hostDshVersion: dshInstallVersion,
   }
 }
 
@@ -72,12 +86,13 @@ export function apply(ctx) {
   if (tools) {
     ctx.effect(() => tools.register({
       name: 'plugin_doctor',
-      description: '只读静态检查一个 DSH 插件仓库（R 包结构 / K cordis 契约 / CC 集合站清单；可选 D 沙箱冒烟）',
+      description: '只读检查一个 DSH 插件仓库（R 包结构 / K cordis 契约 / X 宿主契约：peer 走廊、inject 服务面、patch 行可定位性；可选 D 沙箱冒烟）',
       parameters: {
         type: 'object',
         properties: {
           repo: { type: 'string', description: '被检插件仓库路径（含 package.json）' },
           smoke: { type: 'boolean', description: '是否额外执行 D 组沙箱冒烟（默认 false；需网络 + pnpm）' },
+          host: { type: 'boolean', description: '是否执行 X 组宿主契约检查（默认 true；需要能读到一份 dsh 安装，读不到则该组降级）' },
         },
         required: ['repo'],
       },
@@ -88,7 +103,7 @@ export function apply(ctx) {
         },
       },
       async execute(args) {
-        const r = await runDoctor(args.repo, { smoke: !!args.smoke })
+        const r = await runDoctor(args.repo, { smoke: !!args.smoke, host: args.host !== false })
         if (!r.ok && r.error) return `检查失败: ${r.error}`
         return r.report
       },
@@ -99,7 +114,7 @@ export function apply(ctx) {
   if (commands) {
     ctx.effect(() => commands.register({
       name: 'doctor',
-      description: '对插件仓运行 dsh-plugin-doctor 静态检查（R/K/CC 组）',
+      description: '对插件仓运行 dsh-plugin-doctor 检查（R/K/X 组）',
       input: { hint: '<插件仓路径>' },
       handler: async (invocation) => {
         const repo = (invocation.rawInput ?? '').trim()

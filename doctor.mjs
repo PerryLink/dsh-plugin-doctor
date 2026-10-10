@@ -10,17 +10,19 @@ import { tmpdir } from 'node:os'
 import { Doctor, verdict, render, summarizeGroups, degradedGroups } from './lib/framework.mjs'
 import { addChecks as addPackageChecks } from './lib/checks-package.mjs'
 import { addChecks as addCordisChecks } from './lib/checks-cordis.mjs'
+import { addChecks as addRuntimeChecks } from './lib/checks-runtime.mjs'
 import { addSmokeChecks } from './lib/checks-smoke.mjs'
 import { addChecks as addCollectionChecks } from './lib/checks-collections.mjs'
 import { quarantineSandbox, redact } from './lib/util.mjs'
 import { toContract, contractExitCode } from './lib/compat.mjs'
+import { locateDshInstall, hostSurfaceSummary } from './lib/host-surface.mjs'
 
 const VERSION = JSON.parse(readFileSync(path.join(import.meta.dirname, 'package.json'), 'utf8')).version
 const SCHEMA_VERSION = '2'
 // K10–K13 = 交叉干扰组（waterfall 委托 / 工具名遮蔽 / 服务键双提供 / 覆写内置行）。
 // 它们是 warn 级启发式，与 K1–K9 同属 K 组，因此不新增分组、不改 --only 语义；
 // 下游仓的 plugin-doctor.yml 吃分组名而不是 checkset 串，兼容。
-const CHECKSET = 'R0-R8+K1-K14+D0-D3,D9+CC1-CC5/3'
+const CHECKSET = 'R0-R8+K1-K14+D0-D3,D9+CC1-CC5/3+X1-X5'
 const QUARANTINE_PREFIX = 'doctor-quarantine-'
 
 const USAGE = `dsh-plugin-doctor ${VERSION} —— dsh 插件完整性 + 运行流畅一体检测器
@@ -31,13 +33,18 @@ const USAGE = `dsh-plugin-doctor ${VERSION} —— dsh 插件完整性 + 运行�
   --repo, -r <路径>      被检插件仓（含 package.json）
   --workspace, -w <路径> 兄弟仓所在工作区根（用于 CC 组核对本地清单；缺省=工具自身父目录）
   --no-smoke        跳过动态沙箱冒烟（默认执行；需网络 + pnpm）
-  --dsh <版本>      冒烟宿主版本（默认 ${'0.1.2-rc.1'} = peer 下限：刻意用最老的受支持线做
-                    向后兼容冒烟，不是 npm latest —— npm @deepseek-ai/dsh 实测 latest 为
-                    0.1.5-rc.1、next 为 0.1.5-rc.2。38 个下游仓的 plugin-doctor.yml 吃这个
-                    默认值，改默认值会静默改变那些门禁的含义）
+  --no-host         跳过 X 组（动态面·宿主契约：peer 走廊 / inject 服务面 / patch 可定位性）
+  --host <版本>     把该宿主版本并入 X1 的求值集合（可重复；用于"我还想支持这条线"的场景）
+  --dsh-install <路径> 指定一份 dsh 安装目录（默认自动探测：本工具自身、DSH_INSTALL_DIR、全局 npm 前缀）
+  --dsh <版本>      D 组冒烟要安装的宿主版本。
+                    默认 = **实测到的本机安装版本**；探不到就交给 D1 报 unsupported-host。
+                    刻意不再回落硬编码常量：旧默认 0.1.2-rc.1 早于 peer 执法起点
+                    （dsh-v0.1.7-rc.1），对走廊毫无鉴别力，且会造成 7/46 个仓的假红。
+                    想刻意测最老的线，显式 --dsh 0.1.2-rc.1。
   --only <分组>     只跑指定分组（逗号分隔）。推荐用 ASCII 别名（编码安全）：
                       R  = 静态·包结构
                       K  = 静态·cordis 契约扫描
+                      X  = 动态面·宿主契约（对宿主真实面求值，不手抄常量表）
                       D  = 动态·沙箱冒烟
                       CC = 生态·集合站清单
                     中文全名同样可用；大小写不敏感。
@@ -53,6 +60,15 @@ const USAGE = `dsh-plugin-doctor ${VERSION} —— dsh 插件完整性 + 运行�
   -h, --help        显示帮助
   -v, --version     显示版本
 
+X 组的数据来源（全部离线可读，不需要 harness checkout、不需要联网）:
+  · <dsh>/node_modules/@deepseek-ai/dsh-tool-cordis/lib/types/api-catalog.js —— 官方生成物，
+    导出 91 个 harness 服务 / 81 个事件 / 992 个类型声明
+  · <dsh>/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml —— 宿主自带行 id（当前 94 个）
+  · <dsh>/node_modules/@deepseek-ai/dsh-app-boot —— **X1 直接调用宿主自己的
+    evaluatePluginCompatibility**，结论与宿主逐字节同源，不存在"自研 semver 算错"的可能
+  读不到安装时回落到随包发布的快照（lib/host-surface.data.mjs，带基线版本戳）并如实标注来源。
+  刷新快照: npm run test:host-surface -- --write   （只比较: npm run test:host-surface）
+
 退出码:
   0 = 无 fail/error（可含 warn/skip）
   1 = 存在 fail/error（插件缺陷）
@@ -64,6 +80,7 @@ const USAGE = `dsh-plugin-doctor ${VERSION} —— dsh 插件完整性 + 运行�
 
 安全: 冒烟全程使用 %TEMP% 自建沙箱（前缀 doctor-，与宿主 %TEMP%\\dsh-* 保护模板不重叠），绝不触碰真实 ~/.dsh。
       运行结束只做「隔离不删除」（rename 到 ${QUARANTINE_PREFIX}*），需人工确认后用 --purge 清理。
+      注意: 任何带 --profile 的 dsh 探测都会初始化该 profile，因此必须显式传 DSH_HOME。
 
 防静默通过: --only 里的分组名只要有一个不匹配，本工具立即以退出码 2 失败。
             被请求的分组若整组未真跑（全 skip），以退出码 6 失败——除非显式 --allow-degraded。`
@@ -73,22 +90,26 @@ const GROUP_ALIASES = {
   K: '静态·cordis 契约扫描',
   D: '动态·沙箱冒烟',
   CC: '生态·集合站清单',
+  X: '动态面·宿主契约',
 }
 
-const FLAGS_WITH_VALUE = new Set(['--repo', '-r', '--workspace', '-w', '--dsh', '--json', '--only', '--purge', '--format'])
+const FLAGS_WITH_VALUE = new Set(['--repo', '-r', '--workspace', '-w', '--dsh', '--json', '--only', '--purge', '--format', '--host', '--dsh-install'])
 
 function parseArgs(argv) {
   const opts = {
-    repo: null, workspace: null, smoke: true, dshVersion: '0.1.2-rc.1', json: null,
+    repo: null, workspace: null, smoke: true, hostGroup: true, dshVersion: null, json: null,
     groups: null, help: false, version: false, allowDegraded: false, purge: null,
-    format: 'doctor',
+    format: 'doctor', hosts: [], dshInstall: null,
   }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     if (a === '--repo' || a === '-r') opts.repo = argv[++i]
     else if (a === '--workspace' || a === '-w') opts.workspace = argv[++i]
     else if (a === '--no-smoke') opts.smoke = false
+    else if (a === '--no-host') opts.hostGroup = false
     else if (a === '--dsh') opts.dshVersion = argv[++i]
+    else if (a === '--host') opts.hosts.push(String(argv[++i] ?? ''))
+    else if (a === '--dsh-install') opts.dshInstall = argv[++i]
     else if (a === '--json') opts.json = argv[++i]
     else if (a === '--only') opts.groups = String(argv[++i] ?? '').split(',').map((s) => s.trim())
     else if (a === '--purge') opts.purge = argv[++i]
@@ -141,6 +162,15 @@ function main() {
   const logDir = path.join(runRoot, 'logs')
   mkdirSync(logDir, { recursive: true })
   const workspaceRoot = opts.workspace ? path.resolve(opts.workspace) : path.resolve(import.meta.dirname, '..')
+  // 宿主版本必须**实测**，绝不回落硬编码常量（旧实现的 0.1.2-rc.1 已过期两代，
+  // 且 0.1.2-rc.1 早于 peer 执法起点 dsh-v0.1.7-rc.1，对走廊毫无鉴别力）。
+  const dshInstall = locateDshInstall(opts.dshInstall ?? null)
+  let dshInstallVersion = null
+  if (dshInstall) {
+    try {
+      dshInstallVersion = JSON.parse(readFileSync(path.join(dshInstall, 'package.json'), 'utf8')).version ?? null
+    } catch { dshInstallVersion = null }
+  }
   const ctx = {
     repoPath,
     pkg,
@@ -148,13 +178,17 @@ function main() {
     logDir,
     workspaceRoot,
     sandboxRoots: [runRoot],
+    dshInstall,
+    dshInstallVersion,
+    hostVersions: opts.hosts.filter(Boolean),
   }
 
   const doctor = new Doctor()
   addPackageChecks(doctor, ctx)
   addCordisChecks(doctor, ctx)
+  if (opts.hostGroup) addRuntimeChecks(doctor, ctx)
   addCollectionChecks(doctor, ctx)
-  if (opts.smoke) addSmokeChecks(doctor, ctx, { dshVersion: opts.dshVersion })
+  if (opts.smoke) addSmokeChecks(doctor, ctx, { dshVersion: opts.dshVersion ?? dshInstallVersion })
 
   const knownGroups = [...new Set(doctor.checks.map((c) => c.group))]
   if (opts.groups) {
@@ -211,8 +245,15 @@ function finish(results, { opts, ctx, repoPath, pkg, runRoot, logDir, started })
       node: process.version,
       platform: process.platform,
       arch: process.arch,
-      hostDshVersion: opts.smoke ? opts.dshVersion : null,
+      // 必须区分三件事，旧实现把它们混成一个字段：
+      //   hostDshVersion        = 实际探测到的宿主版本（本机安装，判决器读的就是它）
+      //   smokeHostDshVersion   = D 组冒烟实际安装的宿主版本
+      //   hostDetection         = 探测来源；null 表示探不到（报告须显式说明，不得回落硬编码）
+      hostDshVersion: ctx.dshInstallVersion ?? null,
+      hostDetection: ctx.dshInstall ? 'installed-package' : null,
+      smokeHostDshVersion: opts.smoke ? (opts.dshVersion ?? ctx.dshInstallVersion ?? null) : null,
       smoke: opts.smoke,
+      hostGroup: opts.hostGroup,
     },
     startedAt: new Date(started).toISOString(),
     durationMs,
