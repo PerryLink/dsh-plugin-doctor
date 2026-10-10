@@ -35,6 +35,10 @@ Un comprobador todo-en-uno de «integridad + salud en tiempo de ejecución» par
 
 ![Demostración de terminal de dsh-plugin-doctor: dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.png)
 
+![Animated terminal demo of dsh-plugin-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.gif)
+
+*La misma ejecución, animada.*
+
 ## Comparison
 
 ![Gráfico comparativo medido de dsh-plugin-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-evidence.png)

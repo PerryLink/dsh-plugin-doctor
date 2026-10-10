@@ -33,6 +33,10 @@ dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22
 
 ![dsh-plugin-doctor 终端演示：dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.png)
 
+![Animated terminal demo of dsh-plugin-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.gif)
+
+*同一次运行，动图版。*
+
 ## Comparison
 
 ![dsh-plugin-doctor 的实测对比柱状图](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-evidence.png)
