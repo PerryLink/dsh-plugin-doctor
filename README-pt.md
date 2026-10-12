@@ -282,7 +282,7 @@ O pin permanece deliberadamente na 0.1.6: a 0.2.0 **não muda em nada** os crit�
 
 ## PerryLink DSH Plugin Family
 
-Este projeto é um dos **33 plugins ativamente mantidos** do DeepSeek Harness da [PerryLink](https://github.com/PerryLink): o registro tem **42**, dos quais **6** estão congelados e **3** aposentados; cada um mantém sua linha abaixo, com o motivo na coluna Status. Se este ajudou você, provavelmente os outros também ajudarão:
+Este projeto é um dos **34 plugins ativamente mantidos** do DeepSeek Harness da [PerryLink](https://github.com/PerryLink): o registro tem **42**, dos quais **5** estão congelados e **3** aposentados; cada um mantém sua linha abaixo, com o motivo na coluna Status. Se este ajudou você, provavelmente os outros também ajudarão:
 
 | Plugin | Em uma linha | Status |
 |---|---|---|
@@ -310,7 +310,7 @@ Este projeto é um dos **33 plugins ativamente mantidos** do DeepSeek Harness da
 | **[dsh-lsp-actions](https://github.com/PerryLink/dsh-lsp-actions)** | LSP diagnostics, formatting, completion, code actions, symbols and rename | |
 | **[dsh-mask](https://github.com/PerryLink/dsh-mask)** | PII masking at the model boundary with a host-side restore table | |
 | **[dsh-mcp-panel](https://github.com/PerryLink/dsh-mcp-panel)** | MCP management console: `/mcp` command, Settings tab and trial calls | |
-| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Approval-gated cross-session memory protocol (`ctx.memory` + SQLite) | 🧊 CONGELADO — ver o README do repositório |
+| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Approval-gated cross-session memory protocol (`ctx.memory` + SQLite) | |
 | **[dsh-observe](https://github.com/PerryLink/dsh-observe)** | OpenTelemetry and Langfuse telemetry export from the session event stream | |
 | **[dsh-output-styles](https://github.com/PerryLink/dsh-output-styles)** | Runtime-switchable model output styles | |
 | **[dsh-permission-rules](https://github.com/PerryLink/dsh-permission-rules)** | Declarative allow/deny/ask rules plus a process-level network policy | |

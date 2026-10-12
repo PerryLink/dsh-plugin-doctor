@@ -282,7 +282,7 @@ La fijación se queda deliberadamente en 0.1.6: 0.2.0 **no cambia en absoluto** 
 
 ## PerryLink DSH Plugin Family
 
-Este proyecto es uno de los **33 plugins activamente mantenidos** de DeepSeek Harness de [PerryLink](https://github.com/PerryLink): el registro tiene **42**, de los cuales **6** están congelados y **3** retirados; cada uno conserva su fila abajo, con el motivo en la columna Estado. Si este te ayuda, probablemente los demás también:
+Este proyecto es uno de los **34 plugins activamente mantenidos** de DeepSeek Harness de [PerryLink](https://github.com/PerryLink): el registro tiene **42**, de los cuales **5** están congelados y **3** retirados; cada uno conserva su fila abajo, con el motivo en la columna Estado. Si este te ayuda, probablemente los demás también:
 
 | Plugin | En una línea | Estado |
 |---|---|---|
@@ -310,7 +310,7 @@ Este proyecto es uno de los **33 plugins activamente mantenidos** de DeepSeek Ha
 | **[dsh-lsp-actions](https://github.com/PerryLink/dsh-lsp-actions)** | LSP diagnostics, formatting, completion, code actions, symbols and rename | |
 | **[dsh-mask](https://github.com/PerryLink/dsh-mask)** | PII masking at the model boundary with a host-side restore table | |
 | **[dsh-mcp-panel](https://github.com/PerryLink/dsh-mcp-panel)** | MCP management console: `/mcp` command, Settings tab and trial calls | |
-| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Approval-gated cross-session memory protocol (`ctx.memory` + SQLite) | 🧊 CONGELADO — ver el README del repositorio |
+| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Approval-gated cross-session memory protocol (`ctx.memory` + SQLite) | |
 | **[dsh-observe](https://github.com/PerryLink/dsh-observe)** | OpenTelemetry and Langfuse telemetry export from the session event stream | |
 | **[dsh-output-styles](https://github.com/PerryLink/dsh-output-styles)** | Runtime-switchable model output styles | |
 | **[dsh-permission-rules](https://github.com/PerryLink/dsh-permission-rules)** | Declarative allow/deny/ask rules plus a process-level network policy | |

@@ -282,7 +282,7 @@ pin 停在 0.1.6 是有意的：0.2.0 对 R/K 两组的判据与输出形态**�
 
 ## PerryLink DSH Plugin Family
 
-本项目是 [PerryLink](https://github.com/PerryLink) 维护的 DeepSeek Harness 插件家族成员：**33 个活跃维护**，名册共 **42** 个，其中 **6 个已冻结**、**3 个已退役**——每一个都在下表保留自己的行，原因见「状态」列。如果它能帮到你，其他的也会：
+本项目是 [PerryLink](https://github.com/PerryLink) 维护的 DeepSeek Harness 插件家族成员：**34 个活跃维护**，名册共 **42** 个，其中 **5 个已冻结**、**3 个已退役**——每一个都在下表保留自己的行，原因见「状态」列。如果它能帮到你，其他的也会：
 
 | Plugin | 一句话 | 状态 |
 |---|---|---|
@@ -310,7 +310,7 @@ pin 停在 0.1.6 是有意的：0.2.0 对 R/K 两组的判据与输出形态**�
 | **[dsh-lsp-actions](https://github.com/PerryLink/dsh-lsp-actions)** | LSP diagnostics, formatting, completion, code actions, symbols and rename | |
 | **[dsh-mask](https://github.com/PerryLink/dsh-mask)** | PII masking at the model boundary with a host-side restore table | |
 | **[dsh-mcp-panel](https://github.com/PerryLink/dsh-mcp-panel)** | MCP management console: `/mcp` command, Settings tab and trial calls | |
-| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Approval-gated cross-session memory protocol (`ctx.memory` + SQLite) | 🧊 已冻结 — 见仓库 README |
+| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Approval-gated cross-session memory protocol (`ctx.memory` + SQLite) | |
 | **[dsh-observe](https://github.com/PerryLink/dsh-observe)** | OpenTelemetry and Langfuse telemetry export from the session event stream | |
 | **[dsh-output-styles](https://github.com/PerryLink/dsh-output-styles)** | Runtime-switchable model output styles | |
 | **[dsh-permission-rules](https://github.com/PerryLink/dsh-permission-rules)** | Declarative allow/deny/ask rules plus a process-level network policy | |

@@ -282,7 +282,7 @@ pin जानबूझकर 0.1.6 पर टिका है: 0.2.0 R/K मा�
 
 ## PerryLink DSH Plugin Family
 
-यह प्रोजेक्ट [PerryLink](https://github.com/PerryLink) के DeepSeek Harness प्लगइन परिवार का हिस्सा है — **33 सक्रिय रूप से अनुरक्षित**, कुल सूची **42** है जिसमें **6 फ़्रोज़न** और **3 सेवानिवृत्त** हैं; हर एक की पंक्ति नीचे बनी रहती है, कारण “स्थिति” कॉलम में है। अगर यह उपयोगी लगे, तो अन्य भी मददगार होंगे:
+यह प्रोजेक्ट [PerryLink](https://github.com/PerryLink) के DeepSeek Harness प्लगइन परिवार का हिस्सा है — **34 सक्रिय रूप से अनुरक्षित**, कुल सूची **42** है जिसमें **5 फ़्रोज़न** और **3 सेवानिवृत्त** हैं; हर एक की पंक्ति नीचे बनी रहती है, कारण “स्थिति” कॉलम में है। अगर यह उपयोगी लगे, तो अन्य भी मददगार होंगे:
 
 | Plugin | एक पंक्ति में | स्थिति |
 |---|---|---|
@@ -310,7 +310,7 @@ pin जानबूझकर 0.1.6 पर टिका है: 0.2.0 R/K मा�
 | **[dsh-lsp-actions](https://github.com/PerryLink/dsh-lsp-actions)** | LSP diagnostics, formatting, completion, code actions, symbols and rename | |
 | **[dsh-mask](https://github.com/PerryLink/dsh-mask)** | PII masking at the model boundary with a host-side restore table | |
 | **[dsh-mcp-panel](https://github.com/PerryLink/dsh-mcp-panel)** | MCP management console: `/mcp` command, Settings tab and trial calls | |
-| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Approval-gated cross-session memory protocol (`ctx.memory` + SQLite) | 🧊 फ़्रोज़न — रिपॉज़िटरी README देखें |
+| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Approval-gated cross-session memory protocol (`ctx.memory` + SQLite) | |
 | **[dsh-observe](https://github.com/PerryLink/dsh-observe)** | OpenTelemetry and Langfuse telemetry export from the session event stream | |
 | **[dsh-output-styles](https://github.com/PerryLink/dsh-output-styles)** | Runtime-switchable model output styles | |
 | **[dsh-permission-rules](https://github.com/PerryLink/dsh-permission-rules)** | Declarative allow/deny/ask rules plus a process-level network policy | |
