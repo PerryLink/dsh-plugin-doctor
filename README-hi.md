@@ -2,6 +2,8 @@
 
 > Release stamp: `0.4.6` (2026-10-04).
 
+> **पैकेज नाम।** यह प्रोजेक्ट npm पर **`@perrylink/dsh-plugin-doctor`** के रूप में प्रकाशित होता है। सादा नाम `dsh-plugin-doctor` किसी असंबंधित प्रोजेक्ट का है — कभी `npx dsh-plugin-doctor` न चलाएँ; उसे इंस्टॉल करने से यह प्लगइन इंस्टॉल नहीं होता।
+
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://img.shields.io/npm/v/%40perrylink%2Fdsh-plugin-doctor)](https://www.npmjs.com/package/@perrylink/dsh-plugin-doctor)
 [![npm downloads](https://img.shields.io/npm/dm/%40perrylink%2Fdsh-plugin-doctor)](https://www.npmjs.com/package/@perrylink/dsh-plugin-doctor)
@@ -28,7 +30,7 @@ docs और सोर्स, cordiverse/cordis के सोर्स अनु�
 
 dsh plugins के लिए "integrity + runtime health" का ऑल-इन-वन चेकर। शून्य निर्भरताएँ (यह सिर्फ़ वही इस्तेमाल करता है जो Node ≥22 के साथ आता है), और एक ही रन में चारों परतें एक साथ:
 
-![dsh-plugin-doctor का टर्मिनल डेमो: dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.png)
+![dsh-plugin-doctor का टर्मिनल डेमो: dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-hero.png)
 
 ![Animated terminal demo of dsh-plugin-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.gif)
 
@@ -116,6 +118,31 @@ node doctor.mjs --repo <path> --json -          # JSON stdout पर (मान�
 node doctor.mjs --repo <path> --workspace <workspace-root>   # sibling repos रखने वाला workspace (CC समूह इसका उपयोग करता है)
 node doctor.mjs --repo <path> --allow-degraded  # स्पष्ट रूप से स्वीकारें कि "पूरा समूह वाकई नहीं चला" (डिफ़ॉल्ट exit 6)
 node doctor.mjs --purge <quarantine-dir>        # इस टूल द्वारा बनाए quarantine dirs साफ़ करें (केवल doctor-quarantine-*)
+### होस्ट आधा: `plugin_doctor` / `/doctor` (0.7.1 में नया)
+
+bundle के रूप में इंस्टॉल होने पर यह प्लगइन वही R/K/X जाँचें read-only टूल और
+कमांड के रूप में देता है। CLI से दो बातें अलग हैं, और दोनों उत्तर में लिखी जाती हैं
+क्योंकि **होस्ट आधे के पास exit code नहीं होता** — लौटाई गई रिपोर्ट ही पूरा संदेश है।
+
+| पैरामीटर | डिफ़ॉल्ट | अर्थ |
+|---|---|---|
+| `repo` (अनिवार्य) | — | जाँचे जाने वाले प्लगइन रिपॉज़िटरी का path (`package.json` आवश्यक) |
+| `smoke` | `false` | D समूह का sandbox smoke भी चलाएँ (नेटवर्क + pnpm चाहिए) |
+| `host` | `true` | X समूह (होस्ट अनुबंध) चलाएँ; dsh इंस्टॉल न पढ़ी जा सके तो डिग्रेड |
+| `workspace` | स्वतः | सहोदर `dsh-*` रिपॉज़ वाला family workspace, CC1–CC5 और K14 के लिए |
+
+- **डिग्रेडेड रन यह बताते हैं।** जब अनुरोधित समूह वाकई नहीं चला, उत्तर में CLI
+  जैसी ही `[降级] …` पंक्ति आती है जो समूहों के नाम बताती है। 0.7.1 से पहले
+  renderer यह तथ्य गिरा देता था, इसलिए डिग्रेडेड उत्तर "कुछ करने को नहीं था" वाले
+  रन से अलग पहचाना नहीं जाता था।
+- **`workspace` रिपॉज़िटरी से तय होता है, इंस्टॉल की जगह से नहीं।** टूल जाँची जा
+  रही रिपॉज़िटरी से ऊपर जाकर निकटतम ऐसी निर्देशिका ढूँढता है जिसमें दो या अधिक
+  DSH प्लगइन रिपॉज़ हों (`DSH_WORKSPACE` और स्पष्ट पैरामीटर को प्राथमिकता)।
+  0.7.0 की तरह `import.meta.dirname/..` से तय करने पर bundle इंस्टॉल में वह
+  `<profile>/node_modules` (या `…/@perrylink`) बनता है, जो workspace ही नहीं है:
+  तब CC1–CC4 उन रजिस्ट्रियों को "स्थानीय रूप से अनुपस्थित" बताते हैं जो मौजूद हैं,
+  और K14 को कभी सहोदर नहीं मिलता। workspace न मिलने पर उत्तर यह स्पष्ट कहता है,
+  ताकि वे skips "रजिस्ट्री मौजूद नहीं" जैसे न पढ़े जाएँ।
 ```
 
 ### लक्ष्य आकृतियाँ और कवरेज (0.2.0 में नया)

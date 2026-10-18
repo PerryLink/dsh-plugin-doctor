@@ -2,6 +2,8 @@
 
 > Release stamp: `0.4.6` (2026-10-04).
 
+> **包名说明。** 本项目的 npm 发布名是 **`@perrylink/dsh-plugin-doctor`**。裸名 `dsh-plugin-doctor` 属于另一个无关项目——**永远不要用 `npx dsh-plugin-doctor`**，装它不会装到本插件。
+
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://img.shields.io/npm/v/%40perrylink%2Fdsh-plugin-doctor)](https://www.npmjs.com/package/@perrylink/dsh-plugin-doctor)
 [![npm downloads](https://img.shields.io/npm/dm/%40perrylink%2Fdsh-plugin-doctor)](https://www.npmjs.com/package/@perrylink/dsh-plugin-doctor)
@@ -31,7 +33,7 @@ dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22
 
 dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22 自带能力），一次运行同时覆盖
 
-![dsh-plugin-doctor 终端演示：dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.png)
+![dsh-plugin-doctor 终端演示：dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-hero.png)
 
 ![Animated terminal demo of dsh-plugin-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.gif)
 
@@ -89,6 +91,27 @@ node doctor.mjs --repo <路径> --json -         # JSON 写 stdout（此时抑�
 node doctor.mjs --repo <路径> --workspace <工作区根>   # 指定兄弟仓所在工作区（CC 组核对用）
 node doctor.mjs --repo <路径> --allow-degraded # 显式接受「整组未真跑」（默认 exit 6）
 node doctor.mjs --purge <隔离目录>              # 清理本工具产生的隔离目录（仅 doctor-quarantine-*）
+### 宿主半区：`plugin_doctor` / `/doctor`（0.7.1 新增说明）
+
+作为 bundle 装进 profile 后，同一套 R/K/X 检查以只读工具与命令的形式提供。
+与 CLI 有两处不同，**两处都必须写在回复里** —— 宿主半区没有退出码，返回的报告就是全部信息：
+
+| 参数 | 默认 | 含义 |
+|---|---|---|
+| `repo`（必填） | — | 被检插件仓路径（需含 `package.json`） |
+| `smoke` | `false` | 额外跑 D 组沙箱冒烟（需网络 + pnpm） |
+| `host` | `true` | 跑 X 组宿主契约检查；读不到 dsh 安装时该组降级 |
+| `workspace` | 自动 | 含兄弟 `dsh-*` 仓的家族工作区，用于 CC1–CC5 与 K14 |
+
+- **降级会说出来。** 被请求的分组整组未真跑时，回复带上与 CLI 同一行
+  `[降级] …不可当作通过` 并点名分组。0.7.1 之前渲染层丢掉了这个事实，
+  降级回复与「本来就没有要跑的项」无法区分。
+- **`workspace` 从被检仓推导，而不是从本插件的安装位置推导。** 工具从被检仓
+  向上找最近的、含两个及以上 DSH 插件仓的目录（`DSH_WORKSPACE` 与显式参数
+  优先）。0.7.0 用的 `import.meta.dirname/..` 在 bundle 安装形态下等于
+  `<profile>/node_modules`（或 `…/@perrylink`），根本不是工作区：CC1–CC4 会对
+  真实存在的注册表报「本地不存在」，K14 永远找不到兄弟仓。定位不到时回复会
+  明说这一点，而不是让那些 skip 读起来像「注册表不存在」。
 ```
 
 ### 目标形态与覆盖率（0.2.0 新增）

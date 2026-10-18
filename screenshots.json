@@ -1,6 +1,14 @@
-{
-  "screenshots": [
-    "docs/assets/dsh-plugin-doctor-demo.png",
-    "docs/assets/dsh-plugin-doctor-evidence.png"
-  ]
-}
+[
+  {
+    "path": "docs/assets/dsh-plugin-doctor-hero.png",
+    "kind": "hero",
+    "alt": "dsh-plugin-doctor terminal output",
+    "caption": "Real dsh-plugin-doctor test run; test suite green."
+  },
+  {
+    "path": "docs/assets/dsh-plugin-doctor-demo.gif",
+    "kind": "demo",
+    "alt": "Animated dsh-plugin-doctor terminal session",
+    "caption": "The same run, assembled line by line."
+  }
+]

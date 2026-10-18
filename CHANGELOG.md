@@ -1,5 +1,64 @@
 # Changelog
 
+## [0.7.3] - 2026-10-18
+
+### Changed
+
+- Add a 1280×720 hero and a 960×540, 4-second terminal GIF rendered from the test run; `screenshots.json` is an object array and `capture.json` records the command.
+
+## [0.7.2] - 2026-10-17
+
+### Fixed
+
+- **Cold start registration (issue #12).** `apply()` read `ctx.get('tools')` and `ctx.get('commands')` without declaring `inject`, so a cold profile could activate the plugin before those services and silently skip both registrations. `inject = ['tools', 'commands']` now makes the loader wait.
+- **Manifest:** declare `engines.dsh` `>=0.2.1-0 <0.3.0` (the package previously had no DSH version gate).
+
+## [0.7.1] - 2026-10-13
+
+### Fixed
+
+- **The host half swallowed the degraded verdict.** `lib/framework.mjs`'s
+  `render()` — the one renderer both halves use — never read its `degraded`
+  argument, so the host half (the `plugin_doctor` tool and the `/doctor`
+  command) returned a report in which a degraded run was indistinguishable from
+  a run with nothing to do: X-group checks all skip → four `[SKIP]` lines and
+  `总判定: SKIP`. `verdict.ok` does not turn false on degradation either (it only
+  looks at `fail`/`error`), so nothing else carried the fact. The CLI looked
+  correct only because `doctor.mjs` printed its own `[降级]` line — a path the
+  host half never had. SPEC §3.2 requires a degraded run to report the degraded
+  groups; the host half now does, through the shared renderer
+  (`render(results, { degraded })` / the new exported `renderDegraded`). No
+  output changes when nothing is degraded.
+
+- **`workspaceRoot` was derived from the install location, which is not a
+  workspace once the package is installed as a bundle.** The host half hard-coded
+  `path.resolve(import.meta.dirname, '..')`. `dsh-kit/plugins.txt` installs this
+  package from npm as `@perrylink/dsh-plugin-doctor`, so that expression resolves
+  to `<profile>/node_modules/@perrylink` (npm's flat layout) or
+  `<profile>/node_modules` (pnpm's real path under `.pnpm/`) — never the family
+  workspace. The consequences were wrong answers, not missing ones: CC1–CC4
+  reported "not present locally" for registries that exist on the machine
+  (`dsh-plugin-certification`, `adp-list`, `dsh-catalog`), K14 could never find a
+  sibling repo, and X2's sibling-provide allowlist was empty, so legitimate
+  cross-repo `inject`s were reported as unknown seams. `lib/workspace.mjs` now
+  resolves the workspace from the repository under check (walking up to the
+  nearest directory holding two or more DSH plugin repos), with `DSH_WORKSPACE`
+  and a new `workspace` tool parameter taking precedence, and validates every
+  candidate before using it. When none can be located, the reply says so instead
+  of letting those skips read as absent registries. The temporary directory is
+  never accepted as a workspace: on this machine `%TEMP%` holds 20+ real
+  `dsh-*` scratch repos with `package.json`, which made "some ancestor with two
+  plugin repos" match `%TEMP%` for any repository.
+
+### Changed
+
+- `tests/degrade-visibility.mjs` (new, wired into `pnpm test`) pins both facts
+  without network, sandbox or installs: the degraded line appears in rendered
+  output exactly when a group is degraded, and workspace resolution refuses
+  install-relative `node_modules` candidates.
+- `pnpm test` now also syntax-checks `plugin.mjs` and `lib/workspace.mjs` — the
+  file users actually load as a bundle was previously not checked.
+
 ## [0.7.0] - 2026-10-10
 
 ### Added

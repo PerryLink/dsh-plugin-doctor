@@ -2,6 +2,8 @@
 
 > Release stamp: `0.4.6` (2026-10-04).
 
+> **Nombre del paquete.** Este proyecto se publica en npm como **`@perrylink/dsh-plugin-doctor`**. El nombre simple `dsh-plugin-doctor` pertenece a otro proyecto no relacionado: no ejecutes `npx dsh-plugin-doctor`; instalarlo no instala este plugin.
+
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://img.shields.io/npm/v/%40perrylink%2Fdsh-plugin-doctor)](https://www.npmjs.com/package/@perrylink/dsh-plugin-doctor)
 [![npm downloads](https://img.shields.io/npm/dm/%40perrylink%2Fdsh-plugin-doctor)](https://www.npmjs.com/package/@perrylink/dsh-plugin-doctor)
@@ -33,7 +35,7 @@ Este plugin forma parte de la [familia de plugins DSH](https://github.com/PerryL
 
 Un comprobador todo-en-uno de «integridad + salud en tiempo de ejecución» para plugins de dsh. Cero dependencias (usa solo lo que trae Node ≥22), y una sola ejecución cubre cuatro capas a la vez:
 
-![Demostración de terminal de dsh-plugin-doctor: dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.png)
+![Demostración de terminal de dsh-plugin-doctor: dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-hero.png)
 
 ![Animated terminal demo of dsh-plugin-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.gif)
 
@@ -91,6 +93,34 @@ node doctor.mjs --repo <path> --json -          # JSON to stdout (suppresses the
 node doctor.mjs --repo <path> --workspace <workspace-root>   # workspace holding the sibling repos (used by the CC group)
 node doctor.mjs --repo <path> --allow-degraded  # explicitly accept "the whole group never really ran" (default exit 6)
 node doctor.mjs --purge <quarantine-dir>        # clean up quarantine dirs this tool created (doctor-quarantine-* only)
+### Mitad anfitriona: `plugin_doctor` / `/doctor` (nuevo en 0.7.1)
+
+Instalado como bundle, el plugin registra las mismas comprobaciones R/K/X como
+herramienta de solo lectura y como comando. Dos cosas difieren de la CLI, y
+ambas se declaran en la respuesta porque **la mitad anfitriona no tiene código de
+salida**: el informe devuelto es todo el mensaje.
+
+| Parámetro | Por defecto | Significado |
+|---|---|---|
+| `repo` (obligatorio) | — | ruta del repositorio del plugin (necesita `package.json`) |
+| `smoke` | `false` | ejecutar además el smoke de sandbox del grupo D (requiere red + pnpm) |
+| `host` | `true` | ejecutar el grupo X (contrato del anfitrión); degrada si no se puede leer una instalación de dsh |
+| `workspace` | automático | workspace familiar con los repos `dsh-*` hermanos, para CC1–CC5 y K14 |
+
+- **Las ejecuciones degradadas lo dicen.** Cuando un grupo solicitado no llegó a
+  ejecutarse de verdad, la respuesta lleva la misma línea `[降级] …` que imprime
+  la CLI, nombrando los grupos. Antes de 0.7.1 el renderizador descartaba ese
+  hecho, así que una respuesta degradada era indistinguible de una ejecución sin
+  nada que hacer.
+- **`workspace` se resuelve desde el repositorio, no desde la instalación.** La
+  herramienta sube desde el repositorio inspeccionado hasta el directorio más
+  cercano con dos o más repos de plugins DSH (`DSH_WORKSPACE` y el parámetro
+  explícito tienen prioridad). Resolverlo como `import.meta.dirname/..` —como
+  hacía 0.7.0— da `<profile>/node_modules` (o `…/@perrylink`) cuando el paquete
+  está instalado como bundle, que no es un workspace: CC1–CC4 informan entonces
+  de registros "ausentes en local" que sí existen, y K14 nunca encuentra un
+  hermano. Cuando no se localiza ningún workspace, la respuesta lo dice, en vez
+  de dejar que esos skips se lean como registros inexistentes.
 ```
 
 ### Formas objetivo y cobertura (nuevo en 0.2.0)
