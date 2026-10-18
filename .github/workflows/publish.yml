@@ -46,7 +46,7 @@ jobs:
             echo "not a tag ref (${GITHUB_REF_TYPE}); releasing ${tag} from package.json"
             exit 0
           fi
-          if [ "${GITHUB_REF_NAME}" != "${tag}" ]; then
+          if [ "${GITHUB_EVENT_NAME}" != "workflow_dispatch" ] && [ "${GITHUB_REF_NAME}" != "${tag}" ]; then
             echo "tag ${GITHUB_REF_NAME} does not match package version ${tag}"
             exit 1
           fi
