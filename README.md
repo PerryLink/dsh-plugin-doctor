@@ -14,6 +14,11 @@
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add @perrylink/dsh-plugin-doctor
+```
+
+
 An all-in-one "integrity + runtime health" checker for dsh plugins. Zero dependencies (it uses
 only what Node ≥22 ships), and one run covers four layers at once:
 **static package-structure checks (R) → Cordis contract scan (K) → dynamic sandbox smoke (D) → ecosystem directory-listing validation (CC)**.
@@ -24,6 +29,33 @@ channel in the workspace (full text in `SURVEY.md`).
 **📖 Ecosystem knowledge base** — measured data, not marketing: [plugin development guide · plugin-selection data · maintenance criteria](https://perrylink.github.io/dsh-plugin-guide/).
 
 <!-- star-cta -->
+## Installation (DSH bundle)
+
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
+```
+
+`dsh-plugin-doctor` declares `dsh.bundle.patch` → `cordis.patch.yml` in package.json, so it can also be installed as a DeepSeek Harness bundle:
+
+```powershell
+# git channel (latest main)
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
+
+# npm channel (released version; always use the scoped full name -- the bare name dsh-plugin-doctor is a different project)
+dsh plugin --profile web add @perrylink/dsh-plugin-doctor
+```
+
+The inserted line loads this package under the standard Cordis plugin contract: the host half is a plain ESM module exporting `apply(ctx)` (declaring `inject` for the services it needs). The package ships no browser UI, so there is no `dsh.client` declaration.
+
+```js
+// bundle entry (host half) -- the export contract the patch line loads
+export function apply(ctx) {
+  // registers the /doctor command and the plugin_doctor read-only check tool
+}
+```
+
+Uninstall: `dsh plugin --profile web remove @perrylink/dsh-plugin-doctor` (or delete that line from the profile patch). The CLI usage below is unaffected.
+
 ## ⭐ 如果它帮到了你
 
 这个插件是 [DSH 插件家族](https://github.com/PerryLink)的一员（40+ 个，全部 Apache-2.0）。如果你在用，**给个 star** —— 它不会解锁任何功能，但会让下一个人在搜索里更容易找到它。
@@ -53,33 +85,6 @@ An all-in-one "integrity + runtime health" checker for dsh plugins. Zero depende
 |---|---|
 | Harness | DeepSeek Harness `dsh-v0.2.1-alpha.1` (zero-dependency and host-agnostic by design: `package.json` declares no `@deepseek-ai/dsh-*` dependency and no peer range at all, so this repository's `R5`/`R8` skip deliberately instead of passing — see `SELF-CHECK.md`; the line is recorded in `CHANGELOG.md` §0.4.6, "host pins move to `0.2.1-alpha.1`", and the D-group sandbox smoke takes its host from `--dsh`, default the peer floor `0.1.2-rc.1`) |
 | Node | `^22.19.0 \|\| >=24.0.0` |
-
-## Installation (DSH bundle)
-
-```sh
-dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
-```
-
-`dsh-plugin-doctor` declares `dsh.bundle.patch` → `cordis.patch.yml` in package.json, so it can also be installed as a DeepSeek Harness bundle:
-
-```powershell
-# git channel (latest main)
-dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
-
-# npm channel (released version; always use the scoped full name -- the bare name dsh-plugin-doctor is a different project)
-dsh plugin --profile web add @perrylink/dsh-plugin-doctor
-```
-
-The inserted line loads this package under the standard Cordis plugin contract: the host half is a plain ESM module exporting `apply(ctx)` (declaring `inject` for the services it needs). The package ships no browser UI, so there is no `dsh.client` declaration.
-
-```js
-// bundle entry (host half) -- the export contract the patch line loads
-export function apply(ctx) {
-  // registers the /doctor command and the plugin_doctor read-only check tool
-}
-```
-
-Uninstall: `dsh plugin --profile web remove @perrylink/dsh-plugin-doctor` (or delete that line from the profile patch). The CLI usage below is unaffected.
 
 ## Usage
 
@@ -445,4 +450,4 @@ This project is one of the **34 actively maintained** DeepSeek Harness plugins f
 | **[dsh-test-drive](https://github.com/PerryLink/dsh-test-drive)** | Isolated install-and-smoke test drives for DeepSeek Harness plugins. | |
 | **[dsh-ticktick](https://github.com/PerryLink/dsh-ticktick)** | TickTick/Dida365 task bridge: session-header panel + 11 tools | |
 | **[dsh-translate](https://github.com/PerryLink/dsh-translate)** | Vendor parameter translation and deterministic JSON repair for DeepSeek Harness. | |
-
+

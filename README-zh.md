@@ -14,6 +14,11 @@
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add @perrylink/dsh-plugin-doctor
+```
+
+
 dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22 自带能力），一次运行同时覆盖
 **包结构静态检查（R）→ cordis 契约扫描（K）→ 动态沙箱冒烟（D）→ 生态集合站清单校验（CC）** 四层。
 判据全部来自 2026-09-07 三路一手调研：deepseek-harness 文档/源码、cordiverse/cordis 源码契约、
@@ -23,6 +28,33 @@ dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22
 **📖 生态实测知识库**（实测数据，不是营销）：[插件开发指南 · 选型实测数据 · 维护取舍判据](https://perrylink.github.io/dsh-plugin-guide/)。
 
 <!-- star-cta -->
+## 安装（DSH bundle）
+
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
+```
+
+`dsh-plugin-doctor` 在 package.json 中声明 `dsh.bundle.patch` → `cordis.patch.yml`，因此也可以作为 DeepSeek Harness bundle 安装：
+
+```powershell
+# git 渠道（最新 main）
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
+
+# npm 渠道（正式发布版；务必使用 scoped 全名——裸名 dsh-plugin-doctor 是另一个项目）
+dsh plugin --profile web add @perrylink/dsh-plugin-doctor
+```
+
+插入的行按标准 Cordis 插件契约加载本包：宿主半区是一个导出 `apply(ctx)` 的纯 ESM 模块（需要服务时声明 `inject`）。本包不带浏览器 UI，因此没有 `dsh.client` 声明。
+
+```js
+// bundle 入口（宿主半区）——patch 行加载的导出契约
+export function apply(ctx) {
+  // 注册 /doctor 命令与 plugin_doctor 只读检查工具
+}
+```
+
+卸载：`dsh plugin --profile web remove @perrylink/dsh-plugin-doctor`（或从 profile patch 中删除该行）。上面的 CLI 用法不受影响。
+
 ## ⭐ 如果它帮到了你
 
 这个插件是 [DSH 插件家族](https://github.com/PerryLink)的一员（40+ 个，全部 Apache-2.0）。如果你在用，**给个 star** —— 它不会解锁任何功能，但会让下一个人在搜索里更容易找到它。
@@ -51,33 +83,6 @@ dsh 插件「完整性 + 运行流畅」一体检测器。零依赖（Node ≥22
 |---|---|
 | Harness | DeepSeek Harness `dsh-v0.2.1-alpha.1`（零依赖、且刻意与宿主版本解耦：`package.json` 未声明任何 `@deepseek-ai/dsh-*` 依赖、也没有 peer 区间，因此本仓的 `R5`/`R8` 是刻意 skip 而非 pass —— 见 `SELF-CHECK.md`；该线的记录在 `CHANGELOG.md` §0.4.6 —「host pins move to `0.2.1-alpha.1`」；D 组沙箱冒烟的宿主由 `--dsh` 指定，默认 peer 下限 `0.1.2-rc.1`） |
 | Node | `^22.19.0 \|\| >=24.0.0` |
-
-## 安装（DSH bundle）
-
-```sh
-dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
-```
-
-`dsh-plugin-doctor` 在 package.json 中声明 `dsh.bundle.patch` → `cordis.patch.yml`，因此也可以作为 DeepSeek Harness bundle 安装：
-
-```powershell
-# git 渠道（最新 main）
-dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
-
-# npm 渠道（正式发布版；务必使用 scoped 全名——裸名 dsh-plugin-doctor 是另一个项目）
-dsh plugin --profile web add @perrylink/dsh-plugin-doctor
-```
-
-插入的行按标准 Cordis 插件契约加载本包：宿主半区是一个导出 `apply(ctx)` 的纯 ESM 模块（需要服务时声明 `inject`）。本包不带浏览器 UI，因此没有 `dsh.client` 声明。
-
-```js
-// bundle 入口（宿主半区）——patch 行加载的导出契约
-export function apply(ctx) {
-  // 注册 /doctor 命令与 plugin_doctor 只读检查工具
-}
-```
-
-卸载：`dsh plugin --profile web remove @perrylink/dsh-plugin-doctor`（或从 profile patch 中删除该行）。上面的 CLI 用法不受影响。
 
 ## 用法
 
@@ -354,4 +359,4 @@ pin 停在 0.1.6 是有意的：0.2.0 对 R/K 两组的判据与输出形态**�
 | **[dsh-laya](https://github.com/PerryLink/dsh-laya)** | Laya typed decisions (`noul`/`choice`/`score`) as a first-class Cordis service and model-visible tools | |
 | **[dsh-plugin-upgrade](https://github.com/PerryLink/dsh-plugin-upgrade)** | One-package, one-corridor-index plugin upgrade skill: routes a repository to the matching closed corridor card | |
 | **[dsh-plugin-upgrade-015](https://github.com/PerryLink/dsh-plugin-upgrade-015)** | Merged `0.1.3-alpha.1` → `0.1.5-rc.1` upgrade corridor card plus a zero-dependency seam scanner | 🚫 已退役 —— 走廊由 `dsh-plugin-upgrade` 承担 |
-
+

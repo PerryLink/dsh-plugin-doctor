@@ -14,6 +14,11 @@
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add @perrylink/dsh-plugin-doctor
+```
+
+
 dsh plugins के लिए "integrity + runtime health" का ऑल-इन-वन चेकर। शून्य निर्भरताएँ (यह
 सिर्फ़ वही इस्तेमाल करता है जो Node ≥22 के साथ आता है), और एक ही रन में चारों परतें एक साथ:
 **static package-structure checks (R) → Cordis contract scan (K) → dynamic sandbox smoke (D) → ecosystem directory-listing validation (CC)**।
@@ -25,6 +30,29 @@ docs और सोर्स, cordiverse/cordis के सोर्स अनु�
 **📖 इकोसिस्टम नॉलेज बेस** — मापे गए आँकड़े, मार्केटिंग नहीं: [डेवलपमेंट गाइड · चयन डेटा · रखरखाव मानदंड](https://perrylink.github.io/dsh-plugin-guide/)।
 
 <!-- star-cta -->
+
+## इंस्टॉलेशन (DSH bundle)
+
+`dsh-plugin-doctor` package.json में `dsh.bundle.patch` → `cordis.patch.yml` घोषित करता है, इसलिए इसे DeepSeek Harness bundle के रूप में भी इंस्टॉल किया जा सकता है:
+
+```powershell
+# git चैनल (नवीनतम main)
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
+
+# npm चैनल (रिलीज़ किया गया संस्करण; हमेशा scoped पूरा नाम इस्तेमाल करें -- बिना scope वाला नाम dsh-plugin-doctor एक अलग प्रोजेक्ट है)
+dsh plugin --profile web add @perrylink/dsh-plugin-doctor
+```
+
+जोड़ी गई लाइन इस पैकेज को मानक Cordis plugin अनुबंध के तहत लोड करती है: host half एक सादा ESM मॉड्यूल है जो `apply(ctx)` export करता है (अपनी ज़रूरत की सेवाओं के लिए `inject` घोषित करता हुआ)। पैकेज कोई browser UI नहीं भेजता, इसलिए `dsh.client` घोषणा नहीं है।
+
+```js
+// bundle entry (host half) -- patch लाइन जिस export अनुबंध को लोड करती है
+export function apply(ctx) {
+  // /doctor कमांड और plugin_doctor read-only जाँच टूल रजिस्टर करता है
+}
+```
+
+अनइंस्टॉल: `dsh plugin --profile web remove @perrylink/dsh-plugin-doctor` (या profile patch से वह लाइन हटा दें)। नीचे दिया CLI उपयोग इससे अप्रभावित रहता है।
 
 ## What is dsh-plugin-doctor?
 
@@ -82,29 +110,6 @@ dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
 |---|---|
 | Harness | DeepSeek Harness `dsh-v0.2.1-alpha.1` (शून्य-निर्भरता और जानबूझकर host-agnostic: `package.json` में कोई `@deepseek-ai/dsh-*` dependency और कोई peer range घोषित नहीं है, इसलिए इस रिपॉज़िटरी के `R5`/`R8` pass नहीं बल्कि जानबूझकर skip होते हैं — देखें `SELF-CHECK.md`; इस लाइन का रिकॉर्ड `CHANGELOG.md` §0.4.6 में है — "host pins move to `0.2.1-alpha.1`", और D समूह का sandbox smoke अपना host `--dsh` से लेता है, डिफ़ॉल्ट peer floor `0.1.2-rc.1`) |
 | Node | `^22.19.0 \|\| >=24.0.0` |
-
-## इंस्टॉलेशन (DSH bundle)
-
-`dsh-plugin-doctor` package.json में `dsh.bundle.patch` → `cordis.patch.yml` घोषित करता है, इसलिए इसे DeepSeek Harness bundle के रूप में भी इंस्टॉल किया जा सकता है:
-
-```powershell
-# git चैनल (नवीनतम main)
-dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
-
-# npm चैनल (रिलीज़ किया गया संस्करण; हमेशा scoped पूरा नाम इस्तेमाल करें -- बिना scope वाला नाम dsh-plugin-doctor एक अलग प्रोजेक्ट है)
-dsh plugin --profile web add @perrylink/dsh-plugin-doctor
-```
-
-जोड़ी गई लाइन इस पैकेज को मानक Cordis plugin अनुबंध के तहत लोड करती है: host half एक सादा ESM मॉड्यूल है जो `apply(ctx)` export करता है (अपनी ज़रूरत की सेवाओं के लिए `inject` घोषित करता हुआ)। पैकेज कोई browser UI नहीं भेजता, इसलिए `dsh.client` घोषणा नहीं है।
-
-```js
-// bundle entry (host half) -- patch लाइन जिस export अनुबंध को लोड करती है
-export function apply(ctx) {
-  // /doctor कमांड और plugin_doctor read-only जाँच टूल रजिस्टर करता है
-}
-```
-
-अनइंस्टॉल: `dsh plugin --profile web remove @perrylink/dsh-plugin-doctor` (या profile patch से वह लाइन हटा दें)। नीचे दिया CLI उपयोग इससे अप्रभावित रहता है।
 
 ## उपयोग
 
@@ -358,4 +363,4 @@ pin जानबूझकर 0.1.6 पर टिका है: 0.2.0 R/K मा�
 | **[dsh-laya](https://github.com/PerryLink/dsh-laya)** | Laya typed decisions (`noul`/`choice`/`score`) as a first-class Cordis service and model-visible tools | |
 | **[dsh-plugin-upgrade](https://github.com/PerryLink/dsh-plugin-upgrade)** | One-package, one-corridor-index plugin upgrade skill: routes a repository to the matching closed corridor card | |
 | **[dsh-plugin-upgrade-015](https://github.com/PerryLink/dsh-plugin-upgrade-015)** | Merged `0.1.3-alpha.1` → `0.1.5-rc.1` upgrade corridor card plus a zero-dependency seam scanner | 🚫 सेवानिवृत्त — कॉरिडोर अब `dsh-plugin-upgrade` द्वारा |
-
+

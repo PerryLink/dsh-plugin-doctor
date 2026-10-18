@@ -14,6 +14,11 @@
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add @perrylink/dsh-plugin-doctor
+```
+
+
 Un comprobador todo-en-uno de «integridad + salud en tiempo de ejecución» para plugins de dsh. Cero dependencias (usa
 solo lo que trae Node ≥22), y una sola ejecución cubre cuatro capas a la vez:
 **comprobaciones estáticas de la estructura del paquete (R) → escaneo del contrato Cordis (K) → smoke dinámico en sandbox (D) → validación de los listados de directorio del ecosistema (CC)**.
@@ -25,6 +30,33 @@ de distribución del espacio de trabajo (texto completo en `SURVEY.md`).
 **📖 Base de conocimiento del ecosistema** — datos medidos, no marketing: [guía de desarrollo · datos de selección · criterios de mantenimiento](https://perrylink.github.io/dsh-plugin-guide/).
 
 <!-- star-cta -->
+## Instalación (bundle de DSH)
+
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
+```
+
+`dsh-plugin-doctor` declara `dsh.bundle.patch` → `cordis.patch.yml` en package.json, así que también puede instalarse como bundle de DeepSeek Harness:
+
+```powershell
+# git channel (latest main)
+dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
+
+# npm channel (released version; always use the scoped full name -- the bare name dsh-plugin-doctor is a different project)
+dsh plugin --profile web add @perrylink/dsh-plugin-doctor
+```
+
+La línea insertada carga este paquete bajo el contrato estándar de plugins de Cordis: la mitad de host es un módulo ESM normal que exporta `apply(ctx)` (y declara `inject` para los servicios que necesita). El paquete no incluye interfaz de navegador, así que no hay declaración `dsh.client`.
+
+```js
+// bundle entry (host half) -- the export contract the patch line loads
+export function apply(ctx) {
+  // registers the /doctor command and the plugin_doctor read-only check tool
+}
+```
+
+Desinstalación: `dsh plugin --profile web remove @perrylink/dsh-plugin-doctor` (o borra esa línea del patch del perfil). El uso de la CLI que aparece más abajo no se ve afectado.
+
 ## ⭐ 如果它帮到了你
 
 Este plugin forma parte de la [familia de plugins DSH](https://github.com/PerryLink) (más de 40, todos Apache-2.0). Si te resulta útil, **dale una estrella**: no desbloquea nada, pero ayuda a que la siguiente persona lo encuentre antes.
@@ -53,33 +85,6 @@ Un comprobador todo-en-uno de «integridad + salud en tiempo de ejecución» par
 |---|---|
 | Harness | DeepSeek Harness `dsh-v0.2.1-alpha.1` (cero dependencias y deliberadamente agnóstico respecto al host: `package.json` no declara ninguna dependencia `@deepseek-ai/dsh-*` ni ningún rango de peers, así que las comprobaciones `R5`/`R8` de este repositorio se omiten a propósito en vez de pasar — véase `SELF-CHECK.md`; el registro de esta línea está en `CHANGELOG.md` §0.4.6, «host pins move to `0.2.1-alpha.1`», y el smoke de sandbox del grupo D toma su host de `--dsh`, por defecto el suelo de peers `0.1.2-rc.1`) |
 | Node | `^22.19.0 \|\| >=24.0.0` |
-
-## Instalación (bundle de DSH)
-
-```sh
-dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
-```
-
-`dsh-plugin-doctor` declara `dsh.bundle.patch` → `cordis.patch.yml` en package.json, así que también puede instalarse como bundle de DeepSeek Harness:
-
-```powershell
-# git channel (latest main)
-dsh plugin --profile web add github:PerryLink/dsh-plugin-doctor
-
-# npm channel (released version; always use the scoped full name -- the bare name dsh-plugin-doctor is a different project)
-dsh plugin --profile web add @perrylink/dsh-plugin-doctor
-```
-
-La línea insertada carga este paquete bajo el contrato estándar de plugins de Cordis: la mitad de host es un módulo ESM normal que exporta `apply(ctx)` (y declara `inject` para los servicios que necesita). El paquete no incluye interfaz de navegador, así que no hay declaración `dsh.client`.
-
-```js
-// bundle entry (host half) -- the export contract the patch line loads
-export function apply(ctx) {
-  // registers the /doctor command and the plugin_doctor read-only check tool
-}
-```
-
-Desinstalación: `dsh plugin --profile web remove @perrylink/dsh-plugin-doctor` (o borra esa línea del patch del perfil). El uso de la CLI que aparece más abajo no se ve afectado.
 
 ## Uso
 
@@ -361,4 +366,4 @@ Este proyecto es uno de los **34 plugins activamente mantenidos** de DeepSeek Ha
 | **[dsh-laya](https://github.com/PerryLink/dsh-laya)** | Laya typed decisions (`noul`/`choice`/`score`) as a first-class Cordis service and model-visible tools | |
 | **[dsh-plugin-upgrade](https://github.com/PerryLink/dsh-plugin-upgrade)** | One-package, one-corridor-index plugin upgrade skill: routes a repository to the matching closed corridor card | |
 | **[dsh-plugin-upgrade-015](https://github.com/PerryLink/dsh-plugin-upgrade-015)** | Merged `0.1.3-alpha.1` → `0.1.5-rc.1` upgrade corridor card plus a zero-dependency seam scanner | 🚫 RETIRADO — corredores asumidos por `dsh-plugin-upgrade` |
-
+
