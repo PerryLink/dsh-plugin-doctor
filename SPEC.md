@@ -129,6 +129,13 @@ evaluated. Such a run is **degraded** and must not report success:
 - a non-zero, distinct exit code is required unless degradation is explicitly
   accepted by the caller.
 
+*Reporting the degraded groups is a requirement on the **human-readable output**,
+not only on the envelope or the exit code*: an interface with no exit code (the
+bundled `plugin_doctor` tool and `/doctor` command) has nothing else to carry the
+fact, and `verdict.ok` is deliberately true for a degraded run. Until 0.7.1
+`render()` dropped the `degraded` list, so a degraded tool reply was
+indistinguishable from a run with nothing to do.
+
 A run in which zero checks executed at all, or in which a requested group name
 matched nothing, must also not report success. *Rationale: a mangled group name
 once turned the CI gates of 35 repositories green while checking nothing.*

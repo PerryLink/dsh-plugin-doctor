@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.4] - 2026-10-18
+
+### Fixed
+
+- **Human-readable output now reports degraded groups.** `verdict.ok` can be true for a degraded run, and the tool/`/doctor` surface has no exit code, so dropping the degraded list made a skipped-everything run look like nothing to do. `render()` receives the degraded groups and prints them; the SPEC now states this as a requirement.
+
 ## [0.7.3] - 2026-10-18
 
 ### Changed

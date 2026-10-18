@@ -290,11 +290,7 @@ function finish(results, { opts, ctx, repoPath, pkg, runRoot, logDir, started })
     }
   } else {
     console.log(`# dsh-plugin-doctor 报告\n目标: ${repoPath}\n包名: ${pkg.name}`)
-    console.log(render(results))
-    if (degraded.length) {
-      console.log(`\n[降级] 以下分组整组未真跑（全 skip），本次结论不可当作通过: ${degraded.join(', ')}`)
-      if (!opts.allowDegraded) console.log('       如需显式接受，请加 --allow-degraded（退出码将降为 0）')
-    }
+    console.log(render(results, { degraded }))
     console.log(`沙箱隔离目录: ${qPath ?? '(未创建)'}（人工确认后用 --purge 清理）`)
     if (opts.json) {
       writeFileSync(opts.json, JSON.stringify(envelope, null, 2) + '\n', 'utf8')
