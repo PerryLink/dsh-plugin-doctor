@@ -308,7 +308,7 @@ pin 停在 0.1.6 是有意的：0.2.0 对 R/K 两组的判据与输出形态**�
 - [`THIRD-PARTY-RK-SCAN.md`](https://github.com/PerryLink/dsh-plugin-doctor/blob/main/THIRD-PARTY-RK-SCAN.md) —— 首份**第三方**（非 PerryLink）dsh 插件的静态 R+K 扫描：60 个候选 → 20 个真正声明 `dsh.bundle.patch` 的插件 → 16 项门禁下 **10 通过 / 10 失败**。方法：只读克隆、**零执行**第三方代码、R2/R4 单列不入门禁；含复现命令、本次扫描自身的方法学更正，以及**被点名仓的更正通道**。机器可读形态：`data/rk-scans.json`。
   **它不是认证、不是评级，也不代表插件安全**：pass 仅表示「该 commit 上 16 项静态门禁未报失败」。
 
-## PerryLink DSH 插件家族
+## PerryLink DSH Plugin Family
 
 本项目是 [PerryLink](https://github.com/PerryLink) 维护的 DeepSeek Harness 插件家族成员：**87 个活跃维护**，名册共 **95** 个，其中 **5 个已冻结**、**3 个已退役**。完整名单默认折叠，避免每个 README 的首屏被长表淹没；点击展开可查看每一行，原因见「状态」列。
 
@@ -412,6 +412,8 @@ pin 停在 0.1.6 是有意的：0.2.0 对 R/K 两组的判据与输出形态**�
 | **[dsh-ticktick](https://github.com/PerryLink/dsh-ticktick)** | TickTick/Dida365 task bridge: session-header panel + 11 tools |  |
 | **[dsh-translate](https://github.com/PerryLink/dsh-translate)** | Vendor parameter translation and deterministic JSON repair for DeepSeek Harness. |  |
 | **[dsh-warranty-calc](https://github.com/PerryLink/dsh-warranty-calc)** | 质保期与索赔金额核对（按质保期月数与里程、索赔金额算式核对自洽，仅提示差异，不作出定性结论） |  |
+
+</details>
 
 </details>
 

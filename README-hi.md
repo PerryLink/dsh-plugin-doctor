@@ -312,7 +312,7 @@ pin जानबूझकर 0.1.6 पर टिका है: 0.2.0 R/K मा�
 - [`THIRD-PARTY-RK-SCAN.md`](https://github.com/PerryLink/dsh-plugin-doctor/blob/main/THIRD-PARTY-RK-SCAN.md) — **third-party** (ग़ैर-PerryLink) dsh plugins का पहला static R+K स्कैन: 60 उम्मीदवार → 20 ऐसे plugins जो वाकई `dsh.bundle.patch` घोषित करते हैं → 16-जाँच के गेट में **10 पास / 10 विफल**। तरीक़ा: read-only clones, third-party कोड का **शून्य execution**, R2/R4 अलग सूचीबद्ध और गेट से बाहर; इसमें reproduction commands, इसी स्कैन की methodology का एक सुधार, और **इसमें नाम आए किसी भी repo के लिए सुधार चैनल** शामिल है। Machine-readable रूप: `data/rk-scans.json`।
   **यह न प्रमाणन है, न रेटिंग, और किसी plugin की सुरक्षा के बारे में कुछ नहीं कहता**: pass का अर्थ बस इतना है कि "उस commit पर 16 static जाँचों ने कोई विफलता नहीं बताई"।
 
-## PerryLink DSH प्लगइन परिवार
+## PerryLink DSH Plugin Family
 
 यह प्रोजेक्ट [PerryLink](https://github.com/PerryLink) के **87 सक्रिय रूप से अनुरक्षित** DeepSeek Harness प्लगइन में से एक है। पूरा परिवार **95** प्लगइन है — **5 फ़्रोज़न**, **3 सेवानिवृत्त** — और नीचे संक्षिप्त रखा गया है ताकि हर README की पहली स्क्रीन छोटी रहे। हर पंक्ति देखने के लिए इसे खोलें; कारण स्थिति कॉलम में है।
 
@@ -416,6 +416,8 @@ pin जानबूझकर 0.1.6 पर टिका है: 0.2.0 R/K मा�
 | **[dsh-ticktick](https://github.com/PerryLink/dsh-ticktick)** | TickTick/Dida365 task bridge: session-header panel + 11 tools |  |
 | **[dsh-translate](https://github.com/PerryLink/dsh-translate)** | Vendor parameter translation and deterministic JSON repair for DeepSeek Harness. |  |
 | **[dsh-warranty-calc](https://github.com/PerryLink/dsh-warranty-calc)** | 质保期与索赔金额核对（按质保期月数与里程、索赔金额算式核对自洽，仅提示差异，不作出定性结论） |  |
+
+</details>
 
 </details>
 
