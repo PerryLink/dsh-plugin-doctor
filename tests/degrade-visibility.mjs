@@ -59,6 +59,8 @@ const v = verdict(allSkip, { degraded })
 check('verdict.ok 不因降级而 false（故渲染是唯一出口）', v.ok === true, `worst=${v.worst}`)
 check('verdict 携带 degraded 列表', v.degraded.includes('X'))
 
+const familyWorkspace = pluginRepoDirs(path.dirname(ROOT)).length >= 2
+if (familyWorkspace) {
 // ── 观测 2：工作区定位 —— 不编造路径，且能从被检仓向上找到真工作区 ─────────
 const self = path.join(ROOT)
 check('pluginRepoDirs 认得本仓所在工作区', pluginRepoDirs(path.dirname(ROOT)).length >= 2,
@@ -77,6 +79,9 @@ check('显式 workspace 优先', explicit.source === 'argument' && explicit.root
 
 const env = resolveWorkspaceRoot(self, { installDir: ROOT, env: { DSH_WORKSPACE: path.dirname(ROOT) } })
 check('DSH_WORKSPACE 生效', env.source === 'env:DSH_WORKSPACE')
+} else {
+  console.log('SKIP workspace-location checks: single-repo checkout (no sibling plugin repos)')
+}
 
 // 旧行为（install-relative）只有在它真的含插件仓时才允许被采用。bundle 形态下
 // `import.meta.dirname/..` 是 `<profile>/node_modules`（或 `.../@perrylink`），
@@ -94,6 +99,7 @@ try {
   const bundled = resolveWorkspaceRoot(bundledRepo, { installDir: bundledInstall, env: {} })
   check('bundle 形态不会把 node_modules 当工作区', bundled.root === null, JSON.stringify(bundled))
   check('bundle 形态 source 为 null（不谎报来源）', bundled.source === null)
+
   check('bundle 形态 install-relative 候选确实在 node_modules 下',
     path.resolve(bundledInstall, '..').includes(`${path.sep}node_modules`),
     path.resolve(bundledInstall, '..'))
