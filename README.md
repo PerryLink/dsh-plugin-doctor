@@ -512,7 +512,23 @@ These are the plugin's real entry points; install once, then call one.
 
 #### Detailed example
 
-- `/doctor`
+**Command**
+
+~~~sh
+node doctor.mjs --repo . --no-smoke --only R,K
+~~~
+
+**Output**
+
+~~~text
+== 静态·包结构 ==
+[PASS] R0 基础字段（name/version/license/README/type）
+    基础字段齐全
+[PASS] R1 激活门 dsh.bundle.patch [关键]
+    dsh.bundle.patch = ./cordis.patch.yml
+~~~
+
+*Observed from `README.md:89-95 (Usage); lib/framework.mjs:121 (render)`*
 
 #### Brief examples
 

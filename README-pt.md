@@ -428,7 +428,23 @@ São os pontos de entrada reais; instale e chame um.
 
 #### Exemplo detalhado
 
-- `/doctor`
+**Comando**
+
+~~~sh
+node doctor.mjs --repo . --no-smoke --only R,K
+~~~
+
+**Saída**
+
+~~~text
+== 静态·包结构 ==
+[PASS] R0 基础字段（name/version/license/README/type）
+    基础字段齐全
+[PASS] R1 激活门 dsh.bundle.patch [关键]
+    dsh.bundle.patch = ./cordis.patch.yml
+~~~
+
+*Observado em `README.md:89-95 (Usage); lib/framework.mjs:121 (render)`*
 
 #### Exemplos breves
 

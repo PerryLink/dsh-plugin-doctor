@@ -422,7 +422,23 @@ pin 停在 0.1.6 是有意的：0.2.0 对 R/K 两组的判据与输出形态**�
 
 #### 详细示例
 
-- `/doctor`
+**命令**
+
+~~~sh
+node doctor.mjs --repo . --no-smoke --only R,K
+~~~
+
+**输出**
+
+~~~text
+== 静态·包结构 ==
+[PASS] R0 基础字段（name/version/license/README/type）
+    基础字段齐全
+[PASS] R1 激活门 dsh.bundle.patch [关键]
+    dsh.bundle.patch = ./cordis.patch.yml
+~~~
+
+*来源 `README.md:89-95 (Usage); lib/framework.mjs:121 (render)`*
 
 #### 简短示例
 

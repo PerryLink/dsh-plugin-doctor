@@ -426,7 +426,23 @@ pin जानबूझकर 0.1.6 पर टिका है: 0.2.0 R/K मा�
 
 #### विस्तृत उदाहरण
 
-- `/doctor`
+**कमांड**
+
+~~~sh
+node doctor.mjs --repo . --no-smoke --only R,K
+~~~
+
+**आउटपुट**
+
+~~~text
+== 静态·包结构 ==
+[PASS] R0 基础字段（name/version/license/README/type）
+    基础字段齐全
+[PASS] R1 激活门 dsh.bundle.patch [关键]
+    dsh.bundle.patch = ./cordis.patch.yml
+~~~
+
+*स्रोत `README.md:89-95 (Usage); lib/framework.mjs:121 (render)`*
 
 #### संक्षिप्त उदाहरण
 
