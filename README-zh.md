@@ -440,6 +440,23 @@ node doctor.mjs --repo . --no-smoke --only R,K
 
 *来源 `README.md:89-95 (Usage); lib/framework.mjs:121 (render)`*
 
+#### 失败分支
+
+**输入**
+
+~~~text
+node doctor.mjs --repo . --only NOPE --no-smoke
+~~~
+
+**输出**
+
+~~~text
+未知分组: NOPE
+可用分组: 静态·包结构（R）, 静态·cordis 契约扫描（K）, 动态面·宿主契约（X）, 生态·集合站清单（CC）
+~~~
+
+*来源 `plugins/dsh-plugin-doctor/doctor.mjs:196-206; plugins/dsh-plugin-doctor/tests/selftest.mjs:95; plugins/dsh-plugin-doctor/README.md:169-171`*
+
 #### 简短示例
 
 

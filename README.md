@@ -530,6 +530,23 @@ node doctor.mjs --repo . --no-smoke --only R,K
 
 *Observed from `README.md:89-95 (Usage); lib/framework.mjs:121 (render)`*
 
+#### Failure branch
+
+**Input**
+
+~~~text
+node doctor.mjs --repo . --only NOPE --no-smoke
+~~~
+
+**Output**
+
+~~~text
+未知分组: NOPE
+可用分组: 静态·包结构（R）, 静态·cordis 契约扫描（K）, 动态面·宿主契约（X）, 生态·集合站清单（CC）
+~~~
+
+*Observed from `plugins/dsh-plugin-doctor/doctor.mjs:196-206; plugins/dsh-plugin-doctor/tests/selftest.mjs:95; plugins/dsh-plugin-doctor/README.md:169-171`*
+
 #### Brief examples
 
 
