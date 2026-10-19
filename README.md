@@ -67,11 +67,11 @@ Uninstall: `dsh plugin --profile web remove @perrylink/dsh-plugin-doctor` (or de
 
 An all-in-one "integrity + runtime health" checker for dsh plugins. Zero dependencies (it uses only what Node ≥22 ships), and one run covers four layers at once:
 
-![Terminal demo of dsh-plugin-doctor: dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-hero.png)
+![Workflow diagram for dsh-plugin-doctor: request → policy / review → verdict.](docs/assets/dsh-plugin-doctor-flow.svg)
 
-![Animated terminal demo of dsh-plugin-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.gif)
+*Workflow overview: request → policy / review → verdict. The examples below use the real command surface.*
 
-*The same run, animated.*
+
 
 ## Comparison
 
@@ -505,3 +505,16 @@ This project is part of the DeepSeek Harness plugin family from [PerryLink](http
 | **[dsh-team-rooms](https://github.com/PerryLink/dsh-team-rooms)** | 🚫 RETIRED — see the repo README |
 
 </details>
+
+### Examples
+
+These are the plugin's real entry points; install once, then call one.
+
+#### Detailed example
+
+- `/doctor`
+
+#### Brief examples
+
+
+

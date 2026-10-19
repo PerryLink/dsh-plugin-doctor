@@ -67,9 +67,10 @@ Este plugin faz parte da [família de plugins DSH](https://github.com/PerryLink)
 
 Um verificador tudo-em-um de "integridade + saúde em tempo de execução" para plugins dsh. Zero dependências (usa apenas o que o Node ≥22 traz) e uma execução cobre quatro camadas de uma vez:
 
-![Demonstração de terminal do dsh-plugin-doctor: dsh-plugin-doctor — static R+K gate on a sibling plugin repo](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-hero.png)
+![Diagrama de fluxo de dsh-plugin-doctor: solicitação → política/revisão → veredito.](docs/assets/dsh-plugin-doctor-flow.svg)
 
-![Animated terminal demo of dsh-plugin-doctor](https://raw.githubusercontent.com/PerryLink/dsh-plugin-doctor/main/docs/assets/dsh-plugin-doctor-demo.gif)
+*Visão geral do fluxo: solicitação → política/revisão → veredito. Os exemplos abaixo usam a superfície real de comandos.*
+
 
 *A mesma execução, animada.*
 
@@ -420,3 +421,16 @@ Este projeto faz parte da família de plugins do DeepSeek Harness da [PerryLink]
 | **[dsh-team-rooms](https://github.com/PerryLink/dsh-team-rooms)** | 🚫 RETIRADO — ver o README do repositório |
 
 </details>
+
+### Exemplos
+
+São os pontos de entrada reais; instale e chame um.
+
+#### Exemplo detalhado
+
+- `/doctor`
+
+#### Exemplos breves
+
+
+
