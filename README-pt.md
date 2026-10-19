@@ -314,7 +314,7 @@ O pin permanece deliberadamente na 0.1.6: a 0.2.0 **não muda em nada** os crit�
 - [`THIRD-PARTY-RK-SCAN.md`](https://github.com/PerryLink/dsh-plugin-doctor/blob/main/THIRD-PARTY-RK-SCAN.md) — a primeira varredura estática R+K de plugins dsh de **terceiros** (não PerryLink): 60 candidatos → 20 plugins que realmente declaram `dsh.bundle.patch` → sob o gate de 16 verificações, **10 passaram / 10 falharam**. Método: clones somente leitura, **zero execução** de código de terceiros, R2/R4 listados à parte e fora do gate; ela inclui os comandos de reprodução, uma correção à metodologia da própria varredura, e um **canal de correção para qualquer repositório citado nela**. Forma legível por máquina: `data/rk-scans.json`.
   **Não é uma certificação, não é uma nota, e não diz nada sobre a segurança de um plugin**: uma aprovação significa apenas que "as 16 verificações estáticas não reportaram nenhuma falha naquele commit".
 
-## Família de plugins DSH da PerryLink
+## PerryLink DSH Plugin Family
 
 Este projeto faz parte da família de plugins do DeepSeek Harness da [PerryLink](https://github.com/PerryLink). O registro fica recolhido abaixo para que cada README mantenha uma primeira tela curta; expanda para ver cada linha e seu status.
 

@@ -312,7 +312,7 @@ pin जानबूझकर 0.1.6 पर टिका है: 0.2.0 R/K मा�
 - [`THIRD-PARTY-RK-SCAN.md`](https://github.com/PerryLink/dsh-plugin-doctor/blob/main/THIRD-PARTY-RK-SCAN.md) — **third-party** (ग़ैर-PerryLink) dsh plugins का पहला static R+K स्कैन: 60 उम्मीदवार → 20 ऐसे plugins जो वाकई `dsh.bundle.patch` घोषित करते हैं → 16-जाँच के गेट में **10 पास / 10 विफल**। तरीक़ा: read-only clones, third-party कोड का **शून्य execution**, R2/R4 अलग सूचीबद्ध और गेट से बाहर; इसमें reproduction commands, इसी स्कैन की methodology का एक सुधार, और **इसमें नाम आए किसी भी repo के लिए सुधार चैनल** शामिल है। Machine-readable रूप: `data/rk-scans.json`।
   **यह न प्रमाणन है, न रेटिंग, और किसी plugin की सुरक्षा के बारे में कुछ नहीं कहता**: pass का अर्थ बस इतना है कि "उस commit पर 16 static जाँचों ने कोई विफलता नहीं बताई"।
 
-## PerryLink DSH प्लगइन परिवार
+## PerryLink DSH Plugin Family
 
 यह प्रोजेक्ट [PerryLink](https://github.com/PerryLink) के DeepSeek Harness प्लगइन परिवार का हिस्सा है। पूरी सूची नीचे संक्षिप्त रखी गई है ताकि हर README की पहली स्क्रीन छोटी रहे; हर पंक्ति और उसकी स्थिति देखने के लिए इसे खोलें।
 
