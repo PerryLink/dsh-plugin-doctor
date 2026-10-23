@@ -53,7 +53,7 @@ jobs:
         run: node scripts/check-cross-repo.mjs
       - name: Upload the K14 report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: k14-report
           path: k14-report.json
