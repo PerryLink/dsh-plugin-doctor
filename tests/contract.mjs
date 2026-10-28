@@ -11,6 +11,7 @@ import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
+import plugin from '../plugin.mjs'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'doctor-contract-'))
@@ -123,6 +124,8 @@ function run(repo, args) {
 
 const checks = []
 const assert = (name, cond, detail = '') => checks.push({ name, ok: !!cond, detail })
+
+assert('plugin 默认导出携带 inject（issue #14）', Array.isArray(plugin.inject) && plugin.inject.join(',') === 'tools,commands', `实际 inject=${JSON.stringify(plugin.inject)}`)
 
 const base = run(withSrc, ['--no-smoke', '--only', 'R,K'])
 const results = base.report?.results ?? []

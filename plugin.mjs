@@ -166,4 +166,7 @@ export function apply(ctx) {
   }
 }
 
-export default { name, apply }
+// The loader unwraps a module to `exports.default ?? exports`; a named
+// `inject` beside a default export is dropped, so the declaration must live on
+// the default object too (issue #14).
+export default { name, inject, apply }

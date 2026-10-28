@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.5] - 2026-10-28
+
+### Fixed
+
+- **`inject` is now declared on the default export, so the tool and `/doctor` survive a cold restart (issue #14).** DSH's loader unwraps a module as `exports.default ?? exports`; with a default export present, the named `inject` was dropped, `apply()` read `ctx.get('tools'/'commands')` before those services existed, and the silent fall-through left no tool/command after every restart. The declaration now lives on the default object as well; a contract test asserts the default export carries `['tools','commands']`.
+
 ## [0.7.4] - 2026-10-18
 
 ### Fixed
