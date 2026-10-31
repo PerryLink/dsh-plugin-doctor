@@ -67,7 +67,7 @@ Non-negotiable consequences:
   D-group failure categorized `environment`, `infrastructure`, `unsupported-host`,
   `unstable` or `doctor-internal` still yields `failed` (the rule above), but is
   also listed in `evidence.*.notAttributable` and called out in `note`: it is a
-  host/environment block, not a plugin defect.
+  non-plugin block, not a plugin defect.
 
 ## What `runtime` here does and does not mean
 
