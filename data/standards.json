@@ -1,0 +1,651 @@
+{
+  "schema": "dsh-levels/1",
+  "nonOfficial": true,
+  "disclaimer": "Not an official DeepSeek standard, not a certification, not a security audit, and not a legal GB/GB-T/GB-Z instrument. The GB analogy used by the standards project is a communication aid only.",
+  "canonical": {
+    "repo": "PerryLink/dsh-standards",
+    "schemaFile": "spec/levels.json",
+    "schema": "dsh-levels/1",
+    "specVersion": "1.0.0-rc.1",
+    "documents": {
+      "entry": "31-DSH-ENTRY入门规范.md",
+      "flow": "32-DSH-FLOW顺畅规范.md",
+      "boost": "33-DSH-BOOST加速实践.md",
+      "model": "34-三层分级模型-GB-GBT-GBZ类比.md"
+    },
+    "private": true,
+    "publicTeachingCopy": "https://github.com/PerryLink/dsh-plugin-guide/blob/main/guide/standards.md"
+  },
+  "producer": {
+    "package": "@perrylink/dsh-plugin-doctor",
+    "repo": "https://github.com/PerryLink/dsh-plugin-doctor",
+    "module": "lib/standards.mjs",
+    "reportField": "standards",
+    "doc": "STANDARDS.md",
+    "tests": "tests/standards.mjs",
+    "additive": "Only the JSON envelope gains a standards field; stdout, exit codes, verdict, the results array and --format check are unchanged."
+  },
+  "entry": {
+    "statuses": [
+      "runtime",
+      "static",
+      "failed",
+      "not-run"
+    ],
+    "canonicalEvidenceStates": [
+      "recognized",
+      "static",
+      "runtime",
+      "blocked",
+      "failed",
+      "not-run",
+      "stale"
+    ],
+    "decidingGroups": [
+      "R",
+      "K",
+      "D"
+    ],
+    "runtimeEvidence": [
+      "D0",
+      "D1",
+      "D2",
+      "D3"
+    ],
+    "mappingNote": "Per-check gate lists name the closest canonical ENTRY gate a check supports. They are not a claim that the check verifies that gate exactly; gate coverage is partial everywhere except G4/G5, which are not measured.",
+    "rules": [
+      {
+        "status": "failed",
+        "when": "any R/K/D check returns fail or error, or any critical check fails"
+      },
+      {
+        "status": "runtime",
+        "when": "R and K each ran at least one check and D0-D3 all ran, with no fail/error"
+      },
+      {
+        "status": "static",
+        "when": "R and K each ran at least one check with no fail/error, but the D0-D3 runtime chain is incomplete"
+      },
+      {
+        "status": "not-run",
+        "when": "no ENTRY level can be established, for example when every R/K/D check was skipped"
+      }
+    ],
+    "invariants": [
+      "A skip is not a pass; a fully skipped group is not green.",
+      "static is not a pass and not runtime.",
+      "not-run is not a pass.",
+      "runtime means this run's D0-D3 sandbox chain ran; it does not claim canonical G4 or G5.",
+      "blocked has no separate value in this projection; a non-plugin-category failure is still failed, listed in notAttributable and called out in note."
+    ],
+    "gates": [
+      {
+        "id": "G0",
+        "canonical": "dsh.bundle.patch parses",
+        "coverage": "partial",
+        "strength": "static+runtime",
+        "doctorGroups": [
+          "R",
+          "D",
+          "X"
+        ],
+        "doctorChecks": [
+          "R1",
+          "R3",
+          "D0",
+          "D1",
+          "X3"
+        ],
+        "note": "R1/R3 read the manifest and patch statically; D0/D1 prove the packed tarball installs; X3 checks the declared patch shape."
+      },
+      {
+        "id": "G1",
+        "canonical": "base + sample compose; inserted row names resolve",
+        "coverage": "partial",
+        "strength": "static+runtime",
+        "doctorGroups": [
+          "R",
+          "D",
+          "X"
+        ],
+        "doctorChecks": [
+          "R3",
+          "R4",
+          "R7",
+          "D1",
+          "D2",
+          "X5"
+        ],
+        "note": "D1/D2 verify install and the --dump-config layer marker; X5 checks row locatability statically."
+      },
+      {
+        "id": "G2",
+        "canonical": "evaluatePluginCompatibility admits, or an explicit exact-version exemption applies",
+        "coverage": "partial",
+        "strength": "static-host-surface",
+        "doctorGroups": [
+          "R",
+          "X"
+        ],
+        "doctorChecks": [
+          "R5",
+          "R6",
+          "R8",
+          "X1",
+          "X2"
+        ],
+        "note": "X1 calls the host's own evaluator when a host install is readable; otherwise the shipped host-surface snapshot is used and its source is disclosed. R6 (engines.node) is advisory on npm-line hosts."
+      },
+      {
+        "id": "G3",
+        "canonical": "real boot(): every target row is ACTIVE or disabled",
+        "coverage": "partial",
+        "strength": "runtime-approximation",
+        "doctorGroups": [
+          "D",
+          "K",
+          "X"
+        ],
+        "doctorChecks": [
+          "D3",
+          "K1",
+          "K3",
+          "K5",
+          "K6",
+          "K7",
+          "K8",
+          "K10",
+          "K13",
+          "X4",
+          "X5"
+        ],
+        "note": "D3 proves the composition boots to a model request (exit 1 + MISSING_CREDENTIAL); it does not assert per-row ACTIVE/disabled. K checks are static heuristics."
+      },
+      {
+        "id": "G4",
+        "canonical": "when dsh.client exists: exports['./client'] and a package-root row",
+        "coverage": "none",
+        "strength": "not-measured",
+        "doctorGroups": [],
+        "doctorChecks": [],
+        "note": "Not measured by doctor. Do not read an ENTRY runtime status as a G4 claim."
+      },
+      {
+        "id": "G5",
+        "canonical": "report carries runtime version/commit/artifact mtime; stale evidence is marked stale",
+        "coverage": "none",
+        "strength": "not-measured",
+        "doctorGroups": [],
+        "doctorChecks": [],
+        "note": "The report carries startedAt, hostDshVersion and durationMs, but no commit or artifact-mtime anchors; canonical G5 is not established."
+      }
+    ],
+    "groups": [
+      {
+        "groupId": "R",
+        "group": "静态·包结构",
+        "label": "static · package structure",
+        "checks": [
+          "R0",
+          "R1",
+          "R2",
+          "R3",
+          "R4",
+          "R5",
+          "R6",
+          "R7",
+          "R8"
+        ],
+        "deciding": true,
+        "kind": "static",
+        "entryGates": [
+          "G0",
+          "G1",
+          "G2"
+        ],
+        "note": "Manifest, entry, patch, dependency and artifact shape. R2/R4 read built artifacts and legitimately skip on an unbuilt tree; skips are disclosed, never passed."
+      },
+      {
+        "groupId": "K",
+        "group": "静态·cordis 契约扫描",
+        "label": "static · Cordis contract scan",
+        "checks": [
+          "K1",
+          "K2",
+          "K3",
+          "K4",
+          "K5",
+          "K6",
+          "K7",
+          "K8",
+          "K9",
+          "K10",
+          "K11",
+          "K12",
+          "K13",
+          "K14"
+        ],
+        "deciding": true,
+        "kind": "static-heuristic",
+        "entryGates": [
+          "G1",
+          "G3"
+        ],
+        "note": "Heuristic source scan that predicts activation and boot problems. Every warn needs a human look and is not proof of a boot failure."
+      },
+      {
+        "groupId": "D",
+        "group": "动态·沙箱冒烟",
+        "label": "dynamic · sandbox smoke",
+        "checks": [
+          "D0",
+          "D1",
+          "D2",
+          "D3",
+          "D9"
+        ],
+        "deciding": true,
+        "kind": "runtime",
+        "entryGates": [
+          "G0",
+          "G1",
+          "G3"
+        ],
+        "runtimeEvidence": [
+          "D0",
+          "D1",
+          "D2",
+          "D3"
+        ],
+        "note": "D9 is sandbox quarantine (hygiene), not boot evidence. D1 can skip for environment reasons; D2/D3 then skip behind it and the run cannot claim runtime."
+      },
+      {
+        "groupId": "X",
+        "group": "动态面·宿主契约",
+        "label": "host contract",
+        "checks": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ],
+        "deciding": false,
+        "kind": "static-supporting",
+        "entryGates": [
+          "G2",
+          "G3"
+        ],
+        "note": "Supplementary ENTRY evidence, listed in the canonical crosswalk. It does not decide entry.status in this projection."
+      },
+      {
+        "groupId": "CC",
+        "group": "生态·集合站清单",
+        "label": "ecosystem · directory listings",
+        "checks": [
+          "CC1",
+          "CC2",
+          "CC3",
+          "CC4",
+          "CC5"
+        ],
+        "deciding": false,
+        "kind": "listing",
+        "entryGates": [],
+        "note": "Listing-scope evidence, not package compatibility. Never ENTRY evidence."
+      }
+    ],
+    "checks": {
+      "R0": {
+        "group": "R",
+        "entryGates": [
+          "G0",
+          "G1"
+        ],
+        "role": "manifest recognition"
+      },
+      "R1": {
+        "group": "R",
+        "entryGates": [
+          "G0",
+          "G1"
+        ],
+        "role": "activation gate dsh.bundle.patch"
+      },
+      "R2": {
+        "group": "R",
+        "entryGates": [
+          "G0",
+          "G1"
+        ],
+        "role": "tarball integrity"
+      },
+      "R3": {
+        "group": "R",
+        "entryGates": [
+          "G0",
+          "G1"
+        ],
+        "role": "patch structure"
+      },
+      "R4": {
+        "group": "R",
+        "entryGates": [
+          "G1"
+        ],
+        "role": "entry contract"
+      },
+      "R5": {
+        "group": "R",
+        "entryGates": [
+          "G2"
+        ],
+        "role": "dependency policy"
+      },
+      "R6": {
+        "group": "R",
+        "entryGates": [
+          "G2"
+        ],
+        "role": "node engine declaration (advisory)"
+      },
+      "R7": {
+        "group": "R",
+        "entryGates": [
+          "G1"
+        ],
+        "role": "prebuild and files allowlist"
+      },
+      "R8": {
+        "group": "R",
+        "entryGates": [
+          "G2"
+        ],
+        "role": "peer range eligibility"
+      },
+      "K1": {
+        "group": "K",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "service access vs inject"
+      },
+      "K2": {
+        "group": "K",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "live-data serialization"
+      },
+      "K3": {
+        "group": "K",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "timer and listener lifecycle"
+      },
+      "K4": {
+        "group": "K",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "schema containing a function"
+      },
+      "K5": {
+        "group": "K",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "apply return shape"
+      },
+      "K6": {
+        "group": "K",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "inject service names"
+      },
+      "K7": {
+        "group": "K",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "v3 legacy APIs"
+      },
+      "K8": {
+        "group": "K",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "Config validator"
+      },
+      "K9": {
+        "group": "K",
+        "entryGates": [
+          "G1",
+          "G3"
+        ],
+        "role": "plugin name special case"
+      },
+      "K10": {
+        "group": "K",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "waterfall next() delegation"
+      },
+      "K11": {
+        "group": "K",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "tool name shadowing"
+      },
+      "K12": {
+        "group": "K",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "provided service key collision"
+      },
+      "K13": {
+        "group": "K",
+        "entryGates": [
+          "G1"
+        ],
+        "role": "patch override of a built-in row"
+      },
+      "K14": {
+        "group": "K",
+        "entryGates": [
+          "G1",
+          "G3"
+        ],
+        "role": "cross-repo injection-point collision"
+      },
+      "D0": {
+        "group": "D",
+        "entryGates": [
+          "G0",
+          "G1"
+        ],
+        "role": "package tarball"
+      },
+      "D1": {
+        "group": "D",
+        "entryGates": [
+          "G1"
+        ],
+        "role": "install smoke and bundles assertion"
+      },
+      "D2": {
+        "group": "D",
+        "entryGates": [
+          "G1"
+        ],
+        "role": "layer verification"
+      },
+      "D3": {
+        "group": "D",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "keyless headless boot"
+      },
+      "D9": {
+        "group": "D",
+        "entryGates": [],
+        "role": "sandbox quarantine (hygiene, not ENTRY evidence)"
+      },
+      "X1": {
+        "group": "X",
+        "entryGates": [
+          "G2"
+        ],
+        "role": "peer corridor vs actual host"
+      },
+      "X2": {
+        "group": "X",
+        "entryGates": [
+          "G2"
+        ],
+        "role": "version carrier self-consistency"
+      },
+      "X3": {
+        "group": "X",
+        "entryGates": [
+          "G0"
+        ],
+        "role": "dsh.bundle.patch shape and file existence"
+      },
+      "X4": {
+        "group": "X",
+        "entryGates": [
+          "G3"
+        ],
+        "role": "inject names vs real host services"
+      },
+      "X5": {
+        "group": "X",
+        "entryGates": [
+          "G1",
+          "G3"
+        ],
+        "role": "patch row locatability"
+      }
+    },
+    "excludedChecks": {
+      "CC1": "listing scope, not package compatibility",
+      "CC2": "listing scope, not package compatibility",
+      "CC3": "listing scope, not package compatibility",
+      "CC4": "listing scope, not package compatibility",
+      "CC5": "family policy for listings, not package compatibility"
+    }
+  },
+  "flow": {
+    "status": "manual",
+    "covered": false,
+    "checklist": "J1-J8",
+    "reason": "doctor does not run user journeys",
+    "steps": [
+      {
+        "id": "J1",
+        "check": "install and first run"
+      },
+      {
+        "id": "J2",
+        "check": "configuration and validation errors"
+      },
+      {
+        "id": "J3",
+        "check": "error recovery and rollback"
+      },
+      {
+        "id": "J4",
+        "check": "upgrade and migration"
+      },
+      {
+        "id": "J5",
+        "check": "README and discoverability"
+      },
+      {
+        "id": "J6",
+        "check": "uninstall and cleanup"
+      },
+      {
+        "id": "J7",
+        "check": "client states (loading/empty/error/offline)"
+      },
+      {
+        "id": "J8",
+        "check": "long-running and cancellation behavior"
+      }
+    ],
+    "note": "manual means not measured, never passed. R/K results are static package evidence and are not journey evidence."
+  },
+  "boost": {
+    "status": "not-measured",
+    "covered": false,
+    "evidence": "LEV-1..LEV-8",
+    "reason": "doctor does not benchmark",
+    "practices": [
+      {
+        "id": "LEV-1",
+        "check": "effects/timers/connections/watchers/subprocesses return to baseline"
+      },
+      {
+        "id": "LEV-2",
+        "check": "required services injected; optional ones via ctx.get; no polling"
+      },
+      {
+        "id": "LEV-3",
+        "check": "hot config uses volatile()/get(); config change does not restart"
+      },
+      {
+        "id": "LEV-4",
+        "check": "event modes match; waterfall observers delegate; listener isolation"
+      },
+      {
+        "id": "LEV-5",
+        "check": "seam/isolate/group used only when needed"
+      },
+      {
+        "id": "LEV-6",
+        "check": "tool/prompt declarations byte-stable; volatile data via systemPrompt.context"
+      },
+      {
+        "id": "LEV-7",
+        "check": "bounded parallelism; long work in jobs; cancellation propagates"
+      },
+      {
+        "id": "LEV-8",
+        "check": "bundle patch/preset expresses differences; every practice has an evidence card"
+      }
+    ],
+    "note": "not-measured never implies a BOOST claim, positive or negative. LEV evidence needs environment, input, command, negative control, result, version anchor and limitations."
+  },
+  "gaps": [
+    {
+      "track": "entry",
+      "unsupported": [
+        "G4",
+        "G5"
+      ],
+      "reason": "Doctor does not inspect dsh.client/exports['./client']/package-root rows (G4) and does not carry canonical commit/artifact-mtime freshness anchors (G5)."
+    },
+    {
+      "track": "flow",
+      "unsupported": [
+        "J1-J8"
+      ],
+      "reason": "doctor does not run user journeys"
+    },
+    {
+      "track": "boost",
+      "unsupported": [
+        "LEV-1..LEV-8"
+      ],
+      "reason": "doctor does not benchmark"
+    }
+  ]
+}

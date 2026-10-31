@@ -16,6 +16,7 @@ import { addChecks as addCollectionChecks } from './lib/checks-collections.mjs'
 import { quarantineSandbox, redact } from './lib/util.mjs'
 import { toContract, contractExitCode } from './lib/compat.mjs'
 import { locateDshInstall, hostSurfaceSummary } from './lib/host-surface.mjs'
+import { deriveStandards } from './lib/standards.mjs'
 
 const VERSION = JSON.parse(readFileSync(path.join(import.meta.dirname, 'package.json'), 'utf8')).version
 const SCHEMA_VERSION = '2'
@@ -262,6 +263,10 @@ function finish(results, { opts, ctx, repoPath, pkg, runRoot, logDir, started })
     groups,
     degraded,
     verdict: { worst: v.worst, ok: v.ok, criticalFail: v.criticalFail },
+    // 采用轨道投影（dsh-levels/1）：只加字段，不改 stdout / 退出码 / verdict /
+    // --format check。FLOW 恒 manual、BOOST 恒 not-measured —— 本工具不跑旅程、
+    // 不做基准，绝不冒充。
+    standards: deriveStandards(results, groups),
     results,
   }
 

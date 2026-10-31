@@ -311,6 +311,7 @@ version difference is reported as a note — most skills version independently.
 - A pnpm `ignored-builds` block is an environment-recipe problem: when D1 hits it, the check degrades to warn and prints the compat.yml allowBuilds recipe, matching the certification spec v1's environment-blocked line, and it never counts as a plugin defect.
 - npm-line hosts (0.1.2-rc.1) have no engines/peerDependencies enforcement in their packument, so R6 is advisory there.
 - A measured trap in this environment: a `$` anchor (without the `m` flag) does not match the position before a lone trailing `\r`, so parsing CRLF text must split on `/\r?\n/` (already handled internally — do not regress it).
+- **Standards crosswalk.** R/K/D — with X as supplementary evidence — map only onto the **DSH-ENTRY** compatibility baseline; the JSON envelope now carries an additive `standards` field (`dsh-levels/1`). DSH-FLOW (`J1–J8`) is `manual` and DSH-BOOST (`LEV-1..LEV-8`) is `not-measured` — this tool runs no user journeys and no benchmarks — and the levels are not an official DeepSeek standard. See [STANDARDS.md](STANDARDS.md) and `data/standards.json`.
 
 ## Repository layout
 

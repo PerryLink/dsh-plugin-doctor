@@ -160,6 +160,51 @@ disclose which mode it used:
 
 A `lib-fallback` result must never be presented as equivalent to `src`.
 
+### 3.5 Standards mapping (informative)
+
+The JSON envelope carries an additive `standards` field that projects a run onto
+the DSH adoption tracks defined by the independent
+[`PerryLink/dsh-standards`](https://github.com/PerryLink/dsh-standards) project
+(`schema: "dsh-levels/1"`). It is derived by `lib/standards.mjs`, a pure function
+of the run's results and group summary: no filesystem, no clock, no process.
+
+The field is **additive and informative**. It does not change any verdict, exit
+code, check ID, the `results` array, or the `--format check` view; a consumer that
+ignores it sees exactly the run it saw before.
+
+| Doctor group | ENTRY contribution | Decides `entry.status`? |
+|---|---|---|
+| R (R0–R8) | static package/entry/patch shape, dependency and peer eligibility | yes |
+| K (K1–K14) | static Cordis contract heuristics | yes |
+| D (D0–D3, D9) | sandbox pack/install/layer/boot chain (D9 is hygiene, not boot evidence) | yes |
+| X (X1–X5) | host-surface and peer-corridor support | no — supplementary |
+| CC (CC1–CC5) | directory listings, not package compatibility | no |
+
+`entry.status` is one of `runtime`, `static`, `failed`, `not-run`:
+
+- `failed` — any R/K/D check returned `fail` or `error`, or a critical check failed.
+- `runtime` — R and K each ran at least one check, **and** D0–D3 all ran, with no
+  `fail`/`error`. This is doctor's own sandbox chain, not a claim that canonical
+  G0–G5 all passed.
+- `static` — R and K ran clean but the D0–D3 chain is incomplete. Static is not a
+  pass.
+- `not-run` — no ENTRY level can be established (for example, every group was
+  skipped). Not-run is not a pass.
+
+A skipped check is never evidence: a D1 skip (missing `pnpm`, for example) skips
+D2/D3 and yields `static`, never `runtime`. That conservative projection is the
+point, and `tests/standards.mjs` freezes it.
+
+FLOW is `manual` (`J1–J8`) and BOOST is `not-measured` (`LEV-1..LEV-8`): this
+tool runs no user journeys and no benchmarks, so it must not claim either track.
+The three tracks are different questions, not grades; certification grades A–D
+are orthogonal and are never combined into a level. The mapping is
+**non-official** — the levels come from the independent `PerryLink/dsh-standards`
+project, not from DeepSeek.
+
+The crosswalk, the group/check → ENTRY-gate map, and the FLOW/BOOST gaps are in
+[`STANDARDS.md`](STANDARDS.md) and `data/standards.json`.
+
 ## 4. The criteria
 
 Legend: **Verdicts** lists the statuses the check can return.
