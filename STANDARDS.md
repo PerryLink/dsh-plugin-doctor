@@ -1,5 +1,9 @@
 # Standards mapping — DSH-ENTRY / DSH-FLOW / DSH-BOOST
 
+> **Companion tool.** Part of the DSH standards family; not a certification, accreditation, or official endorsement. Canonical: https://github.com/PerryLink/dsh-standards. The `package.json` `dsh.standards` block is a `not-run` placeholder.
+
+
+
 > **Non-official.** This project is not affiliated with, endorsed by, or certified
 > by DeepSeek. The three tracks below are the PerryLink-authored DSH standards
 > (the private `PerryLink/dsh-standards` draft; public teaching copy: [dsh-plugin-guide/guide/standards.md](https://github.com/PerryLink/dsh-plugin-guide/blob/main/guide/standards.md)):

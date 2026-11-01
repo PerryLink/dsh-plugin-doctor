@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.7.6] - 2026-11-02
+
+### Changed
+
+- Add the `dsh.standards` `not-run` placeholder to `dsh` in `package.json`.
+- Add `STANDARDS.md` and a non-official/companion disclaimer in the README.
+- Point the package at the public standard repository.
+
+
 ## [0.7.5] - 2026-10-28
 
 ### Fixed

@@ -1,6 +1,9 @@
 # dsh-plugin-doctor
 
-> Release stamp: `0.4.6` (2026-10-04).
+> **Non-official companion tool.** Part of the DSH standards family; not a certification, accreditation, security audit, or official endorsement. Standard: https://github.com/PerryLink/dsh-standards. The `dsh.standards` block is a `not-run` placeholder, not a pass.
+
+
+> Release stamp: `0.7.6` (2026-11-02).
 
 > **Package name.** This project publishes to npm as **`@perrylink/dsh-plugin-doctor`**. The bare npm name `dsh-plugin-doctor` belongs to a different, unrelated project — never run `npx dsh-plugin-doctor`; installing it does not install this plugin.
 
@@ -353,7 +356,7 @@ OUTREACH.md              adoption notes: channel states, positioning, actions
 ## Status
 
 Official repository: GitHub `PerryLink/dsh-plugin-doctor` (Apache-2.0), npm `@perrylink/dsh-plugin-doctor`.
-**Current version 0.4.6**, published to npm. Releases go out through **npm Trusted
+**Current version 0.7.6**, published to npm. Releases go out through **npm Trusted
 Publishing (OIDC)** — no long-lived token — after the `NPM_TOKEN` secret expired
 and blocked the 0.2.4 and 0.3.0 attempts. See `CHANGELOG.md`. CI usage
 (**please use the ASCII aliases**):
@@ -365,7 +368,7 @@ npx --yes @perrylink/dsh-plugin-doctor@0.5.0 --repo . --no-smoke --only "R,K"
 Or as a **GitHub Action** — no install step, no copied workflow file:
 
 ```yaml
-- uses: PerryLink/dsh-plugin-doctor@v0.4.6
+- uses: PerryLink/dsh-plugin-doctor@v0.7.6
   with:
     only: R,K
 ```
@@ -373,7 +376,7 @@ Or as a **GitHub Action** — no install step, no copied workflow file:
 **43 PerryLink repositories** ship the gate, and the whole fleet was moved onto one
 byte-identical template pinned to the current version on 2026-09-23/24, after the
 change was verified against every gated repository first. New adopters should pin
-the **newest published** version — currently 0.4.6.
+the **newest published** version — currently 0.7.6.
 
 > **Honest status: there are no external adopters yet.** That, not catalogue
 > coverage, is what limits this project — it is already in 33+ directories

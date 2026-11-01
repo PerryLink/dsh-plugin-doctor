@@ -1,6 +1,6 @@
 {
   "name": "@perrylink/dsh-plugin-doctor",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "Zero-dependency static + sandbox smoke detector for DeepSeek Harness (dsh) plugins: package-structure gates (R), cordis contract scans (K), keyless-headless sandbox smoke (D), and ecosystem-listing checks (CC).",
   "author": {
     "name": "PerryLink",
@@ -87,6 +87,21 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "standards": {
+      "schema": "dsh-levels/1",
+      "entry": {
+        "status": "not-run",
+        "evidence": null
+      },
+      "flow": {
+        "status": "not-run",
+        "evidence": null
+      },
+      "boost": {
+        "status": "not-measured",
+        "evidence": null
+      }
     }
   }
 }
