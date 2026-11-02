@@ -64,8 +64,7 @@
       "package": "dsh-fund-research"
     },
     {
-      "repo": "PerryLink/dsh-github",
-      "package": "@perrylink/dsh-github"
+      "repo": "PerryLink/dsh-github-bot"
     },
     {
       "repo": "PerryLink/dsh-industry-research",
@@ -108,13 +107,12 @@
       "package": "dsh-permission-rules"
     },
     {
-      "repo": "PerryLink/dsh-plugin-guide",
-      "package": "dsh-plugin-guide"
+      "repo": "PerryLink/dsh-primer"
     },
     {
-      "repo": "PerryLink/dsh-plugin-kit",
-      "package": "@perrylink/dsh-plugin-kit"
-    },    {
+      "repo": "PerryLink/dsh-scaffold"
+    },
+    {
       "repo": "PerryLink/dsh-plugin-upgrade-015",
       "package": "dsh-plugin-upgrade-015"
     },
@@ -151,8 +149,7 @@
       "package": "dsh-test-drive"
     },
     {
-      "repo": "PerryLink/dsh-ticktick",
-      "package": "@perrylink/dsh-ticktick"
+      "repo": "PerryLink/dsh-dida"
     },
     {
       "repo": "PerryLink/dsh-translate",
